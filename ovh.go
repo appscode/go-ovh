@@ -9,9 +9,21 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
 	"sync"
 	"time"
+
+	cloud_ops "github.com/appscode/go-ovh/cloud/client/operations"
+	domain_ops "github.com/appscode/go-ovh/domain/client/operations"
+	ip_ops "github.com/appscode/go-ovh/ip/client/operations"
+	iploadbalancing_ops "github.com/appscode/go-ovh/iploadbalancing/client/operations"
+	vip_ops "github.com/appscode/go-ovh/vip/client/operations"
+	vps_ops "github.com/appscode/go-ovh/vps/client/operations"
+	vrack_ops "github.com/appscode/go-ovh/vrack/client/operations"
+	"github.com/go-openapi/runtime"
+	httptransport "github.com/go-openapi/runtime/client"
+	"github.com/go-openapi/strfmt"
 )
 
 // DefaultTimeout api requests after 180s
@@ -70,6 +82,16 @@ type Client struct {
 	timeDeltaDone  bool
 	timeDelta      time.Duration
 	Timeout        time.Duration
+
+	cloud           *cloud_ops.Client
+	domain          *domain_ops.Client
+	ip              *ip_ops.Client
+	iploadbalancing *iploadbalancing_ops.Client
+	vip             *vip_ops.Client
+	vps             *vps_ops.Client
+	vrack           *vrack_ops.Client
+
+	Transport *httptransport.Runtime
 }
 
 // NewClient represents a new client to call the API
@@ -88,6 +110,25 @@ func NewClient(endpoint, appKey, appSecret, consumerKey string) (*Client, error)
 	if err := client.loadConfig(endpoint); err != nil {
 		return nil, err
 	}
+
+	// create transport and client
+	u, _ := url.Parse(client.endpoint)
+	transport := httptransport.New(u.Host, u.Path, []string{u.Scheme})
+	transport.DefaultAuthentication = runtime.ClientAuthInfoWriterFunc(func(req runtime.ClientRequest, reg strfmt.Registry) error {
+		req.SetHeaderParam("X-Ovh-Application", client.AppKey)
+		req.SetTimeout(client.Timeout)
+		return nil
+	})
+	// transport.Debug = true
+	client.cloud = cloud_ops.New(transport, strfmt.Default)
+	client.domain = domain_ops.New(transport, strfmt.Default)
+	client.ip = ip_ops.New(transport, strfmt.Default)
+	client.iploadbalancing = iploadbalancing_ops.New(transport, strfmt.Default)
+	client.vip = vip_ops.New(transport, strfmt.Default)
+	client.vps = vps_ops.New(transport, strfmt.Default)
+	client.vrack = vrack_ops.New(transport, strfmt.Default)
+
+	client.Transport = transport
 	return &client, nil
 }
 
@@ -124,50 +165,6 @@ func (c *Client) TimeDelta() (time.Duration, error) {
 // Time returns time from the OVH API, by asking GET /auth/time.
 func (c *Client) Time() (*time.Time, error) {
 	return c.getTime()
-}
-
-//
-// Common request wrappers
-//
-
-// Get is a wrapper for the GET method
-func (c *Client) Get(url string, resType interface{}) error {
-	return c.CallAPI("GET", url, nil, resType, true)
-}
-
-// GetUnAuth is a wrapper for the unauthenticated GET method
-func (c *Client) GetUnAuth(url string, resType interface{}) error {
-	return c.CallAPI("GET", url, nil, resType, false)
-}
-
-// Post is a wrapper for the POST method
-func (c *Client) Post(url string, reqBody, resType interface{}) error {
-	return c.CallAPI("POST", url, reqBody, resType, true)
-}
-
-// PostUnAuth is a wrapper for the unauthenticated POST method
-func (c *Client) PostUnAuth(url string, reqBody, resType interface{}) error {
-	return c.CallAPI("POST", url, reqBody, resType, false)
-}
-
-// Put is a wrapper for the PUT method
-func (c *Client) Put(url string, reqBody, resType interface{}) error {
-	return c.CallAPI("PUT", url, reqBody, resType, true)
-}
-
-// PutUnAuth is a wrapper for the unauthenticated PUT method
-func (c *Client) PutUnAuth(url string, reqBody, resType interface{}) error {
-	return c.CallAPI("PUT", url, reqBody, resType, false)
-}
-
-// Delete is a wrapper for the DELETE method
-func (c *Client) Delete(url string, resType interface{}) error {
-	return c.CallAPI("DELETE", url, nil, resType, true)
-}
-
-// DeleteUnAuth is a wrapper for the unauthenticated DELETE method
-func (c *Client) DeleteUnAuth(url string, resType interface{}) error {
-	return c.CallAPI("DELETE", url, nil, resType, false)
 }
 
 //
@@ -230,7 +227,7 @@ func (c *Client) getTimeDelta() (time.Duration, error) {
 func (c *Client) getTime() (*time.Time, error) {
 	var timestamp int64
 
-	err := c.GetUnAuth("/auth/time", &timestamp)
+	err := c.callAPI(http.MethodGet, "/auth/time", nil, &timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -269,7 +266,7 @@ var getEndpointForSignature = func(c *Client) string {
 //
 // If everyrthing went fine, unmarshall response into resType and return nil
 // otherwise, return the error
-func (c *Client) CallAPI(method, path string, reqBody, resType interface{}, needAuth bool) error {
+func (c *Client) callAPI(method, path string, reqBody, resType interface{}) error {
 	var body []byte
 	var err error
 
@@ -293,32 +290,6 @@ func (c *Client) CallAPI(method, path string, reqBody, resType interface{}, need
 	req.Header.Add("X-Ovh-Application", c.AppKey)
 	req.Header.Add("Accept", "application/json")
 
-	// Inject signature. Some methods do not need authentication, especially /time,
-	// /auth and some /order methods are actually broken if authenticated.
-	if needAuth {
-		timeDelta, err := c.TimeDelta()
-		if err != nil {
-			return err
-		}
-
-		timestamp := getLocalTime().Add(-timeDelta).Unix()
-
-		req.Header.Add("X-Ovh-Timestamp", strconv.FormatInt(timestamp, 10))
-		req.Header.Add("X-Ovh-Consumer", c.ConsumerKey)
-
-		h := sha1.New()
-		h.Write([]byte(fmt.Sprintf("%s+%s+%s+%s%s+%s+%d",
-			c.AppSecret,
-			c.ConsumerKey,
-			method,
-			getEndpointForSignature(c),
-			path,
-			body,
-			timestamp,
-		)))
-		req.Header.Add("X-Ovh-Signature", fmt.Sprintf("$1$%x", h.Sum(nil)))
-	}
-
 	// Send the request with requested timeout
 	c.Client.Timeout = c.Timeout
 	response, err := c.Client.Do(req)
@@ -329,4 +300,64 @@ func (c *Client) CallAPI(method, path string, reqBody, resType interface{}, need
 
 	// Unmarshal the result into the resType if possible
 	return c.getResponse(response, resType)
+}
+
+// AuthenticateRequest adds authentication data to the request
+func (c *Client) AuthenticateRequest(req runtime.ClientRequest, reg strfmt.Registry) error {
+	timeDelta, err := c.TimeDelta()
+	if err != nil {
+		return err
+	}
+
+	timestamp := getLocalTime().Add(-timeDelta).Unix()
+
+	req.SetHeaderParam("X-Ovh-Application", c.AppKey)
+	req.SetHeaderParam("X-Ovh-Timestamp", strconv.FormatInt(timestamp, 10))
+	req.SetHeaderParam("X-Ovh-Consumer", c.ConsumerKey)
+
+	h := sha1.New()
+	h.Write([]byte(fmt.Sprintf("%s+%s+%s+%s%s+%s+%d",
+		c.AppSecret,
+		c.ConsumerKey,
+		req.GetMethod(),
+		getEndpointForSignature(c),
+		req.GetPath(),
+		string(req.GetBody()),
+		timestamp,
+	)))
+	req.SetHeaderParam("X-Ovh-Signature", fmt.Sprintf("$1$%x", h.Sum(nil)))
+	req.SetTimeout(c.Timeout)
+	return nil
+}
+
+//
+// API services
+//
+
+func (c *Client) Cloud() *cloud_ops.Client {
+	return c.cloud
+}
+
+func (c *Client) Domain() *domain_ops.Client {
+	return c.domain
+}
+
+func (c *Client) IP() *ip_ops.Client {
+	return c.ip
+}
+
+func (c *Client) IPLoadbalancing() *iploadbalancing_ops.Client {
+	return c.iploadbalancing
+}
+
+func (c *Client) VIP() *vip_ops.Client {
+	return c.vip
+}
+
+func (c *Client) VPS() *vps_ops.Client {
+	return c.vps
+}
+
+func (c *Client) VRack() *vrack_ops.Client {
+	return c.vrack
 }

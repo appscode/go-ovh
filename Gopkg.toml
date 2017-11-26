@@ -28,6 +28,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/go-openapi/runtime"
+  source = "github.com/tamalsaha/runtime"
 
 [[constraint]]
   branch = "master"
