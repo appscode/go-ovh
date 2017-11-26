@@ -1,0 +1,4036 @@
+swagger: "2.0"
+info:
+  title: OVH API - EU
+  description: Build your own OVH world.
+  version: 1.0.0
+  contact:
+    name: OVH API EU
+    url: https://eu.api.ovh.com/
+    email: api-subscribe@ml.ovh.net
+  license:
+    name: © OVH SAS
+    url: https://eu.api.ovh.com/
+host: eu.api.ovh.com
+basePath: /1.0
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+externalDocs:
+  url: https://eu.api.ovh.com/
+  description: Online version
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    name: X-Ovh-Consumer
+    in: header
+paths:
+  /ip:
+    get:
+      summary: Your OVH IPs
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ip
+        in: query
+        type: string
+      - name: routedTo.serviceName
+        in: query
+        type: string
+      - name: type
+        in: query
+        type: string
+        enum:
+        - cdn
+        - cloud
+        - dedicated
+        - failover
+        - hosted_ssl
+        - housing
+        - loadBalancing
+        - mail
+        - overthebox
+        - pcc
+        - pci
+        - private
+        - vpn
+        - vps
+        - vrack
+        - xdsl
+      - name: description
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.Ip'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ip.Ip'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/antihack:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Anti-Hack blocked IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: state
+        in: query
+        type: string
+        enum:
+        - blocked
+        - unblocking
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/antihack/{ipBlocked}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipBlocked
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.BlockedIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/antihack/{ipBlocked}/unblock:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipBlocked
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Unblock this IP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/arp:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: ARP blocked IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: state
+        in: query
+        type: string
+        enum:
+        - blocked
+        - unblocking
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/arp/{ipBlocked}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipBlocked
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.ArpBlockedIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/arp/{ipBlocked}/unblock:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipBlocked
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Unblock this IP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/changeOrg:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Change organisation of this IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipChangeOrgPost
+        in: body
+        schema:
+          type: object
+          required:
+          - organisation
+          properties:
+            organisation:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/ip.IpTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/delegation:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Reverse delegation on IPv6 subnet
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add target for reverse delegation on IPv6 subnet
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipDelegationPost
+        in: body
+        schema:
+          type: object
+          required:
+          - target
+          properties:
+            target:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/ip.ReverseDelegation'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/delegation/{target}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: target
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.ReverseDelegation'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a target for reverse delegation on IPv6 subnet
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/firewall:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Ip under firewall
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: state
+        in: query
+        type: string
+        enum:
+        - disableFirewallPending
+        - enableFirewallPending
+        - ok
+      - name: enabled
+        in: query
+        type: boolean
+        default: false
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: AntiDDOS option. Add new IP on firewall
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipFirewallPost
+        in: body
+        schema:
+          type: object
+          required:
+          - ipOnFirewall
+          properties:
+            ipOnFirewall:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/ip.FirewallIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/firewall/{ipOnFirewall}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipOnFirewall
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.FirewallIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipFirewallPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ip.FirewallIp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: AntiDDOS option. Delete IP and rules from firewall
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/firewall/{ipOnFirewall}/rule:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipOnFirewall
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Rules for this IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: state
+        in: query
+        type: string
+        enum:
+        - creationPending
+        - ok
+        - removalPending
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: AntiDDOS option. Add new rule on your IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipFirewallRulePost
+        in: body
+        schema:
+          type: object
+          required:
+          - protocol
+          - sequence
+          - action
+          properties:
+            action:
+              type: string
+              enum:
+              - deny
+              - permit
+            destinationPort:
+              type: integer
+              format: int64
+            protocol:
+              type: string
+              enum:
+              - ah
+              - esp
+              - gre
+              - icmp
+              - ipv4
+              - tcp
+              - udp
+            sequence:
+              type: integer
+              format: int64
+              enum:
+              - 0
+              - 1
+              - 10
+              - 11
+              - 12
+              - 13
+              - 14
+              - 15
+              - 16
+              - 17
+              - 18
+              - 19
+              - 2
+              - 3
+              - 4
+              - 5
+              - 6
+              - 7
+              - 8
+              - 9
+            source:
+              type: string
+            sourcePort:
+              type: integer
+              format: int64
+            tcpOption:
+              $ref: '#/definitions/ip.FirewallOptionTCP'
+      responses:
+        "200":
+          $ref: '#/responses/ip.FirewallNetworkRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/firewall/{ipOnFirewall}/rule/{sequence}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipOnFirewall
+      in: path
+      required: true
+      type: string
+    - name: sequence
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.FirewallNetworkRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: AntiDDOS option. Delete rule
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.FirewallNetworkRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/game:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Ip under game anti-ddos
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/game/{ipOnGame}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipOnGame
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.GameMitigation'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipGamePut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ip.GameMitigation'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/game/{ipOnGame}/rule:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipOnGame
+      in: path
+      required: true
+      type: string
+    get:
+      summary: IDs of rules configured for this IP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add new rule on your IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipGameRulePost
+        in: body
+        schema:
+          type: object
+          required:
+          - protocol
+          - ports
+          properties:
+            ports:
+              $ref: '#/definitions/complexType.Range.Long'
+            protocol:
+              type: string
+              enum:
+              - arkSurvivalEvolved
+              - arma
+              - gtaMultiTheftAutoSanAndreas
+              - gtaSanAndreasMultiplayerMod
+              - hl2Source
+              - minecraftPocketEdition
+              - minecraftQuery
+              - mumble
+              - other
+              - rust
+              - teamspeak2
+              - teamspeak3
+              - trackmaniaShootmania
+      responses:
+        "200":
+          $ref: '#/responses/ip.GameMitigationRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/game/{ipOnGame}/rule/{id}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipOnGame
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.GameMitigationRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete rule
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.GameMitigationRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/license/cloudLinux:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Cloud Linux licenses associated to this IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipAddress
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/license/cpanel:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Cpanel licenses associated to this IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipAddress
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/license/directadmin:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: DirectAdmin licenses associated to this IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipAddress
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/license/plesk:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Plesk licenses associated to this IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipAddress
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/license/sqlserver:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: SQL Server licenses associated to this IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipAddress
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/license/virtuozzo:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Virtuozzo licenses associated to this IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipAddress
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/license/windows:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Windows licenses associated to this IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipAddress
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/license/worklight:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: WorkLight licenses associated to this IP
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipAddress
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/migrationToken:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.IpMigrationToken'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Generate a migration token
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipMigrationTokenPost
+        in: body
+        schema:
+          type: object
+          required:
+          - customerId
+          properties:
+            customerId:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/ip.IpMigrationToken'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/mitigation:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Ip under mitigation
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: auto
+        in: query
+        type: boolean
+        default: false
+      - name: state
+        in: query
+        type: string
+        enum:
+        - creationPending
+        - ok
+        - removalPending
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: AntiDDOS option. Add new IP on permanent mitigation
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipMitigationPost
+        in: body
+        schema:
+          type: object
+          required:
+          - ipOnMitigation
+          properties:
+            ipOnMitigation:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/ip.MitigationIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/mitigation/{ipOnMitigation}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipOnMitigation
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.MitigationIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipMitigationPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ip.MitigationIp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: AntiDDOS option. Delete IP from mitigation
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.MitigationIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/mitigation/{ipOnMitigation}/stats:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipOnMitigation
+      in: path
+      required: true
+      type: string
+    get:
+      summary: AntiDDOS option. Get statistics about your traffic in and out during
+        this mitigation
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: to
+        in: query
+        required: true
+        type: string
+        format: date-time
+      - name: from
+        in: query
+        required: true
+        type: string
+        format: date-time
+      - name: scale
+        in: query
+        required: true
+        type: string
+        enum:
+        - 10s
+        - 1m
+        - 5m
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ip.MitigationStats'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/mitigation/{ipOnMitigation}/topStream:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipOnMitigation
+      in: path
+      required: true
+      type: string
+    get:
+      summary: AntiDDOS option. Get top stream on your ip on a specific timestamp
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: date
+        in: query
+        required: true
+        type: string
+        format: date-time
+      - name: scale
+        in: query
+        required: true
+        type: string
+        enum:
+        - 10s
+        - 1m
+        - 5m
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ip.MitigationDetailedStats'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/mitigationProfiles:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Manage mitigation profile on your IPs
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Create new profile for one of your ip
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipMitigationProfilesPost
+        in: body
+        schema:
+          type: object
+          required:
+          - ipMitigationProfile
+          - autoMitigationTimeOut
+          properties:
+            autoMitigationTimeOut:
+              type: integer
+              format: int64
+              enum:
+              - 0
+              - 15
+              - 1560
+              - 360
+              - 60
+            ipMitigationProfile:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/ip.MitigationProfile'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/mitigationProfiles/{ipMitigationProfile}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipMitigationProfile
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.MitigationProfile'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipMitigationProfilesPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ip.MitigationProfile'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete mitigation profile
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/move:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List services available as a destination
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.Destinations'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Move this IP to another service
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipMovePost
+        in: body
+        schema:
+          type: object
+          required:
+          - to
+          properties:
+            nexthop:
+              type: string
+            to:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/ip.IpTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/park:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Park this IP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.IpTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/phishing:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Ip under anti-phishing
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipOnAntiphishing
+        in: query
+        type: string
+      - name: state
+        in: query
+        type: string
+        enum:
+        - blocked
+        - blocking
+        - unblocked
+        - unblocking
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/phishing/{id}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.Antiphishing'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/reverse:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Reverse on your ip
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add reverse on an ip
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipReversePost
+        in: body
+        schema:
+          type: object
+          required:
+          - ipReverse
+          - reverse
+          properties:
+            ipReverse:
+              type: string
+            reverse:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/ip.ReverseIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/reverse/{ipReverse}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipReverse
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.ReverseIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a reverse on one IP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/ripe:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.RipeInfos'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipRipePut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ip.RipeInfos'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/spam:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Ip spamming
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: state
+        in: query
+        type: string
+        enum:
+        - blockedForSpam
+        - unblocked
+        - unblocking
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/spam/{ipSpamming}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipSpamming
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.SpamIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/spam/{ipSpamming}/stats:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipSpamming
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get statistics about the email traffic
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: to
+        in: query
+        required: true
+        type: string
+        format: date-time
+      - name: from
+        in: query
+        required: true
+        type: string
+        format: date-time
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ip.SpamStats'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/spam/{ipSpamming}/unblock:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: ipSpamming
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Release the ip from anti-spam system
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.SpamIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/task:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: IP tasks
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: function
+        in: query
+        type: string
+        enum:
+        - arinBlockReassign
+        - changeRipeOrg
+        - checkAndReleaseIp
+        - genericMoveFloatingIp
+      - name: status
+        in: query
+        type: string
+        enum:
+        - cancelled
+        - customerError
+        - doing
+        - done
+        - init
+        - ovhError
+        - todo
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/task/{taskId}:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    - name: taskId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.IpTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/{ip}/terminate:
+    parameters:
+    - name: ip
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Delete a failover IP
+      description: DEPRECATED (see '/ip/service/{serviceName}/terminate') - authentication
+        required
+      responses:
+        "200":
+          $ref: '#/responses/ip.IpTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing:
+    get:
+      summary: List available services
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/allowedBackends:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of backends you can attach to your IP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/backend:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Backends for this IP load balancing
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new backend on your IP load balancing
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipLoadBalancingBackendPost
+        in: body
+        schema:
+          type: object
+          required:
+          - ipBackend
+          - probe
+          properties:
+            ipBackend:
+              type: string
+            probe:
+              type: string
+              enum:
+              - http
+              - icmp
+              - none
+              - oco
+            weight:
+              type: integer
+              format: int64
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/backend/{backend}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: backend
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingBackendIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipLoadBalancingBackendPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ip.LoadBalancingBackendIp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Remove a backend IP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/backend/{backend}/backupState:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: backend
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Set or unset the backend as a backup of another backend. Requests will
+        be directed to the backup only if the main backend is in probe fail
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipLoadBalancingBackendBackupStatePost
+        in: body
+        schema:
+          type: object
+          required:
+          - backupStateSet
+          properties:
+            backupStateSet:
+              type: boolean
+              default: false
+            mainBackendIp:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/backend/{backend}/setWeight:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: backend
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Set the weight of a backend. For instance, if backend A has a weight
+        of 8 and backup B was a weight of 16, backend B will receive twice more connections
+        as backend A. Backends must be on the same POP for the weight parameter to
+        take effect between them.
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipLoadBalancingBackendSetWeightPost
+        in: body
+        schema:
+          type: object
+          required:
+          - weight
+          properties:
+            weight:
+              type: integer
+              format: int64
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/importCustomSsl:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Import your own ssl certificate on your IP load balancing. Ssl option
+        is needed to use this url.
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipLoadBalancingImportCustomSslPost
+        in: body
+        schema:
+          type: object
+          required:
+          - certificate
+          - key
+          properties:
+            certificate:
+              type: string
+            chain:
+              type: string
+            key:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/internalNatIp:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Ip subnet used by OVH to nat requests on your ip lb to your backends.
+        You must ensure that your backends are not part of a network that overlap
+        with this one.
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: zone
+        in: query
+        required: true
+        type: string
+        enum:
+        - bhs
+        - gra
+        - rbx
+        - sbg
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/portsRedirection:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get all srcPort
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+              enum:
+              - 3306
+              - 443
+              - 5432
+              - 80
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new port redirection
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipLoadBalancingPortsRedirectionPost
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ip.LoadBalancingIp.LoadBalancingPort'
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/portsRedirection/{srcPort}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: srcPort
+      in: path
+      required: true
+      type: integer
+      format: int64
+      enum:
+      - 3306
+      - 443
+      - 5432
+      - 80
+    get:
+      summary: Get the value for the given srcPort
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingIp.LoadBalancingPort'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a port redirection
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/probeIp:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Ip subnet used to send probes to your backends
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: zone
+        in: query
+        required: true
+        type: string
+        enum:
+        - bhs
+        - gra
+        - rbx
+        - sbg
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/restoreSsl:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Restore OVH' ssl certificate on your IP load balancing. Ssl option
+        is needed to use this url. (A DCV mail will be sent to postmaster@your-domain.abc)
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/serviceInfos:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/services.Service'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipLoadBalancingServiceInfosPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.Service'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/stickiness:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Set Stickiness type. 'ipSource' will stick clients to a backend by
+        their source ip, 'cookie' will stick them by inserting a cookie, 'none' is
+        to set no stickiness
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: ipLoadBalancingStickinessPost
+        in: body
+        schema:
+          type: object
+          required:
+          - stickiness
+          properties:
+            stickiness:
+              type: string
+              enum:
+              - cookie
+              - none
+              - sourceIp
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/switchToIplbNextGenerationApi:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: 'Switch to ipLoadbalancing next-gen API. Benefits : additionnals probes,
+        DDOS protection.'
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.Task.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/task:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Task list associated with this IP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/loadBalancing/{serviceName}/task/{taskId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: taskId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.LoadBalancingTask'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/service:
+    get:
+      summary: List available services
+      description: BETA - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/service/{serviceName}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/ip.ServiceIp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: BETA - authentication required
+      parameters:
+      - name: ipServicePut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ip.ServiceIp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/service/{serviceName}/changeContact:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Launch a contact change procedure
+      description: BETA - authentication required
+      parameters:
+      - name: ipServiceChangeContactPost
+        in: body
+        schema:
+          type: object
+          properties:
+            contactAdmin:
+              type: string
+            contactBilling:
+              type: string
+            contactTech:
+              type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/service/{serviceName}/confirmTermination:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Confirm termination of your service
+      description: BETA - authentication required
+      parameters:
+      - name: ipServiceConfirmTerminationPost
+        in: body
+        schema:
+          type: object
+          required:
+          - token
+          properties:
+            commentary:
+              type: string
+            reason:
+              type: string
+              enum:
+              - LACK_OF_PERFORMANCES
+              - MIGRATED_TO_ANOTHER_OVH_PRODUCT
+              - MIGRATED_TO_COMPETITOR
+              - NOT_NEEDED_ANYMORE
+              - NOT_RELIABLE
+              - OTHER
+              - TOO_EXPENSIVE
+              - TOO_HARD_TO_USE
+            token:
+              type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/service/{serviceName}/serviceInfos:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/services.NonExpiringService'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ip/service/{serviceName}/terminate:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Terminate your service
+      description: BETA - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+definitions:
+  complexType.Range.Long:
+    description: Start and end points (inclusive) of a range
+    type: object
+    properties:
+      from:
+        description: Start point of the range
+        type: integer
+        format: int64
+      to:
+        description: End point of the range
+        type: integer
+        format: int64
+  ip.Antiphishing:
+    description: Phishing URLs hosted on your IP
+    type: object
+    required:
+    - urlPhishing
+    - state
+    - creationDate
+    - ipOnAntiphishing
+    - id
+    properties:
+      creationDate:
+        description: Date of the event
+        type: string
+        format: date-time
+        readOnly: true
+      id:
+        description: Internal ID of the phishing entry
+        type: integer
+        format: int64
+        readOnly: true
+      ipOnAntiphishing:
+        description: IP address hosting the phishing URL
+        type: string
+        readOnly: true
+      state:
+        description: Current state of the phishing
+        type: string
+        readOnly: true
+        enum:
+        - blocked
+        - blocking
+        - unblocked
+        - unblocking
+      urlPhishing:
+        description: Phishing URL
+        type: string
+        readOnly: true
+  ip.ArpBlockedIp:
+    description: ARP blocked IP information
+    type: object
+    required:
+    - state
+    - ipBlocked
+    - blockedSince
+    - time
+    properties:
+      blockedSince:
+        description: The last blocking date
+        type: string
+        format: date-time
+        readOnly: true
+      ipBlocked:
+        description: your IP
+        type: string
+        readOnly: true
+      logs:
+        description: ARP logs
+        type: string
+        readOnly: true
+      state:
+        description: this IP address state
+        type: string
+        readOnly: true
+        enum:
+        - blocked
+        - unblocking
+      time:
+        description: Time (in seconds) remaining before you can request your IP to
+          be unblocked
+        type: integer
+        format: int64
+        readOnly: true
+  ip.BlockedIp:
+    description: Blocked IP information
+    type: object
+    required:
+    - state
+    - ipBlocked
+    - blockedSince
+    - time
+    properties:
+      blockedSince:
+        description: The last blocking date
+        type: string
+        format: date-time
+        readOnly: true
+      ipBlocked:
+        description: your IP
+        type: string
+        readOnly: true
+      logs:
+        description: Logs
+        type: string
+        readOnly: true
+      state:
+        description: this IP address state
+        type: string
+        readOnly: true
+        enum:
+        - blocked
+        - unblocking
+      time:
+        description: Time (in seconds) remaining before you can request your IP to
+          be unblocked
+        type: integer
+        format: int64
+        readOnly: true
+  ip.Destination:
+    description: A structure given service and its nexthops as a destination for failover
+      ips
+    type: object
+    properties:
+      nexthop:
+        description: Nexthops available on this service
+        type: array
+        items:
+          type: string
+      service:
+        description: Service destination
+        type: string
+  ip.Destinations:
+    description: A structure given all services allowed as a destination for this
+      ip
+    type: object
+    properties:
+      cloudProject:
+        description: list of public cloud projects
+        type: array
+        items:
+          $ref: '#/definitions/ip.Destination'
+      dedicatedCloud:
+        description: list of dedicated clouds
+        type: array
+        items:
+          $ref: '#/definitions/ip.Destination'
+      dedicatedServer:
+        description: list of dedicated servers
+        type: array
+        items:
+          $ref: '#/definitions/ip.Destination'
+      hostingReseller:
+        description: list of hosting reseller services
+        type: array
+        items:
+          $ref: '#/definitions/ip.Destination'
+      iplb:
+        description: list of load balancing services
+        type: array
+        items:
+          $ref: '#/definitions/ip.Destination'
+      vps:
+        description: list of vps
+        type: array
+        items:
+          $ref: '#/definitions/ip.Destination'
+  ip.FirewallIp:
+    description: Your IP on firewall
+    type: object
+    required:
+    - state
+    - ipOnFirewall
+    properties:
+      enabled:
+        type: boolean
+      ipOnFirewall:
+        type: string
+        readOnly: true
+      state:
+        description: Current state of your ip on firewall
+        type: string
+        readOnly: true
+        enum:
+        - disableFirewallPending
+        - enableFirewallPending
+        - ok
+  ip.FirewallNetworkRule:
+    description: Rule on ip
+    type: object
+    required:
+    - destination
+    - state
+    - creationDate
+    - source
+    - protocol
+    - rule
+    - action
+    - sequence
+    properties:
+      action:
+        description: Action on this rule
+        type: string
+        readOnly: true
+        enum:
+        - deny
+        - permit
+      creationDate:
+        type: string
+        format: date-time
+        readOnly: true
+      destination:
+        description: Destination ip for your rule
+        type: string
+        readOnly: true
+      destinationPort:
+        description: Destination port range for your rule. Only with TCP/UDP protocol
+        type: string
+        readOnly: true
+      fragments:
+        description: Fragments option
+        type: boolean
+        readOnly: true
+      protocol:
+        description: Network protocol
+        type: string
+        readOnly: true
+        enum:
+        - ah
+        - esp
+        - gre
+        - icmp
+        - ipv4
+        - tcp
+        - udp
+      rule:
+        type: string
+        readOnly: true
+      sequence:
+        type: integer
+        format: int64
+        readOnly: true
+      source:
+        description: Source ip for your rule
+        type: string
+        readOnly: true
+      sourcePort:
+        description: Source port range for your rule. Only with TCP/UDP protocol
+        type: string
+        readOnly: true
+      state:
+        description: Current state of your rule
+        type: string
+        readOnly: true
+        enum:
+        - creationPending
+        - ok
+        - removalPending
+      tcpOption:
+        description: TCP option on your rule
+        type: string
+        readOnly: true
+  ip.FirewallOptionTCP:
+    description: Possible option for TCP
+    type: object
+    properties:
+      fragments:
+        description: TCP fragments
+        type: boolean
+      option:
+        description: TCP option
+        type: string
+        enum:
+        - established
+        - syn
+  ip.GameMitigation:
+    description: GAME Anti-DDoS
+    type: object
+    required:
+    - ipOnGame
+    - state
+    properties:
+      firewallModeEnabled:
+        description: 'Firewall mode : in UDP, only allow traffic matching your rules
+          (as well as established traffic). If not enabled, traffic to ports not defined
+          in your rules will be permited. TCP traffic is unaffected by this.'
+        type: boolean
+      ipOnGame:
+        type: string
+        readOnly: true
+      state:
+        type: string
+        readOnly: true
+        enum:
+        - firewallModeDisablePending
+        - firewallModeEnablePending
+        - ok
+  ip.GameMitigationRule:
+    description: Rule on ip:ports
+    type: object
+    required:
+    - ports
+    - id
+    - state
+    - protocol
+    properties:
+      id:
+        description: ID of the rule
+        type: integer
+        format: int64
+        readOnly: true
+      ports:
+        type: object
+        readOnly: true
+        properties:
+          from:
+            description: Start point of the range
+            type: integer
+            format: int64
+          to:
+            description: End point of the range
+            type: integer
+            format: int64
+      protocol:
+        type: string
+        readOnly: true
+        enum:
+        - arkSurvivalEvolved
+        - arma
+        - gtaMultiTheftAutoSanAndreas
+        - gtaSanAndreasMultiplayerMod
+        - hl2Source
+        - minecraftPocketEdition
+        - minecraftQuery
+        - mumble
+        - other
+        - rust
+        - teamspeak2
+        - teamspeak3
+        - trackmaniaShootmania
+      state:
+        description: Current state of your rule
+        type: string
+        readOnly: true
+        enum:
+        - createRulePending
+        - deleteRulePending
+        - ok
+  ip.Ip:
+    description: Your IP
+    type: object
+    required:
+    - ip
+    - canBeTerminated
+    - type
+    properties:
+      canBeTerminated:
+        type: boolean
+        readOnly: true
+      country:
+        type: string
+        readOnly: true
+        enum:
+        - ac
+        - ad
+        - ae
+        - af
+        - ag
+        - ai
+        - al
+        - am
+        - an
+        - ao
+        - aq
+        - ar
+        - as
+        - at
+        - au
+        - aw
+        - ax
+        - az
+        - ba
+        - bb
+        - bd
+        - be
+        - bf
+        - bg
+        - bh
+        - bi
+        - bj
+        - bl
+        - bm
+        - bn
+        - bo
+        - bq
+        - br
+        - bs
+        - bt
+        - bv
+        - bw
+        - by
+        - bz
+        - ca
+        - cc
+        - cd
+        - cf
+        - cg
+        - ch
+        - ci
+        - ck
+        - cl
+        - cm
+        - cn
+        - co
+        - cr
+        - cs
+        - cu
+        - cv
+        - cw
+        - cx
+        - cy
+        - cz
+        - de
+        - dj
+        - dk
+        - dm
+        - do
+        - dz
+        - ec
+        - ee
+        - eg
+        - eh
+        - er
+        - es
+        - et
+        - fc
+        - fd
+        - fi
+        - fj
+        - fk
+        - fm
+        - fo
+        - fr
+        - fx
+        - ga
+        - gb
+        - gd
+        - ge
+        - gf
+        - gg
+        - gh
+        - gi
+        - gl
+        - gm
+        - gn
+        - gp
+        - gq
+        - gr
+        - gs
+        - gt
+        - gu
+        - gw
+        - gy
+        - hk
+        - hm
+        - hn
+        - hr
+        - ht
+        - hu
+        - id
+        - ie
+        - il
+        - im
+        - in
+        - io
+        - iq
+        - ir
+        - is
+        - it
+        - je
+        - jm
+        - jo
+        - jp
+        - ke
+        - kg
+        - kh
+        - ki
+        - km
+        - kn
+        - kp
+        - kr
+        - kw
+        - ky
+        - kz
+        - la
+        - lb
+        - lc
+        - li
+        - lk
+        - lr
+        - ls
+        - lt
+        - lu
+        - lv
+        - ly
+        - ma
+        - mc
+        - md
+        - me
+        - mf
+        - mg
+        - mh
+        - mk
+        - ml
+        - mm
+        - mn
+        - mo
+        - mp
+        - mq
+        - mr
+        - ms
+        - mt
+        - mu
+        - mv
+        - mw
+        - mx
+        - my
+        - mz
+        - na
+        - nc
+        - ne
+        - nf
+        - ng
+        - ni
+        - nl
+        - "no"
+        - np
+        - nr
+        - nu
+        - nz
+        - om
+        - pa
+        - pe
+        - pf
+        - pg
+        - ph
+        - pk
+        - pl
+        - pm
+        - pn
+        - pr
+        - ps
+        - pt
+        - pw
+        - py
+        - qa
+        - qc
+        - re
+        - ro
+        - rs
+        - ru
+        - rw
+        - sa
+        - sb
+        - sc
+        - sd
+        - se
+        - sg
+        - sh
+        - si
+        - sj
+        - sk
+        - sl
+        - sm
+        - sn
+        - so
+        - sr
+        - ss
+        - st
+        - sv
+        - sx
+        - sy
+        - sz
+        - tc
+        - td
+        - tf
+        - tg
+        - th
+        - tj
+        - tk
+        - tl
+        - tm
+        - tn
+        - to
+        - tp
+        - tr
+        - tt
+        - tv
+        - tw
+        - tz
+        - ua
+        - ug
+        - uk
+        - um
+        - us
+        - uy
+        - uz
+        - va
+        - vc
+        - ve
+        - vg
+        - vi
+        - vn
+        - vu
+        - we
+        - wf
+        - ws
+        - ye
+        - yt
+        - yu
+        - za
+        - zm
+        - zw
+      description:
+        description: Custom description on your ip
+        type: string
+      ip:
+        type: string
+        readOnly: true
+      organisationId:
+        description: IP block organisation Id
+        type: string
+        readOnly: true
+      routedTo:
+        $ref: '#/definitions/ip.RoutedTo'
+      type:
+        type: string
+        readOnly: true
+        enum:
+        - cdn
+        - cloud
+        - dedicated
+        - failover
+        - hosted_ssl
+        - housing
+        - loadBalancing
+        - mail
+        - overthebox
+        - pcc
+        - pci
+        - private
+        - vpn
+        - vps
+        - vrack
+        - xdsl
+  ip.IpMigrationToken:
+    description: IP migration to OVH
+    type: object
+    required:
+    - customerId
+    - token
+    properties:
+      customerId:
+        description: destination customer ID
+        type: string
+        readOnly: true
+      token:
+        description: migration token
+        type: string
+        readOnly: true
+  ip.IpTask:
+    description: IP tasks
+    type: object
+    required:
+    - startDate
+    - taskId
+    - function
+    - status
+    properties:
+      comment:
+        description: Details of this task
+        type: string
+        readOnly: true
+      destination:
+        $ref: '#/definitions/ip.RoutedTo'
+      doneDate:
+        description: Completion date
+        type: string
+        format: date-time
+        readOnly: true
+      function:
+        description: Function name
+        type: string
+        readOnly: true
+        enum:
+        - arinBlockReassign
+        - changeRipeOrg
+        - checkAndReleaseIp
+        - genericMoveFloatingIp
+      lastUpdate:
+        description: last update
+        type: string
+        format: date-time
+        readOnly: true
+      startDate:
+        description: Task Creation date
+        type: string
+        format: date-time
+        readOnly: true
+      status:
+        description: Task status
+        type: string
+        readOnly: true
+        enum:
+        - cancelled
+        - customerError
+        - doing
+        - done
+        - init
+        - ovhError
+        - todo
+      taskId:
+        description: the id of the task
+        type: integer
+        format: int64
+        readOnly: true
+  ip.LoadBalancingBackendIp:
+    description: Backends attached to your IP load balancing
+    type: object
+    required:
+    - zone
+    - backend
+    - weight
+    properties:
+      backend:
+        description: IP of your backend
+        type: string
+        readOnly: true
+      mainBackendIp:
+        description: If the backend has been configured as backup, this field contains
+          the ip of the main backend
+        type: string
+        readOnly: true
+      probe:
+        description: Probe used for your backend
+        type: string
+        enum:
+        - http
+        - icmp
+        - none
+        - oco
+      weight:
+        description: Weight of the backend on its zone, must be between 1 and 100,
+          default is 8
+        type: integer
+        format: int64
+        readOnly: true
+      zone:
+        description: Location where your service is
+        type: string
+        readOnly: true
+        enum:
+        - bhs
+        - gra
+        - rbx
+        - sbg
+  ip.LoadBalancingIp:
+    description: Your load balancing IP
+    type: object
+    required:
+    - state
+    - stickiness
+    - ssl
+    - zone
+    - ipLoadBalancing
+    - serviceName
+    properties:
+      ipLoadBalancing:
+        description: Your IP load balancing
+        type: string
+        readOnly: true
+      serviceName:
+        description: The internal name of your IP load balancing
+        type: string
+        readOnly: true
+      ssl:
+        description: Ssl activation state
+        type: string
+        readOnly: true
+        enum:
+        - customer
+        - none
+        - ovh
+      state:
+        description: Current state of your IP
+        type: string
+        readOnly: true
+        enum:
+        - blacklisted
+        - deleted
+        - free
+        - ok
+        - quarantined
+        - suspended
+      stickiness:
+        description: The type of stickiness currently in place on your Ip LoadBalancing
+        type: string
+        readOnly: true
+        enum:
+        - cookie
+        - none
+        - sourceIp
+      zone:
+        description: Location where your service is
+        type: array
+        readOnly: true
+        items:
+          type: string
+          enum:
+          - bhs
+          - gra
+          - rbx
+          - sbg
+  ip.LoadBalancingIp.LoadBalancingPort:
+    description: LoadBalancingPort mapping
+    type: object
+    properties:
+      dstPort:
+        type: integer
+        format: int64
+      srcPort:
+        type: integer
+        format: int64
+        enum:
+        - 3306
+        - 443
+        - 5432
+        - 80
+  ip.LoadBalancingTask:
+    description: List of tasks associated with your IP load balancing
+    type: object
+    required:
+    - status
+    - action
+    - id
+    - creationDate
+    properties:
+      action:
+        description: The action made
+        type: string
+        readOnly: true
+        enum:
+        - activateSsl
+        - addBackend
+        - addIpToBackend
+        - announceIpLoadBalancing
+        - backupStateSet
+        - backupStateUnset
+        - changeProbe
+        - delBackend
+        - desactivateSsl
+        - removeIpFromBackend
+        - setPortRedirection
+        - setStickiness
+        - setWeight
+        - unannounceIpLoadBalancing
+        - unsetPortRedirection
+      creationDate:
+        description: Creation date of your task
+        type: string
+        format: date-time
+        readOnly: true
+      id:
+        description: Identifier of your task
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        description: Current status of your task
+        type: string
+        readOnly: true
+  ip.MitigationDetailedStats:
+    description: Detailed statistics about your traffic
+    type: object
+    properties:
+      destPort:
+        description: Traffic dest port
+        type: integer
+        format: int64
+      fragments:
+        type: boolean
+      icmpCode:
+        description: ICMP protocol code
+        type: integer
+        format: int64
+      icmpType:
+        description: ICMP protocol type
+        type: integer
+        format: int64
+      in:
+        $ref: '#/definitions/ip.MitigationTraffic'
+      out:
+        $ref: '#/definitions/ip.MitigationTraffic'
+      protocol:
+        description: Used protocol. See RFC5237 for more information
+        type: integer
+        format: int64
+      srcPort:
+        description: Traffic source port
+        type: integer
+        format: int64
+      syn:
+        type: boolean
+  ip.MitigationIp:
+    description: Your IP on mitigation
+    type: object
+    required:
+    - state
+    - ipOnMitigation
+    - auto
+    properties:
+      auto:
+        description: Set on true if your ip is on auto-mitigation
+        type: boolean
+        readOnly: true
+      ipOnMitigation:
+        type: string
+        readOnly: true
+      permanent:
+        description: Set on true if your ip is on permanent mitigation
+        type: boolean
+      state:
+        description: Current state of your ip on mitigation
+        type: string
+        readOnly: true
+        enum:
+        - creationPending
+        - ok
+        - removalPending
+  ip.MitigationProfile:
+    description: Mitigation profile for your ip
+    type: object
+    required:
+    - ipMitigationProfile
+    - state
+    properties:
+      autoMitigationTimeOut:
+        description: Delay to wait before remove ip from auto mitigation after an
+          attack
+        type: integer
+        format: int64
+        enum:
+        - 0
+        - 15
+        - 1560
+        - 360
+        - 60
+      ipMitigationProfile:
+        type: string
+        readOnly: true
+      state:
+        description: Current state of your mitigation profile
+        type: string
+        readOnly: true
+        enum:
+        - ok
+        - tasksPending
+  ip.MitigationStats:
+    description: Traffic statistics in and out on a mitigated ip
+    type: object
+    properties:
+      in:
+        $ref: '#/definitions/ip.MitigationTraffic'
+      out:
+        $ref: '#/definitions/ip.MitigationTraffic'
+      timestamp:
+        description: Traffic timestamp
+        type: integer
+        format: int64
+  ip.MitigationTraffic:
+    description: Traffic on mitigation
+    type: object
+    properties:
+      bps:
+        description: Bits per second
+        type: integer
+        format: int64
+      pps:
+        description: Paquets per second
+        type: integer
+        format: int64
+  ip.ReverseDelegation:
+    description: Your reverse delegations on IPv6 subnet
+    type: object
+    required:
+    - target
+    properties:
+      target:
+        description: NS target for delegation
+        type: string
+        readOnly: true
+  ip.ReverseIp:
+    description: Your reverse records on IP
+    type: object
+    required:
+    - ipReverse
+    - reverse
+    properties:
+      ipReverse:
+        type: string
+        readOnly: true
+      reverse:
+        type: string
+        readOnly: true
+  ip.RipeInfos:
+    description: IP block RIPE informations
+    type: object
+    properties:
+      description:
+        type: string
+      netname:
+        type: string
+  ip.RoutedTo:
+    description: Information about routing
+    type: object
+    properties:
+      serviceName:
+        description: Service where ip is routed to
+        type: string
+  ip.ServiceIp:
+    description: Your IP linked to service
+    type: object
+    required:
+    - ip
+    - canBeTerminated
+    - type
+    properties:
+      canBeTerminated:
+        type: boolean
+        readOnly: true
+      country:
+        type: string
+        readOnly: true
+        enum:
+        - ac
+        - ad
+        - ae
+        - af
+        - ag
+        - ai
+        - al
+        - am
+        - an
+        - ao
+        - aq
+        - ar
+        - as
+        - at
+        - au
+        - aw
+        - ax
+        - az
+        - ba
+        - bb
+        - bd
+        - be
+        - bf
+        - bg
+        - bh
+        - bi
+        - bj
+        - bl
+        - bm
+        - bn
+        - bo
+        - bq
+        - br
+        - bs
+        - bt
+        - bv
+        - bw
+        - by
+        - bz
+        - ca
+        - cc
+        - cd
+        - cf
+        - cg
+        - ch
+        - ci
+        - ck
+        - cl
+        - cm
+        - cn
+        - co
+        - cr
+        - cs
+        - cu
+        - cv
+        - cw
+        - cx
+        - cy
+        - cz
+        - de
+        - dj
+        - dk
+        - dm
+        - do
+        - dz
+        - ec
+        - ee
+        - eg
+        - eh
+        - er
+        - es
+        - et
+        - fc
+        - fd
+        - fi
+        - fj
+        - fk
+        - fm
+        - fo
+        - fr
+        - fx
+        - ga
+        - gb
+        - gd
+        - ge
+        - gf
+        - gg
+        - gh
+        - gi
+        - gl
+        - gm
+        - gn
+        - gp
+        - gq
+        - gr
+        - gs
+        - gt
+        - gu
+        - gw
+        - gy
+        - hk
+        - hm
+        - hn
+        - hr
+        - ht
+        - hu
+        - id
+        - ie
+        - il
+        - im
+        - in
+        - io
+        - iq
+        - ir
+        - is
+        - it
+        - je
+        - jm
+        - jo
+        - jp
+        - ke
+        - kg
+        - kh
+        - ki
+        - km
+        - kn
+        - kp
+        - kr
+        - kw
+        - ky
+        - kz
+        - la
+        - lb
+        - lc
+        - li
+        - lk
+        - lr
+        - ls
+        - lt
+        - lu
+        - lv
+        - ly
+        - ma
+        - mc
+        - md
+        - me
+        - mf
+        - mg
+        - mh
+        - mk
+        - ml
+        - mm
+        - mn
+        - mo
+        - mp
+        - mq
+        - mr
+        - ms
+        - mt
+        - mu
+        - mv
+        - mw
+        - mx
+        - my
+        - mz
+        - na
+        - nc
+        - ne
+        - nf
+        - ng
+        - ni
+        - nl
+        - "no"
+        - np
+        - nr
+        - nu
+        - nz
+        - om
+        - pa
+        - pe
+        - pf
+        - pg
+        - ph
+        - pk
+        - pl
+        - pm
+        - pn
+        - pr
+        - ps
+        - pt
+        - pw
+        - py
+        - qa
+        - qc
+        - re
+        - ro
+        - rs
+        - ru
+        - rw
+        - sa
+        - sb
+        - sc
+        - sd
+        - se
+        - sg
+        - sh
+        - si
+        - sj
+        - sk
+        - sl
+        - sm
+        - sn
+        - so
+        - sr
+        - ss
+        - st
+        - sv
+        - sx
+        - sy
+        - sz
+        - tc
+        - td
+        - tf
+        - tg
+        - th
+        - tj
+        - tk
+        - tl
+        - tm
+        - tn
+        - to
+        - tp
+        - tr
+        - tt
+        - tv
+        - tw
+        - tz
+        - ua
+        - ug
+        - uk
+        - um
+        - us
+        - uy
+        - uz
+        - va
+        - vc
+        - ve
+        - vg
+        - vi
+        - vn
+        - vu
+        - we
+        - wf
+        - ws
+        - ye
+        - yt
+        - yu
+        - za
+        - zm
+        - zw
+      description:
+        description: Custom description on your ip
+        type: string
+      ip:
+        type: string
+        readOnly: true
+      organisationId:
+        description: IP block organisation Id
+        type: string
+        readOnly: true
+      routedTo:
+        $ref: '#/definitions/ip.RoutedTo'
+      type:
+        type: string
+        readOnly: true
+        enum:
+        - cdn
+        - cloud
+        - dedicated
+        - failover
+        - hosted_ssl
+        - housing
+        - loadBalancing
+        - mail
+        - overthebox
+        - pcc
+        - pci
+        - private
+        - vpn
+        - vps
+        - vrack
+        - xdsl
+  ip.SpamIp:
+    description: Your IP spam stats
+    type: object
+    required:
+    - time
+    - date
+    - ipSpamming
+    - state
+    properties:
+      date:
+        description: Last date the ip was blocked
+        type: string
+        format: date-time
+        readOnly: true
+      ipSpamming:
+        description: IP address which is sending spam
+        type: string
+        readOnly: true
+      state:
+        description: Current state of the ip
+        type: string
+        readOnly: true
+        enum:
+        - blockedForSpam
+        - unblocked
+        - unblocking
+      time:
+        description: Time (in seconds) while the IP will be blocked
+        type: integer
+        format: int64
+        readOnly: true
+  ip.SpamStats:
+    description: Spam statistics about an IP address
+    type: object
+    properties:
+      averageSpamscore:
+        description: Average spam score.
+        type: integer
+        format: int64
+      detectedSpams:
+        description: Detailed list of the spams
+        type: array
+        items:
+          $ref: '#/definitions/ip.SpamTarget'
+      numberOfSpams:
+        description: Number of spams sent
+        type: integer
+        format: int64
+      timestamp:
+        description: Time when the IP address was blocked
+        type: integer
+        format: int64
+      total:
+        description: Number of emails sent
+        type: integer
+        format: int64
+  ip.SpamTarget:
+    description: Spam's target information
+    type: object
+    properties:
+      date:
+        description: Timestamp when the email was sent
+        type: integer
+        format: int64
+      destinationIp:
+        description: IP address of the target
+        type: string
+      messageId:
+        description: The message-id of the email
+        type: string
+      spamscore:
+        description: Spam score for the email
+        type: integer
+        format: int64
+  iplb.Task.Task:
+    description: IP Load Balancing Operations
+    type: object
+    required:
+    - creationDate
+    - status
+    - progress
+    - action
+    - id
+    - zones
+    properties:
+      action:
+        description: Operation type
+        type: string
+        readOnly: true
+        enum:
+        - deleteIplb
+        - deployIplb
+        - install
+        - installIplb
+        - installZone
+        - orderFreeCertificate
+        - orderPaidCertificate
+        - orderSsl
+        - refreshIplb
+        - releaseIplb
+        - releaseIplbZone
+        - reopenIplb
+        - suspendIplb
+        - suspendZone
+        - switchToIplbNextGenerationApi
+        - vrackAttach
+        - vrackDetach
+      creationDate:
+        description: Creation date of your operation
+        type: string
+        format: date-time
+        readOnly: true
+      doneDate:
+        description: Done date of your operation
+        type: string
+        format: date-time
+        readOnly: true
+      id:
+        description: Id of the operation
+        type: integer
+        format: int64
+        readOnly: true
+      progress:
+        description: Operation progress percentage
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        description: Current status of your operation
+        type: string
+        readOnly: true
+        enum:
+        - blocked
+        - cancelled
+        - doing
+        - done
+        - error
+        - todo
+      zones:
+        description: Zone of your Load Balancer which are updated by current Task
+        type: array
+        readOnly: true
+        items:
+          type: string
+  service.RenewType:
+    description: Map a possible renew for a specific service
+    type: object
+    properties:
+      automatic:
+        description: The service is automatically renewed
+        type: boolean
+      deleteAtExpiration:
+        description: The service will be deleted at expiration
+        type: boolean
+      forced:
+        description: The service forced to be renewed
+        type: boolean
+      manualPayment:
+        description: The service needs to be manually renewed and paid
+        type: boolean
+      period:
+        description: period of renew in month
+        type: integer
+        format: int64
+  services.NonExpiringService:
+    description: Details about a non-expiring Service
+    type: object
+    required:
+    - contactAdmin
+    - contactBilling
+    - domain
+    - status
+    - contactTech
+    - serviceId
+    - creation
+    properties:
+      contactAdmin:
+        type: string
+        readOnly: true
+      contactBilling:
+        type: string
+        readOnly: true
+      contactTech:
+        type: string
+        readOnly: true
+      creation:
+        type: string
+        format: date
+        readOnly: true
+      domain:
+        type: string
+        readOnly: true
+      serviceId:
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        type: string
+        readOnly: true
+        enum:
+        - expired
+        - inCreation
+        - ok
+        - unPaid
+  services.Service:
+    description: Details about a Service
+    type: object
+    required:
+    - status
+    - canDeleteAtExpiration
+    - domain
+    - contactTech
+    - expiration
+    - creation
+    - contactAdmin
+    - renewalType
+    - contactBilling
+    - serviceId
+    properties:
+      canDeleteAtExpiration:
+        description: Indicates that the service can be set up to be deleted at expiration
+        type: boolean
+        readOnly: true
+      contactAdmin:
+        type: string
+        readOnly: true
+      contactBilling:
+        type: string
+        readOnly: true
+      contactTech:
+        type: string
+        readOnly: true
+      creation:
+        type: string
+        format: date
+        readOnly: true
+      domain:
+        type: string
+        readOnly: true
+      engagedUpTo:
+        type: string
+        format: date
+        readOnly: true
+      expiration:
+        type: string
+        format: date
+        readOnly: true
+      possibleRenewPeriod:
+        description: All the possible renew period of your service in month
+        type: array
+        readOnly: true
+        items:
+          type: integer
+          format: int64
+      renew:
+        $ref: '#/definitions/service.RenewType'
+      renewalType:
+        type: string
+        readOnly: true
+        enum:
+        - automaticForcedProduct
+        - automaticV2012
+        - automaticV2014
+        - automaticV2016
+        - manual
+        - oneShot
+        - option
+      serviceId:
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        type: string
+        readOnly: true
+        enum:
+        - expired
+        - inCreation
+        - ok
+        - unPaid
+responses:
+  OVH.Error:
+    description: Unexpected error
+    schema:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+        httpCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+  ip.Antiphishing:
+    description: description of 'ip.Antiphishing' response
+    schema:
+      $ref: '#/definitions/ip.Antiphishing'
+  ip.ArpBlockedIp:
+    description: description of 'ip.ArpBlockedIp' response
+    schema:
+      $ref: '#/definitions/ip.ArpBlockedIp'
+  ip.BlockedIp:
+    description: description of 'ip.BlockedIp' response
+    schema:
+      $ref: '#/definitions/ip.BlockedIp'
+  ip.Destinations:
+    description: description of 'ip.Destinations' response
+    schema:
+      $ref: '#/definitions/ip.Destinations'
+  ip.FirewallIp:
+    description: description of 'ip.FirewallIp' response
+    schema:
+      $ref: '#/definitions/ip.FirewallIp'
+  ip.FirewallNetworkRule:
+    description: description of 'ip.FirewallNetworkRule' response
+    schema:
+      $ref: '#/definitions/ip.FirewallNetworkRule'
+  ip.GameMitigation:
+    description: description of 'ip.GameMitigation' response
+    schema:
+      $ref: '#/definitions/ip.GameMitigation'
+  ip.GameMitigationRule:
+    description: description of 'ip.GameMitigationRule' response
+    schema:
+      $ref: '#/definitions/ip.GameMitigationRule'
+  ip.Ip:
+    description: description of 'ip.Ip' response
+    schema:
+      $ref: '#/definitions/ip.Ip'
+  ip.IpMigrationToken:
+    description: description of 'ip.IpMigrationToken' response
+    schema:
+      $ref: '#/definitions/ip.IpMigrationToken'
+  ip.IpTask:
+    description: description of 'ip.IpTask' response
+    schema:
+      $ref: '#/definitions/ip.IpTask'
+  ip.LoadBalancingBackendIp:
+    description: description of 'ip.LoadBalancingBackendIp' response
+    schema:
+      $ref: '#/definitions/ip.LoadBalancingBackendIp'
+  ip.LoadBalancingIp:
+    description: description of 'ip.LoadBalancingIp' response
+    schema:
+      $ref: '#/definitions/ip.LoadBalancingIp'
+  ip.LoadBalancingIp.LoadBalancingPort:
+    description: description of 'ip.LoadBalancingIp.LoadBalancingPort' response
+    schema:
+      $ref: '#/definitions/ip.LoadBalancingIp.LoadBalancingPort'
+  ip.LoadBalancingTask:
+    description: description of 'ip.LoadBalancingTask' response
+    schema:
+      $ref: '#/definitions/ip.LoadBalancingTask'
+  ip.MitigationIp:
+    description: description of 'ip.MitigationIp' response
+    schema:
+      $ref: '#/definitions/ip.MitigationIp'
+  ip.MitigationProfile:
+    description: description of 'ip.MitigationProfile' response
+    schema:
+      $ref: '#/definitions/ip.MitigationProfile'
+  ip.ReverseDelegation:
+    description: description of 'ip.ReverseDelegation' response
+    schema:
+      $ref: '#/definitions/ip.ReverseDelegation'
+  ip.ReverseIp:
+    description: description of 'ip.ReverseIp' response
+    schema:
+      $ref: '#/definitions/ip.ReverseIp'
+  ip.RipeInfos:
+    description: description of 'ip.RipeInfos' response
+    schema:
+      $ref: '#/definitions/ip.RipeInfos'
+  ip.ServiceIp:
+    description: description of 'ip.ServiceIp' response
+    schema:
+      $ref: '#/definitions/ip.ServiceIp'
+  ip.SpamIp:
+    description: description of 'ip.SpamIp' response
+    schema:
+      $ref: '#/definitions/ip.SpamIp'
+  iplb.Task.Task:
+    description: description of 'iplb.Task.Task' response
+    schema:
+      $ref: '#/definitions/iplb.Task.Task'
+  services.NonExpiringService:
+    description: description of 'services.NonExpiringService' response
+    schema:
+      $ref: '#/definitions/services.NonExpiringService'
+  services.Service:
+    description: description of 'services.Service' response
+    schema:
+      $ref: '#/definitions/services.Service'

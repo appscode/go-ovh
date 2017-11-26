@@ -1,0 +1,1300 @@
+swagger: "2.0"
+info:
+  title: OVH API - EU
+  description: Build your own OVH world.
+  version: 1.0.0
+  contact:
+    name: OVH API EU
+    url: https://eu.api.ovh.com/
+    email: api-subscribe@ml.ovh.net
+  license:
+    name: © OVH SAS
+    url: https://eu.api.ovh.com/
+host: eu.api.ovh.com
+basePath: /1.0
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+externalDocs:
+  url: https://eu.api.ovh.com/
+  description: Online version
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    name: X-Ovh-Consumer
+    in: header
+paths:
+  /vrack:
+    get:
+      summary: List available services
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Vrack'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vrackPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/vrack.Vrack'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/allowedServices:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List all services allowed in this vrack
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.AllowedServices'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/cloudProject:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: vrack for publicCloud project
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: add a publicCloud project to this vrack
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vrackCloudProjectPost
+        in: body
+        schema:
+          type: object
+          required:
+          - project
+          properties:
+            project:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/cloudProject/{project}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: project
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.CloudProject'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: remove this publicCloud project from this vrack
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedCloud:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: vrack dedicated cloud (VmNetwork)
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: add a dedicatedCloud (VmNetwork) to this vrack
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vrackDedicatedCloudPost
+        in: body
+        schema:
+          type: object
+          required:
+          - dedicatedCloud
+          properties:
+            dedicatedCloud:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedCloud/{dedicatedCloud}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: dedicatedCloud
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.DedicatedCloud'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: remove this dedicatedCloud (VmNetwork) from this vrack
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedCloudDatacenter:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: vrack dedicated cloud datacenter
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedCloudDatacenter/{datacenter}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: datacenter
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.PccDatacenter'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedCloudDatacenter/{datacenter}/allowedVrack:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: datacenter
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Vracks allowed for your dedicatedCloud datacenter
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedCloudDatacenter/{datacenter}/move:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: datacenter
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Move your dedicatedCloud datacenter from a Vrack to another
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vrackDedicatedCloudDatacenterMovePost
+        in: body
+        schema:
+          type: object
+          required:
+          - targetServiceName
+          properties:
+            targetServiceName:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedConnect:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: vrack dedicated connect
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedConnect/{name}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: name
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.DedicatedConnect'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vrackDedicatedConnectPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/vrack.DedicatedConnect'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedServer:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: vrack for dedicated server
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: add a dedicated server to this vrack
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vrackDedicatedServerPost
+        in: body
+        schema:
+          type: object
+          required:
+          - dedicatedServer
+          properties:
+            dedicatedServer:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedServer/{dedicatedServer}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: dedicatedServer
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.DedicatedServer'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: remove this server from this vrack
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedServer/{dedicatedServer}/mrtg:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: dedicatedServer
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Retrieve vrack traffic graph values
+      description: DEPRECATED (see '/dedicated/server/{serviceName}/networkInterfaceController')
+        - authentication required
+      parameters:
+      - name: period
+        in: query
+        required: true
+        type: string
+        enum:
+        - daily
+        - hourly
+        - monthly
+        - weekly
+        - yearly
+      - name: type
+        in: query
+        required: true
+        type: string
+        enum:
+        - errors:download
+        - errors:upload
+        - packets:download
+        - packets:upload
+        - traffic:download
+        - traffic:upload
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/dedicated.Server.MrtgTimestampValue'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedServerInterface:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: vrack for dedicated server interface
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: add a dedicated server interface to this vrack
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vrackDedicatedServerInterfacePost
+        in: body
+        schema:
+          type: object
+          required:
+          - dedicatedServerInterface
+          properties:
+            dedicatedServerInterface:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedServerInterface/{dedicatedServerInterface}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: dedicatedServerInterface
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.DedicatedServerInterface'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: remove this server interface from this vrack
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/dedicatedServerInterfaceDetails:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Details for all dedicated server interfaces in this vrack
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/vrack.AllowedDedicatedServerInterfaces'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/ip:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: vrack for IP blocks
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: add an IP block to this vrack
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vrackIpPost
+        in: body
+        schema:
+          type: object
+          required:
+          - block
+          properties:
+            block:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/ip/{ip}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Ip'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: remove this IP block from this vrack
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/ip/{ip}/announceInZone:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: ip
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Announce IP to zone for vrack
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vrackIpAnnounceInZonePost
+        in: body
+        schema:
+          type: object
+          required:
+          - zone
+          properties:
+            zone:
+              type: string
+              enum:
+              - bhs
+              - gra
+              - rbx
+              - sbg
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/ip/{ip}/availableZone:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: ip
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Zone available to announce your block
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+              - bhs
+              - gra
+              - rbx
+              - sbg
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/ipLoadbalancing:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: vrack for ipLoadbalancing
+      description: BETA - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: add an ipLoadbalancing to this vrack
+      description: BETA - authentication required
+      parameters:
+      - name: vrackIplbPost
+        in: body
+        schema:
+          type: object
+          required:
+          - ipLoadbalancing
+          properties:
+            ipLoadbalancing:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/ipLoadbalancing/{ipLoadbalancing}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: ipLoadbalancing
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Iplb'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: remove this ipLoadbalancing from this vrack
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/legacyVrack:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: vrack for legacy vrack
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: add a legacy vrack (vrackXXXX) to this vrack (pn-XXXX)
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vrackLegacyVrackPost
+        in: body
+        schema:
+          type: object
+          required:
+          - legacyVrack
+          properties:
+            legacyVrack:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/legacyVrack/{legacyVrack}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: legacyVrack
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.LegacyVrack'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: remove this legacy vrack (vrackXXXX) from this vrack (pn-XXXX)
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/serviceInfos:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/services.NonExpiringService'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/task:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: vrack tasks
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vrack/{serviceName}/task/{taskId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: taskId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vrack.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+definitions:
+  dedicated.Server.MrtgTimestampValue:
+    description: A timestamp associated to a value
+    type: object
+    properties:
+      timestamp:
+        type: integer
+        format: int64
+      value:
+        type: object
+        properties:
+          unit:
+            type: string
+          value:
+            type: number
+            format: double
+  services.NonExpiringService:
+    description: Details about a non-expiring Service
+    type: object
+    required:
+    - contactBilling
+    - domain
+    - status
+    - contactTech
+    - serviceId
+    - creation
+    - contactAdmin
+    properties:
+      contactAdmin:
+        type: string
+        readOnly: true
+      contactBilling:
+        type: string
+        readOnly: true
+      contactTech:
+        type: string
+        readOnly: true
+      creation:
+        type: string
+        format: date
+        readOnly: true
+      domain:
+        type: string
+        readOnly: true
+      serviceId:
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        type: string
+        readOnly: true
+        enum:
+        - expired
+        - inCreation
+        - ok
+        - unPaid
+  vrack.AllowedDedicatedServerInterfaces:
+    description: A structure giving all dedicated server interfaces allowed for this
+      vrack
+    type: object
+    properties:
+      dedicatedServer:
+        description: the name of dedicatedServer
+        type: string
+      dedicatedServerInterface:
+        description: the unique identifier of dedicatedServerInterface
+        type: string
+      name:
+        description: the name of dedicatedServerInterface
+        type: string
+  vrack.AllowedServices:
+    description: A structure given all service allowed for this vrack
+    type: object
+    properties:
+      cloudProject:
+        description: list of publicCloud projects allowed to be connected to vrack
+        type: array
+        items:
+          type: string
+      dedicatedCloud:
+        description: list of dedicated cloud allowed to be connected to vrack
+        type: array
+        items:
+          type: string
+      dedicatedCloudDatacenter:
+        description: list of dedicated cloud datacenters allowed to be connected to
+          vrack
+        type: array
+        items:
+          type: string
+      dedicatedConnect:
+        description: list of dedicated connect links allowed to be connected to vrack
+        type: array
+        items:
+          type: string
+      dedicatedServer:
+        description: list of dedicated servers allowed to be connected to vrack
+        type: array
+        items:
+          type: string
+      dedicatedServerInterface:
+        description: list of dedicated server interfaces allowed to be connected to
+          vrack
+        type: array
+        items:
+          $ref: '#/definitions/vrack.AllowedDedicatedServerInterfaces'
+      ip:
+        description: list of blocks allowed to be connected to vrack
+        type: array
+        items:
+          type: string
+      iplb:
+        description: list of ipLoadbalancing allowed to be connected to vrack
+        type: array
+        items:
+          type: string
+      legacyVrack:
+        description: list of legacy vrack (1.0) allowed to be connected to vrack
+        type: array
+        items:
+          type: string
+  vrack.CloudProject:
+    description: PublicCloud project in vrack
+    type: object
+    required:
+    - vrack
+    - project
+    properties:
+      project:
+        description: publicCloud project
+        type: string
+        readOnly: true
+      vrack:
+        description: vrack name
+        type: string
+        readOnly: true
+  vrack.DedicatedCloud:
+    description: vrack dedicated cloud interface
+    type: object
+    required:
+    - vrack
+    - dedicatedCloud
+    properties:
+      dedicatedCloud:
+        description: your dedicated cloud service
+        type: string
+        readOnly: true
+      vlanId:
+        description: Dedicated cloud vlanId used
+        type: integer
+        format: int64
+        readOnly: true
+      vrack:
+        description: vrack name
+        type: string
+        readOnly: true
+  vrack.DedicatedConnect:
+    description: vrack dedicated connect interface
+    type: object
+    properties:
+      name:
+        description: A name for your dedicatedConnect link
+        type: string
+  vrack.DedicatedServer:
+    description: vrack dedicated server interfaces
+    type: object
+    required:
+    - vrack
+    - dedicatedServer
+    properties:
+      dedicatedServer:
+        description: Dedicated Server
+        type: string
+        readOnly: true
+      vrack:
+        description: vrack name
+        type: string
+        readOnly: true
+  vrack.DedicatedServerInterface:
+    description: vrack dedicated server interfaces
+    type: object
+    required:
+    - vrack
+    - dedicatedServerInterface
+    properties:
+      dedicatedServerInterface:
+        description: Dedicated Server Interface
+        type: string
+        readOnly: true
+      vrack:
+        description: vrack name
+        type: string
+        readOnly: true
+  vrack.Ip:
+    description: IP block in vrack
+    type: object
+    required:
+    - ip
+    properties:
+      gateway:
+        description: Your gateway
+        type: string
+        readOnly: true
+      ip:
+        description: Your IP block
+        type: string
+        readOnly: true
+      zone:
+        description: Where you want your block announced on the network
+        type: string
+        readOnly: true
+        enum:
+        - bhs
+        - gra
+        - rbx
+        - sbg
+  vrack.Iplb:
+    description: ipLoadbalancing in vrack
+    type: object
+    required:
+    - vrack
+    - iplb
+    properties:
+      iplb:
+        description: Your ipLoadbalancing
+        type: string
+        readOnly: true
+      vrack:
+        description: vrack name
+        type: string
+        readOnly: true
+  vrack.LegacyVrack:
+    description: interface between legacy vrack (vrackXXXX) and vrack (pn-XXXX)
+    type: object
+    required:
+    - vlanId
+    - legacyVrack
+    properties:
+      legacyVrack:
+        description: your legacy vrack service
+        type: string
+        readOnly: true
+      vlanId:
+        description: vlan to set on legacy vrack equipments
+        type: integer
+        format: int64
+        readOnly: true
+  vrack.PccDatacenter:
+    description: vrack datacenter interface
+    type: object
+    required:
+    - dedicatedCloud
+    - vrack
+    - datacenter
+    properties:
+      datacenter:
+        description: Your dedicatedCloud datacenter name
+        type: string
+        readOnly: true
+      dedicatedCloud:
+        description: Your dedicatedCloud name
+        type: string
+        readOnly: true
+      vrack:
+        description: vrack name
+        type: string
+        readOnly: true
+  vrack.Task:
+    description: vrack tasks
+    type: object
+    required:
+    - id
+    - function
+    - status
+    properties:
+      function:
+        type: string
+        readOnly: true
+      id:
+        type: integer
+        format: int64
+        readOnly: true
+      lastUpdate:
+        type: string
+        format: date-time
+        readOnly: true
+      orderId:
+        type: integer
+        format: int64
+        readOnly: true
+      serviceName:
+        type: string
+        readOnly: true
+      status:
+        type: string
+        readOnly: true
+      targetDomain:
+        type: string
+        readOnly: true
+      todoDate:
+        type: string
+        format: date-time
+        readOnly: true
+  vrack.Vrack:
+    description: vrack
+    type: object
+    properties:
+      description:
+        description: yourvrackdescription
+        type: string
+      name:
+        description: yourvrackname
+        type: string
+responses:
+  OVH.Error:
+    description: Unexpected error
+    schema:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+        httpCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+  services.NonExpiringService:
+    description: description of 'services.NonExpiringService' response
+    schema:
+      $ref: '#/definitions/services.NonExpiringService'
+  vrack.AllowedServices:
+    description: description of 'vrack.AllowedServices' response
+    schema:
+      $ref: '#/definitions/vrack.AllowedServices'
+  vrack.CloudProject:
+    description: description of 'vrack.CloudProject' response
+    schema:
+      $ref: '#/definitions/vrack.CloudProject'
+  vrack.DedicatedCloud:
+    description: description of 'vrack.DedicatedCloud' response
+    schema:
+      $ref: '#/definitions/vrack.DedicatedCloud'
+  vrack.DedicatedConnect:
+    description: description of 'vrack.DedicatedConnect' response
+    schema:
+      $ref: '#/definitions/vrack.DedicatedConnect'
+  vrack.DedicatedServer:
+    description: description of 'vrack.DedicatedServer' response
+    schema:
+      $ref: '#/definitions/vrack.DedicatedServer'
+  vrack.DedicatedServerInterface:
+    description: description of 'vrack.DedicatedServerInterface' response
+    schema:
+      $ref: '#/definitions/vrack.DedicatedServerInterface'
+  vrack.Ip:
+    description: description of 'vrack.Ip' response
+    schema:
+      $ref: '#/definitions/vrack.Ip'
+  vrack.Iplb:
+    description: description of 'vrack.Iplb' response
+    schema:
+      $ref: '#/definitions/vrack.Iplb'
+  vrack.LegacyVrack:
+    description: description of 'vrack.LegacyVrack' response
+    schema:
+      $ref: '#/definitions/vrack.LegacyVrack'
+  vrack.PccDatacenter:
+    description: description of 'vrack.PccDatacenter' response
+    schema:
+      $ref: '#/definitions/vrack.PccDatacenter'
+  vrack.Task:
+    description: description of 'vrack.Task' response
+    schema:
+      $ref: '#/definitions/vrack.Task'
+  vrack.Vrack:
+    description: description of 'vrack.Vrack' response
+    schema:
+      $ref: '#/definitions/vrack.Vrack'

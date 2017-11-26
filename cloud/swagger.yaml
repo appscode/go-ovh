@@ -21,6 +21,11 @@ produces:
 externalDocs:
   url: https://eu.api.ovh.com/
   description: Online version
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    name: X-Ovh-Consumer
+    in: header
 paths:
   /cloud:
     get:
@@ -35,6 +40,8 @@ paths:
               type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca:
     parameters:
     - name: serviceName
@@ -54,6 +61,8 @@ paths:
               type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}:
     parameters:
     - name: serviceName
@@ -73,6 +82,8 @@ paths:
           $ref: '#/responses/pca.Account'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     put:
       summary: Alter this object properties
       description: DEPRECATED (see '/cloud/project/{serviceName}/storage') - authentication
@@ -88,6 +99,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/billing:
     parameters:
     - name: serviceName
@@ -125,6 +138,8 @@ paths:
               format: int64
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/billing/{billingId}:
     parameters:
     - name: serviceName
@@ -149,6 +164,8 @@ paths:
           $ref: '#/responses/pca.Billing'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/serviceInfos:
     parameters:
     - name: serviceName
@@ -168,6 +185,8 @@ paths:
           $ref: '#/responses/services.Service'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     put:
       summary: Alter this object properties
       description: DEPRECATED (see '/cloud/project/{serviceName}/storage') - authentication
@@ -183,6 +202,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/sessions:
     parameters:
     - name: serviceName
@@ -210,6 +231,8 @@ paths:
               type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/sessions/{sessionId}:
     parameters:
     - name: serviceName
@@ -233,6 +256,8 @@ paths:
           $ref: '#/responses/pca.Session'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     put:
       summary: Alter this object properties
       description: DEPRECATED (see '/cloud/project/{serviceName}/storage') - authentication
@@ -248,6 +273,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Create a delete task for all files in session
       description: DEPRECATED (see '/cloud/project/{serviceName}/storage') - authentication
@@ -257,6 +284,8 @@ paths:
           $ref: '#/responses/pca.Task'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/sessions/{sessionId}/files:
     parameters:
     - name: serviceName
@@ -288,6 +317,8 @@ paths:
               type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/sessions/{sessionId}/files/{fileId}:
     parameters:
     - name: serviceName
@@ -315,6 +346,8 @@ paths:
           $ref: '#/responses/pca.File'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/sessions/{sessionId}/restore:
     parameters:
     - name: serviceName
@@ -338,6 +371,8 @@ paths:
           $ref: '#/responses/pca.Task'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/tasks:
     parameters:
     - name: serviceName
@@ -400,6 +435,8 @@ paths:
               type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create a cloud archives task
       description: DEPRECATED (see '/cloud/project/{serviceName}/storage') - authentication
@@ -430,6 +467,8 @@ paths:
           $ref: '#/responses/pca.Task'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/tasks/{taskId}:
     parameters:
     - name: serviceName
@@ -453,6 +492,8 @@ paths:
           $ref: '#/responses/pca.Task'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/{serviceName}/pca/{pcaServiceName}/usage:
     parameters:
     - name: serviceName
@@ -475,6 +516,8 @@ paths:
             format: int64
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/createProject:
     post:
       summary: Start a new cloud project
@@ -497,6 +540,8 @@ paths:
           $ref: '#/responses/cloud.Project.NewProject'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/createProjectInfo:
     get:
       summary: Get information about a cloud project creation
@@ -506,6 +551,8 @@ paths:
           $ref: '#/responses/cloud.Project.NewProjectInfo'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/price:
     get:
       summary: Get services prices
@@ -522,6 +569,8 @@ paths:
           $ref: '#/responses/cloud.Price'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project:
     get:
       summary: List available services
@@ -535,6 +584,8 @@ paths:
               type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}:
     parameters:
     - name: serviceName
@@ -549,6 +600,8 @@ paths:
           $ref: '#/responses/cloud.Project'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     put:
       summary: Alter this object properties
       description: PRODUCTION - authentication required
@@ -563,6 +616,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/acl:
     parameters:
     - name: serviceName
@@ -588,6 +643,8 @@ paths:
               type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create new ACL
       description: PRODUCTION - authentication required
@@ -612,6 +669,8 @@ paths:
           $ref: '#/responses/cloud.Acl'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/acl/{accountId}:
     parameters:
     - name: serviceName
@@ -630,6 +689,8 @@ paths:
           $ref: '#/responses/cloud.Acl'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete ACL
       description: PRODUCTION - authentication required
@@ -638,6 +699,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/alerting:
     parameters:
     - name: serviceName
@@ -656,6 +719,8 @@ paths:
               type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Add new alert
       description: PRODUCTION - authentication required
@@ -691,6 +756,8 @@ paths:
           $ref: '#/responses/cloud.Alerting'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/alerting/{id}:
     parameters:
     - name: serviceName
@@ -709,6 +776,8 @@ paths:
           $ref: '#/responses/cloud.Alerting'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     put:
       summary: Alter this object properties
       description: PRODUCTION - authentication required
@@ -723,6 +792,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete alerting
       description: PRODUCTION - authentication required
@@ -731,6 +802,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/alerting/{id}/alert:
     parameters:
     - name: serviceName
@@ -754,6 +827,8 @@ paths:
               format: int64
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/alerting/{id}/alert/{alertId}:
     parameters:
     - name: serviceName
@@ -777,6 +852,8 @@ paths:
           $ref: '#/responses/cloud.AlertingAlert'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/bill:
     parameters:
     - name: serviceName
@@ -806,6 +883,8 @@ paths:
               $ref: '#/definitions/cloud.Project.Bill'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/cancel:
     parameters:
     - name: serviceName
@@ -820,6 +899,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/changeContact:
     parameters:
     - name: serviceName
@@ -851,6 +932,8 @@ paths:
               format: int64
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/confirmTermination:
     parameters:
     - name: serviceName
@@ -890,6 +973,8 @@ paths:
             type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/consumption:
     parameters:
     - name: serviceName
@@ -915,6 +1000,8 @@ paths:
           $ref: '#/responses/cloud.Project.ProjectUsage'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/credit:
     parameters:
     - name: serviceName
@@ -934,6 +1021,8 @@ paths:
               format: int64
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Add credit to your project
       description: PRODUCTION - authentication required
@@ -952,6 +1041,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/credit/{id}:
     parameters:
     - name: serviceName
@@ -971,6 +1062,8 @@ paths:
           $ref: '#/responses/cloud.Credit'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/flavor:
     parameters:
     - name: serviceName
@@ -993,6 +1086,8 @@ paths:
               $ref: '#/definitions/cloud.Flavor.Flavor'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/flavor/{flavorId}:
     parameters:
     - name: flavorId
@@ -1011,6 +1106,8 @@ paths:
           $ref: '#/responses/cloud.Flavor.Flavor'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/forecast:
     parameters:
     - name: serviceName
@@ -1031,6 +1128,8 @@ paths:
           $ref: '#/responses/cloud.Forecast.ProjectForecast'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/image:
     parameters:
     - name: serviceName
@@ -1063,6 +1162,8 @@ paths:
               $ref: '#/definitions/cloud.Image.Image'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/image/{imageId}:
     parameters:
     - name: imageId
@@ -1081,6 +1182,8 @@ paths:
           $ref: '#/responses/cloud.Image.Image'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance:
     parameters:
     - name: serviceName
@@ -1103,6 +1206,8 @@ paths:
               $ref: '#/definitions/cloud.Instance.Instance'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create a new instance
       description: PRODUCTION - authentication required
@@ -1144,6 +1249,8 @@ paths:
           $ref: '#/responses/cloud.Instance.InstanceDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}:
     parameters:
     - name: instanceId
@@ -1162,6 +1269,8 @@ paths:
           $ref: '#/responses/cloud.Instance.InstanceDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     put:
       summary: Alter an instance
       description: PRODUCTION - authentication required
@@ -1180,6 +1289,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete an instance
       description: PRODUCTION - authentication required
@@ -1188,6 +1299,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/activeMonthlyBilling:
     parameters:
     - name: instanceId
@@ -1206,6 +1319,8 @@ paths:
           $ref: '#/responses/cloud.Instance.InstanceDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/applicationAccess:
     parameters:
     - name: instanceId
@@ -1224,6 +1339,8 @@ paths:
           $ref: '#/responses/cloud.Instance.ApplicationAccess'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/interface:
     parameters:
     - name: instanceId
@@ -1246,6 +1363,8 @@ paths:
               $ref: '#/definitions/cloud.InstanceInterface.Interface'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create interface on an instance and attached it to a network
       description: PRODUCTION - authentication required
@@ -1266,6 +1385,8 @@ paths:
           $ref: '#/responses/cloud.InstanceInterface.Interface'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/interface/{interfaceId}:
     parameters:
     - name: instanceId
@@ -1288,6 +1409,8 @@ paths:
           $ref: '#/responses/cloud.InstanceInterface.Interface'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete an interface
       description: PRODUCTION - authentication required
@@ -1296,6 +1419,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/monitoring:
     parameters:
     - name: instanceId
@@ -1336,6 +1461,8 @@ paths:
           $ref: '#/responses/cloud.Instance.InstanceMetrics'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/reboot:
     parameters:
     - name: instanceId
@@ -1367,6 +1494,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/reinstall:
     parameters:
     - name: instanceId
@@ -1395,6 +1524,8 @@ paths:
           $ref: '#/responses/cloud.Instance.InstanceDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/rescueMode:
     parameters:
     - name: instanceId
@@ -1426,6 +1557,8 @@ paths:
           $ref: '#/responses/cloud.Instance.RescueAdminPassword'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/resize:
     parameters:
     - name: instanceId
@@ -1454,6 +1587,8 @@ paths:
           $ref: '#/responses/cloud.Instance.InstanceDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/resume:
     parameters:
     - name: instanceId
@@ -1472,6 +1607,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/snapshot:
     parameters:
     - name: instanceId
@@ -1500,6 +1637,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/{instanceId}/vnc:
     parameters:
     - name: instanceId
@@ -1518,6 +1657,8 @@ paths:
           $ref: '#/responses/cloud.Instance.InstanceVnc'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/bulk:
     parameters:
     - name: serviceName
@@ -1573,6 +1714,8 @@ paths:
               $ref: '#/definitions/cloud.Instance.Instance'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/group:
     parameters:
     - name: serviceName
@@ -1595,6 +1738,8 @@ paths:
               $ref: '#/definitions/cloud.Instancegroup.InstanceGroup'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create a group
       description: PRODUCTION - authentication required
@@ -1622,6 +1767,8 @@ paths:
           $ref: '#/responses/cloud.Instancegroup.InstanceGroup'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/instance/group/{groupId}:
     parameters:
     - name: groupId
@@ -1644,6 +1791,8 @@ paths:
           $ref: '#/responses/cloud.Instancegroup.InstanceGroup'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete a group
       description: PRODUCTION - authentication required
@@ -1652,6 +1801,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/ip:
     parameters:
     - name: serviceName
@@ -1670,6 +1821,8 @@ paths:
               $ref: '#/definitions/cloud.Ip.CloudIp'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/ip/failover:
     parameters:
     - name: serviceName
@@ -1688,6 +1841,8 @@ paths:
               $ref: '#/definitions/cloud.Ip.FailoverIp'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/ip/failover/{id}:
     parameters:
     - name: id
@@ -1706,6 +1861,8 @@ paths:
           $ref: '#/responses/cloud.Ip.FailoverIp'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/ip/failover/{id}/attach:
     parameters:
     - name: id
@@ -1734,6 +1891,8 @@ paths:
           $ref: '#/responses/cloud.Ip.FailoverIp'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/ipLoadbalancing:
     parameters:
     - name: serviceName
@@ -1752,6 +1911,8 @@ paths:
               type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Import an existing IP LB into OpenStack
       description: BETA - authentication required
@@ -1773,6 +1934,8 @@ paths:
           $ref: '#/responses/cloud.IPLoadbalancing'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/ipLoadbalancing/{id}:
     parameters:
     - name: serviceName
@@ -1791,6 +1954,8 @@ paths:
           $ref: '#/responses/cloud.IPLoadbalancing'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete the import of your load balancing IP into OpenStack. This does
         not delete the IP LB but close the access of it from OpenStack
@@ -1800,6 +1965,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/ipLoadbalancing/{id}/renew:
     parameters:
     - name: serviceName
@@ -1828,6 +1995,8 @@ paths:
           $ref: '#/responses/cloud.IPLoadbalancing'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/ipLoadbalancing/{id}/validate:
     parameters:
     - name: serviceName
@@ -1846,6 +2015,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/migration:
     parameters:
     - name: serviceName
@@ -1864,6 +2035,8 @@ paths:
               $ref: '#/definitions/cloud.Migration.Migration'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/migration/{migrationId}:
     parameters:
     - name: migrationId
@@ -1882,6 +2055,8 @@ paths:
           $ref: '#/responses/cloud.Migration.Migration'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     put:
       summary: Update planned migration
       description: BETA - authentication required
@@ -1901,6 +2076,8 @@ paths:
           $ref: '#/responses/cloud.Migration.Migration'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/network/private:
     parameters:
     - name: serviceName
@@ -1919,6 +2096,8 @@ paths:
               $ref: '#/definitions/cloud.Network.Network'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create a new network
       description: PRODUCTION - authentication required
@@ -1944,6 +2123,8 @@ paths:
           $ref: '#/responses/cloud.Network.Network'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/network/private/{networkId}:
     parameters:
     - name: networkId
@@ -1962,6 +2143,8 @@ paths:
           $ref: '#/responses/cloud.Network.Network'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     put:
       summary: Rename private network
       description: PRODUCTION - authentication required
@@ -1980,6 +2163,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete private network
       description: PRODUCTION - authentication required
@@ -1988,6 +2173,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/network/private/{networkId}/region:
     parameters:
     - name: networkId
@@ -2016,6 +2203,8 @@ paths:
           $ref: '#/responses/cloud.Network.Network'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/network/private/{networkId}/subnet:
     parameters:
     - name: networkId
@@ -2038,6 +2227,8 @@ paths:
               $ref: '#/definitions/cloud.Network.Subnet'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create a new network subnet
       description: PRODUCTION - authentication required
@@ -2073,6 +2264,8 @@ paths:
           $ref: '#/responses/cloud.Network.Subnet'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/network/private/{networkId}/subnet/{subnetId}:
     parameters:
     - name: networkId
@@ -2095,6 +2288,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/network/public:
     parameters:
     - name: serviceName
@@ -2113,6 +2308,8 @@ paths:
               $ref: '#/definitions/cloud.Network.Network'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/quota:
     parameters:
     - name: serviceName
@@ -2131,6 +2328,8 @@ paths:
               $ref: '#/definitions/cloud.Quota.Quotas'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/region:
     parameters:
     - name: serviceName
@@ -2149,6 +2348,8 @@ paths:
               type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/region/{regionName}:
     parameters:
     - name: regionName
@@ -2167,6 +2368,8 @@ paths:
           $ref: '#/responses/cloud.Region.RegionDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/retain:
     parameters:
     - name: serviceName
@@ -2182,6 +2385,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/serviceInfos:
     parameters:
     - name: serviceName
@@ -2196,6 +2401,8 @@ paths:
           $ref: '#/responses/services.Service'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     put:
       summary: Alter this object properties
       description: PRODUCTION - authentication required
@@ -2210,6 +2417,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/snapshot:
     parameters:
     - name: serviceName
@@ -2235,6 +2444,8 @@ paths:
               $ref: '#/definitions/cloud.Image.Image'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/snapshot/{snapshotId}:
     parameters:
     - name: serviceName
@@ -2253,6 +2464,8 @@ paths:
           $ref: '#/responses/cloud.Image.Image'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete a snapshot
       description: PRODUCTION - authentication required
@@ -2261,6 +2474,8 @@ paths:
           $ref: '#/responses/cloud.Image.Image'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/sshkey:
     parameters:
     - name: serviceName
@@ -2283,6 +2498,8 @@ paths:
               $ref: '#/definitions/cloud.Sshkey.SshKey'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create SSH key
       description: PRODUCTION - authentication required
@@ -2306,6 +2523,8 @@ paths:
           $ref: '#/responses/cloud.Sshkey.SshKeyDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/sshkey/{keyId}:
     parameters:
     - name: keyId
@@ -2324,6 +2543,8 @@ paths:
           $ref: '#/responses/cloud.Sshkey.SshKeyDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete SSH key
       description: PRODUCTION - authentication required
@@ -2332,6 +2553,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/storage:
     parameters:
     - name: serviceName
@@ -2350,6 +2573,8 @@ paths:
               $ref: '#/definitions/cloud.Storage.Container'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create container
       description: PRODUCTION - authentication required
@@ -2375,6 +2600,8 @@ paths:
           $ref: '#/responses/cloud.Storage.Container'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/storage/{containerId}:
     parameters:
     - name: containerId
@@ -2393,6 +2620,8 @@ paths:
           $ref: '#/responses/cloud.Storage.ContainerDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete container
       description: PRODUCTION - authentication required
@@ -2401,6 +2630,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/storage/{containerId}/cors:
     parameters:
     - name: containerId
@@ -2429,6 +2660,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete CORS support on your container
       description: PRODUCTION - authentication required
@@ -2442,6 +2675,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/storage/{containerId}/publicUrl:
     parameters:
     - name: containerId
@@ -2474,6 +2709,8 @@ paths:
           $ref: '#/responses/cloud.Storage.ContainerObjectTempURL'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/storage/{containerId}/static:
     parameters:
     - name: containerId
@@ -2492,6 +2729,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/storage/{containerId}/user:
     parameters:
     - name: containerId
@@ -2526,6 +2765,8 @@ paths:
           $ref: '#/responses/cloud.User.UserDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/storage/access:
     parameters:
     - name: serviceName
@@ -2541,6 +2782,8 @@ paths:
           $ref: '#/responses/cloud.Storage.ContainerAccess'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Access to storage API
       description: PRODUCTION - authentication required
@@ -2549,6 +2792,8 @@ paths:
           $ref: '#/responses/cloud.Storage.ContainerAccess'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/terminate:
     parameters:
     - name: serviceName
@@ -2565,6 +2810,8 @@ paths:
             type: string
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/unleash:
     parameters:
     - name: serviceName
@@ -2579,6 +2826,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/usage/current:
     parameters:
     - name: serviceName
@@ -2593,6 +2842,8 @@ paths:
           $ref: '#/responses/cloud.Usage.UsageCurrent'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/usage/forecast:
     parameters:
     - name: serviceName
@@ -2607,6 +2858,8 @@ paths:
           $ref: '#/responses/cloud.Usage.UsageForecast'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/usage/history:
     parameters:
     - name: serviceName
@@ -2634,6 +2887,8 @@ paths:
               $ref: '#/definitions/cloud.Usage.UsageHistory'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/usage/history/{usageId}:
     parameters:
     - name: serviceName
@@ -2652,6 +2907,8 @@ paths:
           $ref: '#/responses/cloud.Usage.UsageHistoryDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/user:
     parameters:
     - name: serviceName
@@ -2670,6 +2927,8 @@ paths:
               $ref: '#/definitions/cloud.User.User'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create user
       description: PRODUCTION - authentication required
@@ -2691,6 +2950,8 @@ paths:
           $ref: '#/responses/cloud.User.UserDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/user/{userId}:
     parameters:
     - name: serviceName
@@ -2710,6 +2971,8 @@ paths:
           $ref: '#/responses/cloud.User.User'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete user
       description: PRODUCTION - authentication required
@@ -2718,6 +2981,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/user/{userId}/openrc:
     parameters:
     - name: serviceName
@@ -2742,6 +3007,8 @@ paths:
           $ref: '#/responses/cloud.User.Openrc'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/user/{userId}/rclone:
     parameters:
     - name: serviceName
@@ -2766,6 +3033,8 @@ paths:
           $ref: '#/responses/cloud.User.Rclone'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/user/{userId}/regeneratePassword:
     parameters:
     - name: serviceName
@@ -2785,6 +3054,8 @@ paths:
           $ref: '#/responses/cloud.User.UserDetail'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/user/{userId}/token:
     parameters:
     - name: serviceName
@@ -2815,6 +3086,8 @@ paths:
           $ref: '#/responses/cloud.Authentication.Token'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/volume:
     parameters:
     - name: serviceName
@@ -2837,6 +3110,8 @@ paths:
               $ref: '#/definitions/cloud.Volume.Volume'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     post:
       summary: Create a volume
       description: PRODUCTION - authentication required
@@ -2873,6 +3148,8 @@ paths:
           $ref: '#/responses/cloud.Volume.Volume'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/volume/{volumeId}:
     parameters:
     - name: serviceName
@@ -2891,6 +3168,8 @@ paths:
           $ref: '#/responses/cloud.Volume.Volume'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     put:
       summary: Update a volume
       description: PRODUCTION - authentication required
@@ -2909,6 +3188,8 @@ paths:
           $ref: '#/responses/cloud.Volume.Volume'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete a volume
       description: PRODUCTION - authentication required
@@ -2917,6 +3198,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/volume/{volumeId}/attach:
     parameters:
     - name: serviceName
@@ -2945,6 +3228,8 @@ paths:
           $ref: '#/responses/cloud.Volume.Volume'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/volume/{volumeId}/detach:
     parameters:
     - name: serviceName
@@ -2973,6 +3258,8 @@ paths:
           $ref: '#/responses/cloud.Volume.Volume'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/volume/{volumeId}/snapshot:
     parameters:
     - name: serviceName
@@ -3001,6 +3288,8 @@ paths:
           $ref: '#/responses/cloud.Volume.Snapshot'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/volume/{volumeId}/upsize:
     parameters:
     - name: serviceName
@@ -3030,6 +3319,8 @@ paths:
           $ref: '#/responses/cloud.Volume.Volume'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/volume/snapshot:
     parameters:
     - name: serviceName
@@ -3052,6 +3343,8 @@ paths:
               $ref: '#/definitions/cloud.Volume.Snapshot'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/volume/snapshot/{snapshotId}:
     parameters:
     - name: serviceName
@@ -3070,6 +3363,8 @@ paths:
           $ref: '#/responses/cloud.Volume.Snapshot'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
     delete:
       summary: Delete a volume snapshot
       description: PRODUCTION - authentication required
@@ -3078,6 +3373,8 @@ paths:
           description: return 'void'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/project/{serviceName}/vrack:
     parameters:
     - name: serviceName
@@ -3092,6 +3389,8 @@ paths:
           $ref: '#/responses/vrack.Vrack'
         default:
           $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
   /cloud/subsidiaryPrice:
     get:
       summary: Get services prices for a subsidiary
@@ -3142,8 +3441,8 @@ definitions:
     description: Cloud ACL
     type: object
     required:
-    - accountId
     - type
+    - accountId
     properties:
       accountId:
         description: OVH customer unique identifier
@@ -3160,9 +3459,9 @@ definitions:
     description: Cloud alerting consumption
     type: object
     required:
-    - creationDate
     - id
     - formattedMonthlyThreshold
+    - creationDate
     properties:
       creationDate:
         description: Alerting creation date
@@ -3275,12 +3574,12 @@ definitions:
     description: Endpoint
     type: object
     required:
-    - region_id
-    - interface
     - url
     - id
     - legacy_endpoint_id
     - service_id
+    - region_id
+    - interface
     properties:
       id:
         type: string
@@ -3304,13 +3603,13 @@ definitions:
     description: OpenstackToken
     type: object
     required:
-    - issued_at
     - methods
     - user
     - roles
     - catalog
     - expires_at
     - project
+    - issued_at
     properties:
       catalog:
         type: array
@@ -3368,9 +3667,9 @@ definitions:
     description: TokenProject
     type: object
     required:
-    - id
     - domain
     - name
+    - id
     properties:
       domain:
         $ref: '#/definitions/cloud.Authentication.Domain'
@@ -3384,9 +3683,9 @@ definitions:
     description: UserToken
     type: object
     required:
-    - domain
     - name
     - id
+    - domain
     properties:
       domain:
         $ref: '#/definitions/cloud.Authentication.Domain'
@@ -3409,8 +3708,8 @@ definitions:
     description: BandwidthStorage
     type: object
     required:
-    - totalPrice
     - quantity
+    - totalPrice
     properties:
       quantity:
         $ref: '#/definitions/cloud.BillingView.Quantity'
@@ -3423,11 +3722,11 @@ definitions:
     description: HourlyInstance
     type: object
     required:
+    - quantity
     - region
     - details
     - reference
     - totalPrice
-    - quantity
     properties:
       details:
         description: Details about hourly instances
@@ -3454,9 +3753,9 @@ definitions:
     description: HourlyInstanceDetail
     type: object
     required:
-    - totalPrice
     - quantity
     - instanceId
+    - totalPrice
     properties:
       instanceId:
         description: Instance ID
@@ -3473,10 +3772,10 @@ definitions:
     description: HourlyResources
     type: object
     required:
+    - storage
     - volume
     - snapshot
     - instance
-    - storage
     properties:
       instance:
         description: Details about hourly instances
@@ -3526,9 +3825,9 @@ definitions:
     description: HourlyStorage
     type: object
     required:
+    - region
     - type
     - totalPrice
-    - region
     properties:
       incomingBandwidth:
         $ref: '#/definitions/cloud.BillingView.BandwidthStorage'
@@ -3556,11 +3855,11 @@ definitions:
     description: HourlyVolume
     type: object
     required:
+    - type
+    - details
     - totalPrice
     - quantity
     - region
-    - type
-    - details
     properties:
       details:
         description: Detail about volume consumption
@@ -3587,9 +3886,9 @@ definitions:
     description: HourlyVolumeDetail
     type: object
     required:
-    - volumeId
     - totalPrice
     - quantity
+    - volumeId
     properties:
       quantity:
         $ref: '#/definitions/cloud.BillingView.Quantity'
@@ -3606,8 +3905,8 @@ definitions:
     description: InstanceSnapshot
     type: object
     required:
-    - totalPrice
     - quantity
+    - totalPrice
     properties:
       quantity:
         $ref: '#/definitions/cloud.BillingView.Quantity'
@@ -3620,10 +3919,10 @@ definitions:
     description: MonthlyInstance
     type: object
     required:
+    - totalPrice
     - region
     - details
     - reference
-    - totalPrice
     properties:
       details:
         description: Details about monthly instances
@@ -3756,8 +4055,8 @@ definitions:
     description: VolumeSnapshot
     type: object
     required:
-    - quantity
     - totalPrice
+    - quantity
     properties:
       quantity:
         $ref: '#/definitions/cloud.BillingView.Quantity'
@@ -3783,8 +4082,8 @@ definitions:
     type: object
     required:
     - total_credit
-    - available_credit
     - id
+    - available_credit
     - used_credit
     properties:
       available_credit:
@@ -3822,15 +4121,15 @@ definitions:
     description: Flavor
     type: object
     required:
-    - ram
     - disk
-    - vcpus
-    - region
-    - type
     - name
     - osType
-    - id
     - available
+    - region
+    - vcpus
+    - type
+    - ram
+    - id
     properties:
       available:
         description: Available in stock
@@ -3916,9 +4215,9 @@ definitions:
     description: Load balancing IP imported into your OpenStack project
     type: object
     required:
-    - status
     - id
     - iplb
+    - status
     properties:
       id:
         description: ID of your load balancing ip import
@@ -3940,17 +4239,17 @@ definitions:
     description: Image
     type: object
     required:
+    - creationDate
+    - region
+    - user
+    - type
+    - visibility
     - status
     - size
-    - visibility
-    - minRam
-    - name
-    - region
-    - type
-    - minDisk
     - id
-    - creationDate
-    - user
+    - name
+    - minDisk
+    - minRam
     properties:
       creationDate:
         description: Image creation date
@@ -4080,14 +4379,14 @@ definitions:
     description: Instance
     type: object
     required:
-    - name
     - imageId
-    - id
-    - status
     - region
     - flavorId
-    - ipAddresses
+    - status
+    - id
+    - name
     - created
+    - ipAddresses
     properties:
       created:
         description: Instance creation date
@@ -4163,15 +4462,15 @@ definitions:
     description: InstanceDetail
     type: object
     required:
-    - image
-    - sshKey
-    - ipAddresses
-    - flavor
-    - status
-    - name
-    - id
     - region
     - created
+    - id
+    - ipAddresses
+    - flavor
+    - name
+    - sshKey
+    - status
+    - image
     properties:
       created:
         description: Instance creation date
@@ -4241,8 +4540,8 @@ definitions:
     description: InstanceMetrics
     type: object
     required:
-    - values
     - unit
+    - values
     properties:
       unit:
         type: string
@@ -4286,10 +4585,10 @@ definitions:
     description: IpAddress
     type: object
     required:
-    - networkId
-    - ip
     - version
     - type
+    - networkId
+    - ip
     properties:
       gatewayIp:
         description: Gateway IP
@@ -4376,12 +4675,12 @@ definitions:
     description: Interface
     type: object
     required:
+    - type
+    - state
     - macAddress
     - networkId
     - fixedIps
     - id
-    - type
-    - state
     properties:
       fixedIps:
         description: List of ips of the interface
@@ -4413,9 +4712,9 @@ definitions:
     description: IpAddress
     type: object
     required:
+    - ip
     - version
     - type
-    - ip
     properties:
       ip:
         description: Instance IP address
@@ -4453,11 +4752,11 @@ definitions:
     description: InstanceGroup
     type: object
     required:
-    - name
     - region
     - id
     - type
     - instance_ids
+    - name
     properties:
       id:
         description: Instance group id
@@ -4488,8 +4787,8 @@ definitions:
     description: IP
     type: object
     required:
-    - subnetwork
     - ipAddress
+    - subnetwork
     properties:
       ipAddress:
         description: IP address
@@ -4501,9 +4800,9 @@ definitions:
     description: CloudIp
     type: object
     required:
+    - status
     - id
     - type
-    - status
     properties:
       id:
         description: Ip id
@@ -4528,11 +4827,11 @@ definitions:
     description: FailoverIp
     type: object
     required:
-    - routedTo
-    - status
-    - subType
     - id
     - progress
+    - routedTo
+    - subType
+    - status
     properties:
       block:
         description: IP block
@@ -4581,10 +4880,10 @@ definitions:
     description: Migration
     type: object
     required:
-    - migrationId
     - resourceType
     - date
     - resourceId
+    - migrationId
     properties:
       date:
         description: The planned date of the migration
@@ -4628,11 +4927,11 @@ definitions:
     description: Network
     type: object
     required:
+    - id
     - vlanId
     - regions
     - status
     - name
-    - id
     properties:
       id:
         description: Network id
@@ -4672,8 +4971,8 @@ definitions:
     description: NetworkRegion
     type: object
     required:
-    - status
     - region
+    - status
     properties:
       region:
         description: Network region
@@ -4690,9 +4989,9 @@ definitions:
     description: Subnet
     type: object
     required:
-    - id
     - cidr
     - ipPools
+    - id
     properties:
       cidr:
         description: Subnet CIDR
@@ -4761,11 +5060,11 @@ definitions:
     description: Project
     type: object
     required:
+    - project_id
     - status
     - access
     - unleash
     - creationDate
-    - project_id
     properties:
       access:
         description: Project access
@@ -5108,10 +5407,10 @@ definitions:
     description: Quotas
     type: object
     required:
+    - keypair
     - volume
     - region
     - instance
-    - keypair
     properties:
       instance:
         $ref: '#/definitions/cloud.Quota.InstanceQuotas'
@@ -5286,8 +5585,8 @@ definitions:
     description: RegionStock
     type: object
     required:
-    - name
     - flavors
+    - name
     properties:
       flavors:
         description: Stock list by flavor
@@ -5303,10 +5602,10 @@ definitions:
     description: Stock
     type: object
     required:
-    - quantity
     - flavorName
     - flavorId
     - error
+    - quantity
     properties:
       error:
         description: Error message, if any
@@ -5367,11 +5666,11 @@ definitions:
     description: SshKeyDetail
     type: object
     required:
-    - regions
-    - name
     - id
     - publicKey
     - fingerPrint
+    - regions
+    - name
     properties:
       fingerPrint:
         description: SSH key fingerprint
@@ -5399,11 +5698,11 @@ definitions:
     description: Container
     type: object
     required:
+    - storedObjects
     - storedBytes
     - name
     - region
     - id
-    - storedObjects
     properties:
       id:
         description: Storage id
@@ -5430,8 +5729,8 @@ definitions:
     description: ContainerAccess
     type: object
     required:
-    - token
     - endpoints
+    - token
     properties:
       endpoints:
         description: Storage access endpoints
@@ -5447,15 +5746,15 @@ definitions:
     description: ContainerDetail
     type: object
     required:
-    - objects
-    - storedObjects
-    - archive
-    - storedBytes
-    - staticUrl
     - cors
     - name
     - region
+    - storedObjects
+    - staticUrl
+    - objects
     - public
+    - archive
+    - storedBytes
     properties:
       archive:
         description: Whether this is an archive container or not
@@ -5503,12 +5802,12 @@ definitions:
     description: ContainerObject
     type: object
     required:
+    - retrievalState
+    - contentType
     - size
     - retrievalDelay
     - lastModified
     - name
-    - retrievalState
-    - contentType
     properties:
       contentType:
         description: Object content type
@@ -5587,8 +5886,8 @@ definitions:
     description: IPPool
     type: object
     required:
-    - end
     - start
+    - end
     properties:
       end:
         description: 'Last IP for this region (eg: 192.168.1.24)'
@@ -5602,8 +5901,8 @@ definitions:
     description: Period
     type: object
     required:
-    - from
     - to
+    - from
     properties:
       from:
         description: Usage from
@@ -5674,8 +5973,8 @@ definitions:
     description: UsageForecast
     type: object
     required:
-    - period
     - lastUpdate
+    - period
     properties:
       hourlyUsage:
         $ref: '#/definitions/cloud.BillingView.HourlyResources'
@@ -5694,9 +5993,9 @@ definitions:
     description: UsageHistory
     type: object
     required:
+    - period
     - id
     - lastUpdate
-    - period
     properties:
       id:
         description: Usage id
@@ -5713,9 +6012,9 @@ definitions:
     description: UsageHistoryDetail
     type: object
     required:
+    - lastUpdate
     - period
     - id
-    - lastUpdate
     properties:
       hourlyUsage:
         $ref: '#/definitions/cloud.BillingView.HourlyResources'
@@ -5756,11 +6055,11 @@ definitions:
     description: User
     type: object
     required:
+    - status
+    - id
     - description
     - username
     - creationDate
-    - status
-    - id
     properties:
       creationDate:
         description: User creation date
@@ -5793,12 +6092,12 @@ definitions:
     description: UserDetail
     type: object
     required:
-    - password
     - creationDate
     - status
     - id
     - description
     - username
+    - password
     properties:
       creationDate:
         description: User creation date
@@ -5835,14 +6134,14 @@ definitions:
     description: Snapshot
     type: object
     required:
-    - volumeId
-    - status
-    - name
     - region
     - description
     - size
     - creationDate
     - id
+    - volumeId
+    - status
+    - name
     properties:
       creationDate:
         description: Snapshot creation date
@@ -5888,16 +6187,16 @@ definitions:
     description: Volume
     type: object
     required:
-    - type
-    - name
-    - description
-    - creationDate
-    - status
     - id
     - bootable
-    - attachedTo
     - size
+    - type
+    - name
+    - status
+    - attachedTo
     - region
+    - description
+    - creationDate
     properties:
       attachedTo:
         description: Volume attached to instances id
@@ -6106,11 +6405,11 @@ definitions:
     description: cloud archives sessions
     type: object
     required:
-    - size
     - state
     - id
     - startDate
     - login
+    - size
     properties:
       endDate:
         description: Session end date
@@ -6164,11 +6463,11 @@ definitions:
     description: cloud archives tasks
     type: object
     required:
-    - id
-    - login
     - function
     - status
     - todoDate
+    - id
+    - login
     properties:
       comment:
         description: Task comments
@@ -6247,16 +6546,16 @@ definitions:
     description: Details about a Service
     type: object
     required:
+    - creation
+    - renewalType
+    - serviceId
+    - contactBilling
+    - expiration
+    - contactTech
+    - canDeleteAtExpiration
+    - contactAdmin
     - status
     - domain
-    - contactTech
-    - contactAdmin
-    - creation
-    - serviceId
-    - expiration
-    - canDeleteAtExpiration
-    - renewalType
-    - contactBilling
     properties:
       canDeleteAtExpiration:
         description: Indicates that the service can be set up to be deleted at expiration

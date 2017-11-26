@@ -1,0 +1,3776 @@
+swagger: "2.0"
+info:
+  title: OVH API - EU
+  description: Build your own OVH world.
+  version: 1.0.0
+  contact:
+    name: OVH API EU
+    url: https://eu.api.ovh.com/
+    email: api-subscribe@ml.ovh.net
+  license:
+    name: © OVH SAS
+    url: https://eu.api.ovh.com/
+host: eu.api.ovh.com
+basePath: /1.0
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+externalDocs:
+  url: https://eu.api.ovh.com/
+  description: Online version
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    name: X-Ovh-Consumer
+    in: header
+paths:
+  /domain:
+    get:
+      summary: List available services
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: whoisOwner
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Domain'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Domain'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/activateZone:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Activate the DNS zone for this domain
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainActivateZonePost
+        in: body
+        schema:
+          type: object
+          properties:
+            minimized:
+              type: boolean
+              default: false
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/authInfo:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Return authInfo code if the domain is unlocked
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+            format: password
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/changeContact:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Launch a contact change procedure
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainChangeContactPost
+        in: body
+        schema:
+          type: object
+          properties:
+            contactAdmin:
+              type: string
+            contactBilling:
+              type: string
+            contactTech:
+              type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/dsRecord:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of domain's DS Records
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: flags
+        in: query
+        type: integer
+        format: int64
+        enum:
+        - 256
+        - 257
+      - name: status
+        in: query
+        type: string
+        enum:
+        - active
+        - generated
+        - published
+        - removed
+        - retired
+        - revoked
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Update DS records
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainDsRecordPost
+        in: body
+        schema:
+          type: object
+          required:
+          - keys
+          properties:
+            keys:
+              type: array
+              items:
+                $ref: '#/definitions/dnssec.Key'
+      responses:
+        "200":
+          $ref: '#/responses/domain.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/dsRecord/{id}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.DnssecKey'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/glueRecord:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of glue record
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: host
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Create a glue record
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainGlueRecordPost
+        in: body
+        schema:
+          type: object
+          required:
+          - ips
+          - host
+          properties:
+            host:
+              type: string
+            ips:
+              type: array
+              items:
+                type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/glueRecord/{host}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: host
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.GlueRecord'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete the glue record
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/glueRecord/{host}/update:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: host
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Update the glue record
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainGlueRecordUpdatePost
+        in: body
+        schema:
+          type: object
+          required:
+          - ips
+          properties:
+            ips:
+              type: array
+              items:
+                type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/nameServer:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of current name servers
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add new name server
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainNameServerPost
+        in: body
+        schema:
+          type: object
+          required:
+          - nameServer
+          properties:
+            nameServer:
+              type: array
+              items:
+                $ref: '#/definitions/domain.DomainNs'
+      responses:
+        "200":
+          $ref: '#/responses/domain.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/nameServer/{id}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.CurrentNameServer'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a name server
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/nameServer/{id}/status:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    post:
+      summary: Get name server status
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.DomainNsStatus'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/nameServers/update:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Update DNS servers
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainNameServersUpdatePost
+        in: body
+        schema:
+          type: object
+          required:
+          - nameServers
+          properties:
+            nameServers:
+              type: array
+              items:
+                $ref: '#/definitions/domain.DomainNs'
+      responses:
+        "200":
+          $ref: '#/responses/domain.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/owo:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of whois obfuscators
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: field
+        in: query
+        type: string
+        enum:
+        - address
+        - email
+        - phone
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+              - address
+              - email
+              - phone
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add whois obfuscators
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainOwoPost
+        in: body
+        schema:
+          type: object
+          required:
+          - fields
+          properties:
+            fields:
+              type: array
+              items:
+                type: string
+                enum:
+                - address
+                - email
+                - phone
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+              - address
+              - email
+              - phone
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/owo/{field}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: field
+      in: path
+      required: true
+      type: string
+      enum:
+      - address
+      - email
+      - phone
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Owo'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a whois obfuscator
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/serviceInfos:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/services.Service'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainServiceInfosPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.Service'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/task:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Domain pending tasks
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: function
+        in: query
+        type: string
+      - name: status
+        in: query
+        type: string
+        enum:
+        - cancelled
+        - doing
+        - done
+        - error
+        - todo
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/task/{id}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/task/{id}/accelerate:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    post:
+      summary: Accelerate the task
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/task/{id}/cancel:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    post:
+      summary: Cancel the task
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/task/{id}/relaunch:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    post:
+      summary: Relaunch the task
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/{serviceName}/ukOutgoingTransfer:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Schedule an outgoing transfer task for this domain (.uk only)
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainUkOutgoingTransferPost
+        in: body
+        schema:
+          type: object
+          required:
+          - tag
+          properties:
+            tag:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/data/afnicAssociationInformation:
+    get:
+      summary: Retrieve all association information according to Afnic
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Post a new association information according to Afnic
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainDataAfnicAssociationInformationPost
+        in: body
+        schema:
+          type: object
+          required:
+          - declarationDate
+          - publicationDate
+          - publicationNumber
+          - publicationPageNumber
+          - contactId
+          properties:
+            contactId:
+              type: integer
+              format: int64
+            declarationDate:
+              type: string
+              format: date
+            publicationDate:
+              type: string
+              format: date
+            publicationNumber:
+              type: string
+            publicationPageNumber:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Data.AssociationContact'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/data/afnicAssociationInformation/{associationInformationId}:
+    parameters:
+    - name: associationInformationId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Retrieve an association information according to Afnic
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Data.AssociationContact'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/data/afnicCorporationTrademarkInformation:
+    get:
+      summary: Retrieve all corporation trademark information according to Afnic
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Post a new corporation trademark information according to Afnic
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainDataAfnicCorporationTrademarkInformationPost
+        in: body
+        schema:
+          type: object
+          required:
+          - inpiNumber
+          - inpiTrademarkOwner
+          - contactId
+          properties:
+            contactId:
+              type: integer
+              format: int64
+            inpiNumber:
+              type: string
+            inpiTrademarkOwner:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Data.AfnicCorporationTrademarkContact'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/data/afnicCorporationTrademarkInformation/{afnicCorporationTrademarkId}:
+    parameters:
+    - name: afnicCorporationTrademarkId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Retrieve a corporation trademark information according to Afnic
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Data.AfnicCorporationTrademarkContact'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/data/claimNotice:
+    get:
+      summary: Retrieve claim notices associated to a domain
+      description: PRODUCTION
+      parameters:
+      - name: domain
+        in: query
+        required: true
+        type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Data.ClaimNotice.ClaimNotice'
+        default:
+          $ref: '#/responses/OVH.Error'
+  /domain/data/extension:
+    get:
+      summary: List all the extensions for a specific country
+      description: PRODUCTION
+      parameters:
+      - name: country
+        in: query
+        required: true
+        type: string
+        enum:
+        - AC
+        - AD
+        - AE
+        - AF
+        - AG
+        - AI
+        - AL
+        - AM
+        - AO
+        - AQ
+        - AR
+        - AS
+        - AT
+        - AU
+        - AW
+        - AX
+        - AZ
+        - BA
+        - BB
+        - BD
+        - BE
+        - BF
+        - BG
+        - BH
+        - BI
+        - BJ
+        - BL
+        - BM
+        - BN
+        - BO
+        - BQ
+        - BR
+        - BS
+        - BT
+        - BW
+        - BY
+        - BZ
+        - CA
+        - CC
+        - CD
+        - CF
+        - CG
+        - CH
+        - CI
+        - CK
+        - CL
+        - CM
+        - CN
+        - CO
+        - CR
+        - CU
+        - CV
+        - CW
+        - CX
+        - CY
+        - CZ
+        - DE
+        - DG
+        - DJ
+        - DK
+        - DM
+        - DO
+        - DZ
+        - EA
+        - EC
+        - EE
+        - EG
+        - EH
+        - ER
+        - ES
+        - ET
+        - FI
+        - FJ
+        - FK
+        - FM
+        - FO
+        - FR
+        - GA
+        - GB
+        - GD
+        - GE
+        - GF
+        - GG
+        - GH
+        - GI
+        - GL
+        - GM
+        - GN
+        - GP
+        - GQ
+        - GR
+        - GS
+        - GT
+        - GU
+        - GW
+        - GY
+        - HK
+        - HN
+        - HR
+        - HT
+        - HU
+        - IC
+        - ID
+        - IE
+        - IL
+        - IM
+        - IN
+        - IO
+        - IQ
+        - IR
+        - IS
+        - IT
+        - JE
+        - JM
+        - JO
+        - JP
+        - KE
+        - KG
+        - KH
+        - KI
+        - KM
+        - KN
+        - KP
+        - KR
+        - KW
+        - KY
+        - KZ
+        - LA
+        - LB
+        - LC
+        - LI
+        - LK
+        - LR
+        - LS
+        - LT
+        - LU
+        - LV
+        - LY
+        - MA
+        - MC
+        - MD
+        - ME
+        - MF
+        - MG
+        - MH
+        - MK
+        - ML
+        - MM
+        - MN
+        - MO
+        - MP
+        - MQ
+        - MR
+        - MS
+        - MT
+        - MU
+        - MV
+        - MW
+        - MX
+        - MY
+        - MZ
+        - NA
+        - NC
+        - NE
+        - NF
+        - NG
+        - NI
+        - NL
+        - "NO"
+        - NP
+        - NR
+        - NU
+        - NZ
+        - OM
+        - PA
+        - PE
+        - PF
+        - PG
+        - PH
+        - PK
+        - PL
+        - PM
+        - PN
+        - PR
+        - PS
+        - PT
+        - PW
+        - PY
+        - QA
+        - RE
+        - RO
+        - RS
+        - RU
+        - RW
+        - SA
+        - SB
+        - SC
+        - SD
+        - SE
+        - SG
+        - SH
+        - SI
+        - SJ
+        - SK
+        - SL
+        - SM
+        - SN
+        - SO
+        - SR
+        - SS
+        - ST
+        - SV
+        - SX
+        - SY
+        - SZ
+        - TA
+        - TC
+        - TD
+        - TF
+        - TG
+        - TH
+        - TJ
+        - TK
+        - TL
+        - TM
+        - TN
+        - TO
+        - TR
+        - TT
+        - TV
+        - TW
+        - TZ
+        - UA
+        - UG
+        - UM
+        - UNKNOWN
+        - US
+        - UY
+        - UZ
+        - VA
+        - VC
+        - VE
+        - VG
+        - VI
+        - VN
+        - VU
+        - WF
+        - WS
+        - XK
+        - YE
+        - YT
+        - ZA
+        - ZM
+        - ZW
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+  /domain/data/proContact:
+    get:
+      summary: Retrieve all your Pro Contact
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Post new information about .pro contact information
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainDataProContactPost
+        in: body
+        schema:
+          type: object
+          required:
+          - jobDescription
+          - authority
+          - authorityWebsite
+          - licenseNumber
+          properties:
+            authority:
+              type: string
+            authorityWebsite:
+              type: string
+            contactId:
+              type: integer
+              format: int64
+            jobDescription:
+              type: string
+            licenseNumber:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Data.ProContact'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/data/proContact/{proContactId}:
+    parameters:
+    - name: proContactId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Retrieve information about a Pro Contact
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Data.ProContact'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/data/smd:
+    get:
+      summary: List all your SMD files
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: protectedLabels.label
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Post a new SMD file
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainDataSmdPost
+        in: body
+        schema:
+          type: object
+          required:
+          - data
+          properties:
+            data:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Data.Smd'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/data/smd/{smdId}:
+    parameters:
+    - name: smdId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Retrieve information about a SMD file
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Data.Smd'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Modify an existing SMD file
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainDataSmdPut
+        in: body
+        schema:
+          type: object
+          required:
+          - data
+          properties:
+            data:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Data.Smd'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a SMD file
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/rules:
+    get:
+      summary: List all the rules for a specific cartId/itemId
+      description: BETA
+      parameters:
+      - name: cartId
+        in: query
+        required: true
+        type: string
+      - name: itemId
+        in: query
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          $ref: '#/responses/domain.Rule'
+        default:
+          $ref: '#/responses/OVH.Error'
+  /domain/zone:
+    get:
+      summary: List available services
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.Zone'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/changeContact:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Launch a contact change procedure
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneChangeContactPost
+        in: body
+        schema:
+          type: object
+          properties:
+            contactAdmin:
+              type: string
+            contactBilling:
+              type: string
+            contactTech:
+              type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/confirmTermination:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Confirm termination of your service
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneConfirmTerminationPost
+        in: body
+        schema:
+          type: object
+          required:
+          - token
+          properties:
+            commentary:
+              type: string
+            reason:
+              type: string
+              enum:
+              - LACK_OF_PERFORMANCES
+              - MIGRATED_TO_ANOTHER_OVH_PRODUCT
+              - MIGRATED_TO_COMPETITOR
+              - NOT_NEEDED_ANYMORE
+              - NOT_RELIABLE
+              - OTHER
+              - TOO_EXPENSIVE
+              - TOO_HARD_TO_USE
+            token:
+              type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/dnssec:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.Dnssec'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Enable Dnssec
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Disable Dnssec
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/dynHost/login:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: DynHost' logins
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: subDomain
+        in: query
+        type: string
+      - name: login
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Create a new DynHost login
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneDynHostLoginPost
+        in: body
+        schema:
+          type: object
+          required:
+          - password
+          - loginSuffix
+          - subDomain
+          properties:
+            loginSuffix:
+              type: string
+            password:
+              type: string
+              format: password
+            subDomain:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.DynHostLogin'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/dynHost/login/{login}:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: login
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.DynHostLogin'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneDynHostLoginPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Zone.DynHostLogin'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a DynHost login
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/dynHost/login/{login}/changePassword:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: login
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Change password of the DynHost login
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneDynHostLoginChangePasswordPost
+        in: body
+        schema:
+          type: object
+          required:
+          - password
+          properties:
+            password:
+              type: string
+              format: password
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/dynHost/record:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: DynHost' records
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: subDomain
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Create a new DynHost record (Don't forget to refresh the zone)
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneDynHostRecordPost
+        in: body
+        schema:
+          type: object
+          required:
+          - ip
+          properties:
+            ip:
+              type: string
+            subDomain:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.DynHostRecord'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/dynHost/record/{id}:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.DynHostRecord'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneDynHostRecordPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Zone.DynHostRecord'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a DynHost record (Don't forget to refresh the zone)
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/export:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Export zone
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/history:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Zone restore points
+      description: BETA - authentication required
+      parameters:
+      - name: creationDate.to
+        in: query
+        type: string
+        format: date-time
+      - name: creationDate.from
+        in: query
+        type: string
+        format: date-time
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+              format: date-time
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/history/{creationDate}:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: creationDate
+      in: path
+      required: true
+      type: string
+      format: date-time
+    get:
+      summary: Get this object properties
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.ZoneRestorePoint'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/history/{creationDate}/restore:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: creationDate
+      in: path
+      required: true
+      type: string
+      format: date-time
+    post:
+      summary: Restore the DNS zone
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/import:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Import zone
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneImportPost
+        in: body
+        schema:
+          type: object
+          required:
+          - zoneFile
+          properties:
+            zoneFile:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/record:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Records of the zone
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: fieldType
+        in: query
+        type: string
+        enum:
+        - A
+        - AAAA
+        - CNAME
+        - DKIM
+        - LOC
+        - MX
+        - NAPTR
+        - NS
+        - PTR
+        - SPF
+        - SRV
+        - SSHFP
+        - TLSA
+        - TXT
+      - name: subDomain
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Create a new DNS record (Don't forget to refresh the zone)
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneRecordPost
+        in: body
+        schema:
+          type: object
+          required:
+          - target
+          - fieldType
+          properties:
+            fieldType:
+              type: string
+              enum:
+              - A
+              - AAAA
+              - CNAME
+              - DKIM
+              - LOC
+              - MX
+              - NAPTR
+              - NS
+              - PTR
+              - SPF
+              - SRV
+              - SSHFP
+              - TLSA
+              - TXT
+            subDomain:
+              type: string
+            target:
+              type: string
+            ttl:
+              type: integer
+              format: int64
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.Record'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/record/{id}:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.Record'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneRecordPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Zone.Record'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a DNS record (Don't forget to refresh the zone)
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/redirection:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Redirections
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: subDomain
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Create a new redirection (Don't forget to refresh the zone)
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneRedirectionPost
+        in: body
+        schema:
+          type: object
+          required:
+          - target
+          - type
+          properties:
+            description:
+              type: string
+            keywords:
+              type: string
+            subDomain:
+              type: string
+            target:
+              type: string
+            title:
+              type: string
+            type:
+              type: string
+              enum:
+              - invisible
+              - visible
+              - visiblePermanent
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.Redirection'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/redirection/{id}:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.Redirection'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneRedirectionPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Zone.Redirection'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a redirection (Don't forget to refresh the zone)
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/refresh:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Apply zone modification on DNS servers
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/reset:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Reset the DNS zone
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneResetPost
+        in: body
+        schema:
+          type: object
+          properties:
+            DnsRecords:
+              type: array
+              items:
+                $ref: '#/definitions/zone.ResetRecord'
+            minimized:
+              type: boolean
+              default: false
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/serviceInfos:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/services.Service'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneServiceInfosPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.Service'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/soa:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.Soa'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: domainZoneSoaPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Zone.Soa'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/status:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Zone status
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/zone.Status'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/task:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Domain pending tasks
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: function
+        in: query
+        type: string
+      - name: status
+        in: query
+        type: string
+        enum:
+        - cancelled
+        - doing
+        - done
+        - error
+        - todo
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/task/{id}:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/domain.Zone.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/task/{id}/accelerate:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    post:
+      summary: Accelerate the task
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/task/{id}/cancel:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    post:
+      summary: Cancel the task
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/task/{id}/relaunch:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    post:
+      summary: Relaunch the task
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /domain/zone/{zoneName}/terminate:
+    parameters:
+    - name: zoneName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Terminate your service
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+definitions:
+  dnssec.Key:
+    description: Key type
+    type: object
+    properties:
+      algorithm:
+        description: Algorithm
+        type: integer
+        format: int64
+        enum:
+        - 10
+        - 13
+        - 14
+        - 3
+        - 5
+        - 6
+        - 7
+        - 8
+      flags:
+        description: Flag of the dnssec key
+        type: integer
+        format: int64
+        enum:
+        - 256
+        - 257
+      publicKey:
+        description: Public key
+        type: string
+      tag:
+        description: Key tag
+        type: integer
+        format: int64
+  domain.CurrentNameServer:
+    description: CurrentNameServer
+    type: object
+    required:
+    - isUsed
+    - id
+    - host
+    - toDelete
+    properties:
+      host:
+        description: Host of the name server
+        type: string
+        readOnly: true
+      id:
+        description: Id of the name server
+        type: integer
+        format: int64
+        readOnly: true
+      ip:
+        description: Ip of the name server
+        type: string
+        readOnly: true
+      isUsed:
+        description: isUsed flag of the name server
+        type: boolean
+        readOnly: true
+      toDelete:
+        description: toDelete flag of the name server
+        type: boolean
+        readOnly: true
+  domain.Data.AfnicCorporationTrademarkContact:
+    description: Representation of an Inpi additional information for a corporation
+    type: object
+    properties:
+      contactId:
+        description: Contact ID related to the Inpi additional information
+        type: integer
+        format: int64
+      id:
+        description: Corporation Inpi additional information ID
+        type: integer
+        format: int64
+      inpiNumber:
+        description: Number of the Inpi declaration
+        type: string
+      inpiTrademarkOwner:
+        description: Owner of the trademark
+        type: string
+  domain.Data.AssociationContact:
+    description: Representation of a Association additional information
+    type: object
+    properties:
+      contactId:
+        description: Contact ID related to the association contact information
+        type: integer
+        format: int64
+      declarationDate:
+        description: Date of the declaration of the association
+        type: string
+        format: date
+      id:
+        description: Association additional information ID
+        type: integer
+        format: int64
+      publicationDate:
+        description: Date of the publication of the declaration of the association
+        type: string
+        format: date
+      publicationNumber:
+        description: Number of the publication of the declaration of the association
+        type: string
+      publicationPageNumber:
+        description: Page number of the publication of the declaration of the association
+        type: string
+  domain.Data.ClaimNotice.Address:
+    description: Address for a claim notice holder
+    type: object
+    required:
+    - streets
+    properties:
+      city:
+        description: City
+        type: string
+        readOnly: true
+      countryCode:
+        description: Country code
+        type: string
+        readOnly: true
+        enum:
+        - AC
+        - AD
+        - AE
+        - AF
+        - AG
+        - AI
+        - AL
+        - AM
+        - AO
+        - AQ
+        - AR
+        - AS
+        - AT
+        - AU
+        - AW
+        - AX
+        - AZ
+        - BA
+        - BB
+        - BD
+        - BE
+        - BF
+        - BG
+        - BH
+        - BI
+        - BJ
+        - BL
+        - BM
+        - BN
+        - BO
+        - BQ
+        - BR
+        - BS
+        - BT
+        - BW
+        - BY
+        - BZ
+        - CA
+        - CC
+        - CD
+        - CF
+        - CG
+        - CH
+        - CI
+        - CK
+        - CL
+        - CM
+        - CN
+        - CO
+        - CR
+        - CU
+        - CV
+        - CW
+        - CX
+        - CY
+        - CZ
+        - DE
+        - DG
+        - DJ
+        - DK
+        - DM
+        - DO
+        - DZ
+        - EA
+        - EC
+        - EE
+        - EG
+        - EH
+        - ER
+        - ES
+        - ET
+        - FI
+        - FJ
+        - FK
+        - FM
+        - FO
+        - FR
+        - GA
+        - GB
+        - GD
+        - GE
+        - GF
+        - GG
+        - GH
+        - GI
+        - GL
+        - GM
+        - GN
+        - GP
+        - GQ
+        - GR
+        - GS
+        - GT
+        - GU
+        - GW
+        - GY
+        - HK
+        - HN
+        - HR
+        - HT
+        - HU
+        - IC
+        - ID
+        - IE
+        - IL
+        - IM
+        - IN
+        - IO
+        - IQ
+        - IR
+        - IS
+        - IT
+        - JE
+        - JM
+        - JO
+        - JP
+        - KE
+        - KG
+        - KH
+        - KI
+        - KM
+        - KN
+        - KP
+        - KR
+        - KW
+        - KY
+        - KZ
+        - LA
+        - LB
+        - LC
+        - LI
+        - LK
+        - LR
+        - LS
+        - LT
+        - LU
+        - LV
+        - LY
+        - MA
+        - MC
+        - MD
+        - ME
+        - MF
+        - MG
+        - MH
+        - MK
+        - ML
+        - MM
+        - MN
+        - MO
+        - MP
+        - MQ
+        - MR
+        - MS
+        - MT
+        - MU
+        - MV
+        - MW
+        - MX
+        - MY
+        - MZ
+        - NA
+        - NC
+        - NE
+        - NF
+        - NG
+        - NI
+        - NL
+        - "NO"
+        - NP
+        - NR
+        - NU
+        - NZ
+        - OM
+        - PA
+        - PE
+        - PF
+        - PG
+        - PH
+        - PK
+        - PL
+        - PM
+        - PN
+        - PR
+        - PS
+        - PT
+        - PW
+        - PY
+        - QA
+        - RE
+        - RO
+        - RS
+        - RU
+        - RW
+        - SA
+        - SB
+        - SC
+        - SD
+        - SE
+        - SG
+        - SH
+        - SI
+        - SJ
+        - SK
+        - SL
+        - SM
+        - SN
+        - SO
+        - SR
+        - SS
+        - ST
+        - SV
+        - SX
+        - SY
+        - SZ
+        - TA
+        - TC
+        - TD
+        - TF
+        - TG
+        - TH
+        - TJ
+        - TK
+        - TL
+        - TM
+        - TN
+        - TO
+        - TR
+        - TT
+        - TV
+        - TW
+        - TZ
+        - UA
+        - UG
+        - UM
+        - UNKNOWN
+        - US
+        - UY
+        - UZ
+        - VA
+        - VC
+        - VE
+        - VG
+        - VI
+        - VN
+        - VU
+        - WF
+        - WS
+        - XK
+        - YE
+        - YT
+        - ZA
+        - ZM
+        - ZW
+      fax:
+        description: Fax number
+        type: string
+        readOnly: true
+      faxExtension:
+        description: Fax number extension
+        type: string
+        readOnly: true
+      postalCode:
+        description: Postal zip code
+        type: string
+        readOnly: true
+      stateOrProvince:
+        description: State of province
+        type: string
+        readOnly: true
+      streets:
+        description: Array of street name
+        type: array
+        readOnly: true
+        items:
+          type: string
+      voice:
+        description: Phone number
+        type: string
+        readOnly: true
+      voiceExtension:
+        description: Phone number extension
+        type: string
+        readOnly: true
+  domain.Data.ClaimNotice.ClaimNotice:
+    description: Definition of claim notices applying to a domain name
+    type: object
+    required:
+    - id
+    - endingDate
+    - label
+    properties:
+      claims:
+        description: Array of claim notice for the domain
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/domain.Data.ClaimNotice.ClaimNoticeDecision'
+      endingDate:
+        description: Ending date of claim notice
+        type: string
+        readOnly: true
+      id:
+        description: Claim notice ID
+        type: string
+        readOnly: true
+      label:
+        description: Label referring to claim notice
+        type: string
+        readOnly: true
+      startingDate:
+        description: Beginning date of claim notice
+        type: string
+        readOnly: true
+      type:
+        description: Type of claim notice
+        type: string
+        enum:
+        - UK
+        - TRADEMARK
+  domain.Data.ClaimNotice.ClaimNoticeDecision:
+    description: Definition of a single claim notice
+    type: object
+    required:
+    - jurisdiction
+    - courtDecisions
+    - trademarkHolders
+    - markName
+    - goodsAndServices
+    - jurisdictionCountryCode
+    - classifications
+    - trademarkContacts
+    - trademarkUDRP
+    properties:
+      classifications:
+        description: Classifications where trademark claim notice apply
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/domain.Data.ClaimNotice.Classification'
+      courtDecisions:
+        description: Array of court decisions related to claim notice
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/domain.Data.ClaimNotice.CourtDecision'
+      goodsAndServices:
+        description: Goods and services on which apply claim notice
+        type: string
+        readOnly: true
+      jurisdiction:
+        description: Name of jurisdiction
+        type: string
+        readOnly: true
+      jurisdictionCountryCode:
+        description: Jurisdiction country code
+        type: string
+        readOnly: true
+      markName:
+        description: Mark name implicated in claim notice
+        type: string
+        readOnly: true
+      trademarkContacts:
+        description: Trademark contacts
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/domain.Data.ClaimNotice.Contact'
+      trademarkHolders:
+        description: Trademark holders
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/domain.Data.ClaimNotice.Contact'
+      trademarkUDRP:
+        description: Trademark UDRP informations
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/domain.Data.ClaimNotice.UDRP'
+  domain.Data.ClaimNotice.Classification:
+    description: Definition of a trademark claim notice classification
+    type: object
+    required:
+    - number
+    - description
+    properties:
+      description:
+        description: Summary of the classification
+        type: string
+        readOnly: true
+      number:
+        description: Code of the classification
+        type: string
+        readOnly: true
+  domain.Data.ClaimNotice.Contact:
+    description: Contact definition of a claim notice holder
+    type: object
+    required:
+    - address
+    properties:
+      address:
+        $ref: '#/definitions/domain.Data.ClaimNotice.Address'
+      email:
+        description: Email address
+        type: string
+        readOnly: true
+      entitlement:
+        description: Legitimacy of holder
+        type: string
+        readOnly: true
+      name:
+        description: Name of claim notice holder
+        type: string
+        readOnly: true
+      organisation:
+        description: Organisation name
+        type: string
+        readOnly: true
+      type:
+        description: Type of contact
+        type: string
+        readOnly: true
+  domain.Data.ClaimNotice.CourtDecision:
+    description: Definition of a court decision
+    type: object
+    required:
+    - courtName
+    - referenceNumber
+    - regions
+    - countryCode
+    properties:
+      countryCode:
+        description: Country code
+        type: string
+        readOnly: true
+      courtName:
+        description: Court name
+        type: string
+        readOnly: true
+      referenceNumber:
+        description: Reference number of court decision
+        type: string
+        readOnly: true
+      regions:
+        description: Regions where court decision apply
+        type: array
+        readOnly: true
+        items:
+          type: string
+  domain.Data.ClaimNotice.UDRP:
+    description: Definition of a UDRP procedure
+    type: object
+    required:
+    - udrpProvider
+    - caseNumber
+    properties:
+      caseNumber:
+        description: Case number
+        type: string
+        readOnly: true
+      udrpProvider:
+        description: UDRP Provider
+        type: string
+        readOnly: true
+  domain.Data.ProContact:
+    description: Representation of an .pro Contact Resource
+    type: object
+    properties:
+      authority:
+        description: Authority that certify your profesional status
+        type: string
+      authorityWebsite:
+        description: Website of the authority that certify your profesional status
+        type: string
+      id:
+        description: .pro Contact ID
+        type: integer
+        format: int64
+      jobDescription:
+        description: Description of your job
+        type: string
+      licenseNumber:
+        description: License number given by the authority
+        type: string
+  domain.Data.Smd:
+    description: Representation of a SMD Resource file
+    type: object
+    properties:
+      data:
+        description: SMD file content
+        type: string
+      id:
+        description: SMD file ID
+        type: integer
+        format: int64
+      notAfter:
+        description: Date when information about SMD file aren't valid anymore
+        type: string
+        format: date-time
+      notBefore:
+        description: Date before when information about SMD file aren't valid yet
+        type: string
+        format: date-time
+      protectedLabels:
+        description: List of the labels that are protected with that SMD file
+        type: array
+        items:
+          $ref: '#/definitions/domain.Data.SmdLabel'
+      smdId:
+        description: TMCH Internal identifier
+        type: string
+  domain.Data.SmdLabel:
+    description: Representation of a protected label
+    type: object
+    properties:
+      label:
+        description: Label that is protected
+        type: string
+      trademark:
+        description: Trademark associated to the protected label
+        type: string
+  domain.DnssecKey:
+    description: Domain's DNSSEC Key
+    type: object
+    required:
+    - publicKey
+    - algorithm
+    - flags
+    - status
+    - id
+    - tag
+    properties:
+      algorithm:
+        description: Algorithm number of the DNSSEC key
+        type: integer
+        format: int64
+        readOnly: true
+        enum:
+        - 10
+        - 13
+        - 14
+        - 3
+        - 5
+        - 6
+        - 7
+        - 8
+      flags:
+        description: Flag of the DNSSEC key
+        type: integer
+        format: int64
+        readOnly: true
+        enum:
+        - 256
+        - 257
+      id:
+        description: Id of the DNSSEC key
+        type: integer
+        format: int64
+        readOnly: true
+      publicKey:
+        description: Public key
+        type: string
+        readOnly: true
+      status:
+        description: Key status of the DNSSEC key
+        type: string
+        readOnly: true
+        enum:
+        - active
+        - generated
+        - published
+        - removed
+        - retired
+        - revoked
+      tag:
+        description: Tag of the DNSSEC key
+        type: integer
+        format: int64
+        readOnly: true
+  domain.Domain:
+    description: Domain name administration
+    type: object
+    required:
+    - offer
+    - domain
+    - owoSupported
+    - whoisOwner
+    - glueRecordIpv6Supported
+    - dnssecSupported
+    - lastUpdate
+    - glueRecordMultiIpSupported
+    properties:
+      dnssecSupported:
+        description: Is DNSSEC implemented for this domain name's tld
+        type: boolean
+        readOnly: true
+      domain:
+        description: Domain name
+        type: string
+        readOnly: true
+      glueRecordIpv6Supported:
+        description: Does the registry support ipv6 glue record
+        type: boolean
+        readOnly: true
+      glueRecordMultiIpSupported:
+        description: Does the registry support multi ip glue record
+        type: boolean
+        readOnly: true
+      lastUpdate:
+        description: Last update date
+        type: string
+        format: date-time
+        readOnly: true
+      nameServerType:
+        description: Name servers type
+        type: string
+        enum:
+        - external
+        - hosted
+      offer:
+        description: Domain's offer
+        type: string
+        readOnly: true
+        enum:
+        - diamond
+        - gold
+        - platinum
+      owoSupported:
+        description: Is whois obfuscation supported by this domain name's registry
+        type: boolean
+        readOnly: true
+      parentService:
+        $ref: '#/definitions/domain.ParentService'
+      transferLockStatus:
+        description: Transfer lock status
+        type: string
+        enum:
+        - locked
+        - locking
+        - unavailable
+        - unlocked
+        - unlocking
+      whoisOwner:
+        description: Contact Owner (you can edit it via /me/contact/<ID>)
+        type: string
+        readOnly: true
+  domain.DomainNs:
+    description: Name server
+    type: object
+    properties:
+      host:
+        description: Host
+        type: string
+      ip:
+        description: Ip
+        type: string
+  domain.DomainNsStatus:
+    description: DNS server status
+    type: object
+    properties:
+      state:
+        description: Whether or not the DNS server is working
+        type: string
+        enum:
+        - ko
+        - ok
+      type:
+        description: Whether or not the DNS server is managed by OVH
+        type: string
+        enum:
+        - external
+        - hosted
+      usedSince:
+        description: Date from which the DNS server is used by the domain
+        type: string
+        format: date-time
+  domain.GlueRecord:
+    description: Glue record
+    type: object
+    required:
+    - ips
+    - host
+    properties:
+      host:
+        description: Host of the glue record
+        type: string
+        readOnly: true
+      ips:
+        description: Ips of the glue record
+        type: array
+        readOnly: true
+        items:
+          type: string
+  domain.Owo:
+    description: Obfuscate whois
+    type: object
+    required:
+    - field
+    properties:
+      field:
+        description: Obfuscated field
+        type: string
+        readOnly: true
+        enum:
+        - address
+        - email
+        - phone
+  domain.ParentService:
+    description: Parent service
+    type: object
+    properties:
+      name:
+        description: Name of the parent service
+        type: string
+      type:
+        description: Type of the parent service
+        type: string
+        enum:
+        - /allDom
+  domain.Rule:
+    description: Rule
+    type: object
+    properties:
+      allowedValues:
+        type: array
+        items:
+          type: string
+      description:
+        type: string
+      fields:
+        type: array
+        items:
+          type: string
+      innerConfigurations:
+        type: array
+        items:
+          $ref: '#/definitions/domain.Rule'
+      label:
+        type: string
+      required:
+        type: boolean
+      type:
+        type: string
+  domain.Task:
+    description: Tasks associated to domain
+    type: object
+    required:
+    - todoDate
+    - function
+    - status
+    - canAccelerate
+    - creationDate
+    - canRelaunch
+    - lastUpdate
+    - id
+    - canCancel
+    properties:
+      canAccelerate:
+        description: Can accelerate the task
+        type: boolean
+        readOnly: true
+      canCancel:
+        description: Can cancel the task
+        type: boolean
+        readOnly: true
+      canRelaunch:
+        description: Can relaunch the task
+        type: boolean
+        readOnly: true
+      comment:
+        description: Comment about the task
+        type: string
+        readOnly: true
+      creationDate:
+        description: Creation date of the task
+        type: string
+        format: date-time
+        readOnly: true
+      doneDate:
+        description: Done date of the task
+        type: string
+        format: date-time
+        readOnly: true
+      function:
+        description: Function of the task
+        type: string
+        readOnly: true
+      id:
+        description: Id of the task
+        type: integer
+        format: int64
+        readOnly: true
+      lastUpdate:
+        description: Last update date of the task
+        type: string
+        format: date-time
+        readOnly: true
+      status:
+        description: Status of the task
+        type: string
+        readOnly: true
+        enum:
+        - cancelled
+        - doing
+        - done
+        - error
+        - todo
+      todoDate:
+        description: Todo date of the task
+        type: string
+        format: date-time
+        readOnly: true
+  domain.Zone.Dnssec:
+    description: Manage Dnssec for this zone
+    type: object
+    required:
+    - status
+    properties:
+      status:
+        type: string
+        readOnly: true
+        enum:
+        - disableInProgress
+        - disabled
+        - enableInProgress
+        - enabled
+  domain.Zone.DynHostLogin:
+    description: Manage DynHost login
+    type: object
+    required:
+    - login
+    - zone
+    properties:
+      login:
+        description: Login
+        type: string
+        readOnly: true
+      subDomain:
+        description: Subdomain that the login will be allowed to update (* to allow
+          all)
+        type: string
+      zone:
+        description: Zone
+        type: string
+        readOnly: true
+  domain.Zone.DynHostRecord:
+    description: DynHost record
+    type: object
+    required:
+    - id
+    - zone
+    properties:
+      id:
+        description: Id of the DynHost record
+        type: integer
+        format: int64
+        readOnly: true
+      ip:
+        description: Ip address of the DynHost record
+        type: string
+      subDomain:
+        description: Subdomain of the DynHost record
+        type: string
+      zone:
+        description: Zone of the DynHost record
+        type: string
+        readOnly: true
+  domain.Zone.Record:
+    description: Zone resource records
+    type: object
+    required:
+    - zone
+    - fieldType
+    - id
+    properties:
+      fieldType:
+        description: Resource record Name
+        type: string
+        readOnly: true
+        enum:
+        - A
+        - AAAA
+        - CNAME
+        - DKIM
+        - LOC
+        - MX
+        - NAPTR
+        - NS
+        - PTR
+        - SPF
+        - SRV
+        - SSHFP
+        - TLSA
+        - TXT
+      id:
+        description: Id of the zone resource record
+        type: integer
+        format: int64
+        readOnly: true
+      subDomain:
+        description: Resource record subdomain
+        type: string
+      target:
+        description: Resource record target
+        type: string
+      ttl:
+        description: Resource record ttl
+        type: integer
+        format: int64
+      zone:
+        description: Resource record zone
+        type: string
+        readOnly: true
+  domain.Zone.Redirection:
+    description: Redirection
+    type: object
+    required:
+    - id
+    - zone
+    properties:
+      description:
+        description: Desciption for invisible redirection
+        type: string
+      id:
+        description: Id of the redirection
+        type: integer
+        format: int64
+        readOnly: true
+      keywords:
+        description: Keywords for invisible redirection
+        type: string
+      subDomain:
+        description: subdomain to redirect
+        type: string
+        readOnly: true
+      target:
+        description: Target of the redirection
+        type: string
+      title:
+        description: Title for invisible redirection
+        type: string
+      type:
+        description: Redirection type
+        type: string
+        enum:
+        - invisible
+        - visible
+        - visiblePermanent
+      zone:
+        description: Redirection zone
+        type: string
+        readOnly: true
+  domain.Zone.Soa:
+    description: Zone Start Of Authority
+    type: object
+    properties:
+      email:
+        description: Email address of the DNS Administrator
+        type: string
+      expire:
+        description: When a zone transfer fails, a countdown clock begins. When the
+          number of seconds set in the expire field elapses, the nameserver stops
+          answering for that zone file
+        type: integer
+        format: int64
+      nxDomainTtl:
+        description: Non-Existent Domain TTL, if the name server returns a negative
+          response, the remote server should wait the number of seconds set in the
+          nxDomainTtl field before trying again
+        type: integer
+        format: int64
+      refresh:
+        description: The refresh value determines the interval in seconds between
+          successful zone transfers of the entire zone file from a nameserver to another.
+        type: integer
+        format: int64
+      serial:
+        description: The serial number is used to indicate which copy of the zone
+          file is the most current. When editing zone files, you must increment the
+          serial number
+        type: integer
+        format: int64
+      server:
+        description: Primary authoritative server
+        type: string
+      ttl:
+        description: Time To Live in seconds
+        type: integer
+        format: int64
+  domain.Zone.Task:
+    description: Tasks associated to a zone
+    type: object
+    required:
+    - status
+    - function
+    - lastUpdate
+    - id
+    - canCancel
+    - canRelaunch
+    - creationDate
+    - todoDate
+    - canAccelerate
+    properties:
+      canAccelerate:
+        description: Can accelerate the task
+        type: boolean
+        readOnly: true
+      canCancel:
+        description: Can cancel the task
+        type: boolean
+        readOnly: true
+      canRelaunch:
+        description: Can relaunch the task
+        type: boolean
+        readOnly: true
+      comment:
+        description: Comment about the task
+        type: string
+        readOnly: true
+      creationDate:
+        description: Creation date of the task
+        type: string
+        format: date-time
+        readOnly: true
+      doneDate:
+        description: Done date of the task
+        type: string
+        format: date-time
+        readOnly: true
+      function:
+        description: Function of the task
+        type: string
+        readOnly: true
+      id:
+        description: Id of the task
+        type: integer
+        format: int64
+        readOnly: true
+      lastUpdate:
+        description: Last update date of the task
+        type: string
+        format: date-time
+        readOnly: true
+      status:
+        description: Status of the task
+        type: string
+        readOnly: true
+        enum:
+        - cancelled
+        - doing
+        - done
+        - error
+        - todo
+      todoDate:
+        description: Todo date of the task
+        type: string
+        format: date-time
+        readOnly: true
+  domain.Zone.Zone:
+    description: Zone dns Management
+    type: object
+    required:
+    - hasDnsAnycast
+    - nameServers
+    - dnssecSupported
+    - lastUpdate
+    properties:
+      dnssecSupported:
+        description: Is DNSSEC supported by this zone
+        type: boolean
+        readOnly: true
+      hasDnsAnycast:
+        description: hasDnsAnycast flag of the DNS zone
+        type: boolean
+        readOnly: true
+      lastUpdate:
+        description: Last update date of the DNS zone
+        type: string
+        format: date-time
+        readOnly: true
+      nameServers:
+        description: Name servers that host the DNS zone
+        type: array
+        readOnly: true
+        items:
+          type: string
+  domain.Zone.ZoneRestorePoint:
+    description: Zone restore point
+    type: object
+    required:
+    - creationDate
+    - zoneFileUrl
+    properties:
+      creationDate:
+        description: Date of backup creation
+        type: string
+        format: date-time
+        readOnly: true
+      zoneFileUrl:
+        description: URL to get backup content
+        type: string
+        readOnly: true
+  service.RenewType:
+    description: Map a possible renew for a specific service
+    type: object
+    properties:
+      automatic:
+        description: The service is automatically renewed
+        type: boolean
+      deleteAtExpiration:
+        description: The service will be deleted at expiration
+        type: boolean
+      forced:
+        description: The service forced to be renewed
+        type: boolean
+      manualPayment:
+        description: The service needs to be manually renewed and paid
+        type: boolean
+      period:
+        description: period of renew in month
+        type: integer
+        format: int64
+  services.Service:
+    description: Details about a Service
+    type: object
+    required:
+    - contactTech
+    - contactAdmin
+    - creation
+    - domain
+    - contactBilling
+    - expiration
+    - status
+    - canDeleteAtExpiration
+    - renewalType
+    - serviceId
+    properties:
+      canDeleteAtExpiration:
+        description: Indicates that the service can be set up to be deleted at expiration
+        type: boolean
+        readOnly: true
+      contactAdmin:
+        type: string
+        readOnly: true
+      contactBilling:
+        type: string
+        readOnly: true
+      contactTech:
+        type: string
+        readOnly: true
+      creation:
+        type: string
+        format: date
+        readOnly: true
+      domain:
+        type: string
+        readOnly: true
+      engagedUpTo:
+        type: string
+        format: date
+        readOnly: true
+      expiration:
+        type: string
+        format: date
+        readOnly: true
+      possibleRenewPeriod:
+        description: All the possible renew period of your service in month
+        type: array
+        readOnly: true
+        items:
+          type: integer
+          format: int64
+      renew:
+        $ref: '#/definitions/service.RenewType'
+      renewalType:
+        type: string
+        readOnly: true
+        enum:
+        - automaticForcedProduct
+        - automaticV2012
+        - automaticV2014
+        - automaticV2016
+        - manual
+        - oneShot
+        - option
+      serviceId:
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        type: string
+        readOnly: true
+        enum:
+        - expired
+        - inCreation
+        - ok
+        - unPaid
+  zone.ResetRecord:
+    description: Resource record
+    type: object
+    properties:
+      fieldType:
+        type: string
+        enum:
+        - A
+        - MX
+      target:
+        description: Resource record target
+        type: string
+  zone.Status:
+    description: Zone status
+    type: object
+    properties:
+      errors:
+        description: Error list
+        type: array
+        items:
+          type: string
+      isDeployed:
+        description: True if the zone has successfully been deployed
+        type: boolean
+      warnings:
+        description: Warning list
+        type: array
+        items:
+          type: string
+responses:
+  OVH.Error:
+    description: Unexpected error
+    schema:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+        httpCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+  domain.CurrentNameServer:
+    description: description of 'domain.CurrentNameServer' response
+    schema:
+      $ref: '#/definitions/domain.CurrentNameServer'
+  domain.Data.AfnicCorporationTrademarkContact:
+    description: description of 'domain.Data.AfnicCorporationTrademarkContact' response
+    schema:
+      $ref: '#/definitions/domain.Data.AfnicCorporationTrademarkContact'
+  domain.Data.AssociationContact:
+    description: description of 'domain.Data.AssociationContact' response
+    schema:
+      $ref: '#/definitions/domain.Data.AssociationContact'
+  domain.Data.ClaimNotice.ClaimNotice:
+    description: description of 'domain.Data.ClaimNotice.ClaimNotice' response
+    schema:
+      $ref: '#/definitions/domain.Data.ClaimNotice.ClaimNotice'
+  domain.Data.ProContact:
+    description: description of 'domain.Data.ProContact' response
+    schema:
+      $ref: '#/definitions/domain.Data.ProContact'
+  domain.Data.Smd:
+    description: description of 'domain.Data.Smd' response
+    schema:
+      $ref: '#/definitions/domain.Data.Smd'
+  domain.DnssecKey:
+    description: description of 'domain.DnssecKey' response
+    schema:
+      $ref: '#/definitions/domain.DnssecKey'
+  domain.Domain:
+    description: description of 'domain.Domain' response
+    schema:
+      $ref: '#/definitions/domain.Domain'
+  domain.DomainNsStatus:
+    description: description of 'domain.DomainNsStatus' response
+    schema:
+      $ref: '#/definitions/domain.DomainNsStatus'
+  domain.GlueRecord:
+    description: description of 'domain.GlueRecord' response
+    schema:
+      $ref: '#/definitions/domain.GlueRecord'
+  domain.Owo:
+    description: description of 'domain.Owo' response
+    schema:
+      $ref: '#/definitions/domain.Owo'
+  domain.Rule:
+    description: description of 'domain.Rule' response
+    schema:
+      $ref: '#/definitions/domain.Rule'
+  domain.Task:
+    description: description of 'domain.Task' response
+    schema:
+      $ref: '#/definitions/domain.Task'
+  domain.Zone.Dnssec:
+    description: description of 'domain.Zone.Dnssec' response
+    schema:
+      $ref: '#/definitions/domain.Zone.Dnssec'
+  domain.Zone.DynHostLogin:
+    description: description of 'domain.Zone.DynHostLogin' response
+    schema:
+      $ref: '#/definitions/domain.Zone.DynHostLogin'
+  domain.Zone.DynHostRecord:
+    description: description of 'domain.Zone.DynHostRecord' response
+    schema:
+      $ref: '#/definitions/domain.Zone.DynHostRecord'
+  domain.Zone.Record:
+    description: description of 'domain.Zone.Record' response
+    schema:
+      $ref: '#/definitions/domain.Zone.Record'
+  domain.Zone.Redirection:
+    description: description of 'domain.Zone.Redirection' response
+    schema:
+      $ref: '#/definitions/domain.Zone.Redirection'
+  domain.Zone.Soa:
+    description: description of 'domain.Zone.Soa' response
+    schema:
+      $ref: '#/definitions/domain.Zone.Soa'
+  domain.Zone.Task:
+    description: description of 'domain.Zone.Task' response
+    schema:
+      $ref: '#/definitions/domain.Zone.Task'
+  domain.Zone.Zone:
+    description: description of 'domain.Zone.Zone' response
+    schema:
+      $ref: '#/definitions/domain.Zone.Zone'
+  domain.Zone.ZoneRestorePoint:
+    description: description of 'domain.Zone.ZoneRestorePoint' response
+    schema:
+      $ref: '#/definitions/domain.Zone.ZoneRestorePoint'
+  services.Service:
+    description: description of 'services.Service' response
+    schema:
+      $ref: '#/definitions/services.Service'
+  zone.Status:
+    description: description of 'zone.Status' response
+    schema:
+      $ref: '#/definitions/zone.Status'

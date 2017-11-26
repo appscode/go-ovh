@@ -1,0 +1,232 @@
+swagger: "2.0"
+info:
+  title: OVH API - EU
+  description: Build your own OVH world.
+  version: 1.0.0
+  contact:
+    name: OVH API EU
+    url: https://eu.api.ovh.com/
+    email: api-subscribe@ml.ovh.net
+  license:
+    name: © OVH SAS
+    url: https://eu.api.ovh.com/
+host: eu.api.ovh.com
+basePath: /1.0
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+externalDocs:
+  url: https://eu.api.ovh.com/
+  description: Online version
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    name: X-Ovh-Consumer
+    in: header
+paths:
+  /vip:
+    get:
+      summary: List available services
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vip/{serviceName}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vip.SupportVip'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vip/{serviceName}/serviceInfos:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/services.Service'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vipServiceInfosPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.Service'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+definitions:
+  service.RenewType:
+    description: Map a possible renew for a specific service
+    type: object
+    properties:
+      automatic:
+        description: The service is automatically renewed
+        type: boolean
+      deleteAtExpiration:
+        description: The service will be deleted at expiration
+        type: boolean
+      forced:
+        description: The service forced to be renewed
+        type: boolean
+      manualPayment:
+        description: The service needs to be manually renewed and paid
+        type: boolean
+      period:
+        description: period of renew in month
+        type: integer
+        format: int64
+  services.Service:
+    description: Details about a Service
+    type: object
+    required:
+    - contactBilling
+    - serviceId
+    - domain
+    - creation
+    - canDeleteAtExpiration
+    - renewalType
+    - contactTech
+    - expiration
+    - contactAdmin
+    - status
+    properties:
+      canDeleteAtExpiration:
+        description: Indicates that the service can be set up to be deleted at expiration
+        type: boolean
+        readOnly: true
+      contactAdmin:
+        type: string
+        readOnly: true
+      contactBilling:
+        type: string
+        readOnly: true
+      contactTech:
+        type: string
+        readOnly: true
+      creation:
+        type: string
+        format: date
+        readOnly: true
+      domain:
+        type: string
+        readOnly: true
+      engagedUpTo:
+        type: string
+        format: date
+        readOnly: true
+      expiration:
+        type: string
+        format: date
+        readOnly: true
+      possibleRenewPeriod:
+        description: All the possible renew period of your service in month
+        type: array
+        readOnly: true
+        items:
+          type: integer
+          format: int64
+      renew:
+        $ref: '#/definitions/service.RenewType'
+      renewalType:
+        type: string
+        readOnly: true
+        enum:
+        - automaticForcedProduct
+        - automaticV2012
+        - automaticV2014
+        - automaticV2016
+        - manual
+        - oneShot
+        - option
+      serviceId:
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        type: string
+        readOnly: true
+        enum:
+        - expired
+        - inCreation
+        - ok
+        - unPaid
+  vip.SupportVip:
+    description: Vip Service
+    type: object
+    required:
+    - serviceName
+    - universe
+    properties:
+      serviceName:
+        description: Name of the VIP offer
+        type: string
+        readOnly: true
+      universe:
+        description: VIP universes of this service
+        type: array
+        readOnly: true
+        items:
+          type: string
+          enum:
+          - cloud
+          - dedicated
+          - telecom
+          - web
+responses:
+  OVH.Error:
+    description: Unexpected error
+    schema:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+        httpCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+  services.Service:
+    description: description of 'services.Service' response
+    schema:
+      $ref: '#/definitions/services.Service'
+  vip.SupportVip:
+    description: description of 'vip.SupportVip' response
+    schema:
+      $ref: '#/definitions/vip.SupportVip'
