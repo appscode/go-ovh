@@ -22,6 +22,10 @@ rm -rf $REPO_ROOT/iploadbalancing/{client,models}; mkdir -p $REPO_ROOT/iploadbal
 ovhapi2openapi -i api.yaml -o swagger.yaml
 swagger generate client -f ./swagger.yaml -A ipLoadbalancing --copyright-file=$REPO_ROOT/hack/boilerplate.go.txt
 
+rm -rf $REPO_ROOT/me/{client,models}; mkdir -p $REPO_ROOT/me; cd $REPO_ROOT/me
+ovhapi2openapi -i api.yaml -o swagger.yaml
+swagger generate client -f ./swagger.yaml -A me --copyright-file=$REPO_ROOT/hack/boilerplate.go.txt
+
 rm -rf $REPO_ROOT/vip/{client,models}; mkdir -p $REPO_ROOT/vip; cd $REPO_ROOT/vip
 ovhapi2openapi -i api.yaml -o swagger.yaml
 swagger generate client -f ./swagger.yaml -A vip --copyright-file=$REPO_ROOT/hack/boilerplate.go.txt
