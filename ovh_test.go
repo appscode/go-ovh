@@ -140,7 +140,7 @@ func TestError500HTML(t *testing.T) {
 
 	// Test
 	var res struct{}
-	err := client.CallAPI("GET", "/test", nil, &res, false)
+	err := client.callAPI("GET", "/test", nil, &res, false)
 
 	// Validate
 	if err == nil {
