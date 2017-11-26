@@ -18,6 +18,7 @@ import (
 	domain_ops "github.com/appscode/go-ovh/domain/client/operations"
 	ip_ops "github.com/appscode/go-ovh/ip/client/operations"
 	iploadbalancing_ops "github.com/appscode/go-ovh/iploadbalancing/client/operations"
+	me_ops "github.com/appscode/go-ovh/me/client/operations"
 	vip_ops "github.com/appscode/go-ovh/vip/client/operations"
 	vps_ops "github.com/appscode/go-ovh/vps/client/operations"
 	vrack_ops "github.com/appscode/go-ovh/vrack/client/operations"
@@ -87,6 +88,7 @@ type Client struct {
 	domain          *domain_ops.Client
 	ip              *ip_ops.Client
 	iploadbalancing *iploadbalancing_ops.Client
+	me              *me_ops.Client
 	vip             *vip_ops.Client
 	vps             *vps_ops.Client
 	vrack           *vrack_ops.Client
@@ -124,6 +126,7 @@ func NewClient(endpoint, appKey, appSecret, consumerKey string) (*Client, error)
 	client.domain = domain_ops.New(transport, strfmt.Default)
 	client.ip = ip_ops.New(transport, strfmt.Default)
 	client.iploadbalancing = iploadbalancing_ops.New(transport, strfmt.Default)
+	client.me = me_ops.New(transport, strfmt.Default)
 	client.vip = vip_ops.New(transport, strfmt.Default)
 	client.vps = vps_ops.New(transport, strfmt.Default)
 	client.vrack = vrack_ops.New(transport, strfmt.Default)
@@ -348,6 +351,10 @@ func (c *Client) IP() *ip_ops.Client {
 
 func (c *Client) IPLoadbalancing() *iploadbalancing_ops.Client {
 	return c.iploadbalancing
+}
+
+func (c *Client) Me() *me_ops.Client {
+	return c.me
 }
 
 func (c *Client) VIP() *vip_ops.Client {
