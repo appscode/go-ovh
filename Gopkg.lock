@@ -104,6 +104,12 @@
   revision = "88f656faf3f37f690df1a32515b479415e1a6769"
 
 [[projects]]
+  name = "gopkg.in/ini.v1"
+  packages = ["."]
+  revision = "32e4c1e6bc4e7d0d8451aa6b75200d19e37a536a"
+  version = "v1.32.0"
+
+[[projects]]
   branch = "v2"
   name = "gopkg.in/mgo.v2"
   packages = ["bson","internal/json"]
@@ -118,6 +124,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7066b3db1125614a89e6a57970be9d0291ab5d9106424cb2e41544a7344aeacd"
+  inputs-digest = "c261531fe9e0357ef9a1118026b59ad6337a1f48f9f70c1a57abd856d19c0731"
   solver-name = "gps-cdcl"
   solver-version = 1

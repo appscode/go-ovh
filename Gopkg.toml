@@ -44,3 +44,7 @@
 [[constraint]]
   branch = "master"
   name = "golang.org/x/net"
+
+[[constraint]]
+  name = "gopkg.in/ini.v1"
+  version = "1.32.0"
