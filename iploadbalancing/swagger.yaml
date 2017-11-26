@@ -1,0 +1,3943 @@
+swagger: "2.0"
+info:
+  title: OVH API - EU
+  description: Build your own OVH world.
+  version: 1.0.0
+  contact:
+    name: OVH API EU
+    url: https://eu.api.ovh.com/
+    email: api-subscribe@ml.ovh.net
+  license:
+    name: © OVH SAS
+    url: https://eu.api.ovh.com/
+host: eu.api.ovh.com
+basePath: /1.0
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+externalDocs:
+  url: https://eu.api.ovh.com/
+  description: Online version
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    name: X-Ovh-Consumer
+    in: header
+paths:
+  /ipLoadbalancing:
+    get:
+      summary: List available services
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.Ip'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.Ip'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/availableFarmProbes:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Available farm probes for health checks
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/iplb.FarmAvailableProbe'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/availableFarmType:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Available farm types
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/availableFrontendType:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Available frontend type
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/availableRouteActions:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Available route actions
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/iplb.RouteAvailableAction'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/availableRouteRules:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Available route match rules
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/iplb.RouteAvailableRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/changeContact:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Launch a contact change procedure
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbChangeContactPost
+        in: body
+        schema:
+          type: object
+          properties:
+            contactAdmin:
+              type: string
+            contactBilling:
+              type: string
+            contactTech:
+              type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/confirmTermination:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Confirm termination of your service
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbConfirmTerminationPost
+        in: body
+        schema:
+          type: object
+          required:
+          - token
+          properties:
+            commentary:
+              type: string
+            reason:
+              type: string
+              enum:
+              - LACK_OF_PERFORMANCES
+              - MIGRATED_TO_ANOTHER_OVH_PRODUCT
+              - MIGRATED_TO_COMPETITOR
+              - NOT_NEEDED_ANYMORE
+              - NOT_RELIABLE
+              - OTHER
+              - TOO_EXPENSIVE
+              - TOO_HARD_TO_USE
+            token:
+              type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/definedFarms:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of defined farms, and whether they are HTTP, TCP or UDP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/iplb.DefinedBackend'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/definedFrontends:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of defined frontends, and whether they are HTTP, TCP or UDP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/iplb.DefinedFrontend'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/definedRoutes:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of defined routes, and whether they are HTTP or TCP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/iplb.DefinedRoute'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/failover:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List all failover ip routed to this IPLB
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/freeCertificate:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Order a free certificate. We order and deliver it for you
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbFreeCertificatePost
+        in: body
+        schema:
+          type: object
+          required:
+          - fqdn
+          properties:
+            fqdn:
+              type: array
+              items:
+                type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.Task.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/http/farm:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: HTTP Farm for this iplb
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: zone
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new HTTP Farm on your IP Load Balancing
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbHttpFarmPost
+        in: body
+        schema:
+          type: object
+          required:
+          - zone
+          properties:
+            balance:
+              type: string
+              enum:
+              - first
+              - leastconn
+              - roundrobin
+              - source
+              - uri
+            displayName:
+              type: string
+            port:
+              type: integer
+              format: int64
+            probe:
+              $ref: '#/definitions/iplb.BackendProbe'
+            stickiness:
+              type: string
+              enum:
+              - cookie
+              - sourceIp
+            vrackNetworkId:
+              type: integer
+              format: int64
+            zone:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendHttp.BackendHttp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/http/farm/{farmId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: farmId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendHttp.BackendHttp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbHttpFarmPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.BackendHttp.BackendHttp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete an HTTP Farm
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/http/farm/{farmId}/server:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: farmId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: HTTP Farm's Servers
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: status
+        in: query
+        type: string
+        enum:
+        - active
+        - inactive
+      - name: cookie
+        in: query
+        type: string
+      - name: address
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a server to an HTTP Farm
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbHttpFarmServerPost
+        in: body
+        schema:
+          type: object
+          required:
+          - status
+          - address
+          properties:
+            address:
+              type: string
+            backup:
+              type: boolean
+              default: false
+            chain:
+              type: string
+            cookie:
+              type: string
+            displayName:
+              type: string
+            port:
+              type: integer
+              format: int64
+            probe:
+              type: boolean
+              default: false
+            proxyProtocolVersion:
+              type: string
+              enum:
+              - v1
+              - v2
+              - v2-ssl
+              - v2-ssl-cn
+            ssl:
+              type: boolean
+              default: false
+            status:
+              type: string
+              enum:
+              - active
+              - inactive
+            weight:
+              type: integer
+              format: int64
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendHttpCustomerServer.BackendHTTPServer'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/http/farm/{farmId}/server/{serverId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: farmId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    - name: serverId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendHttpCustomerServer.BackendHTTPServer'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbHttpFarmServerPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.BackendHttpCustomerServer.BackendHTTPServer'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a server from an HTTP Farm
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/http/frontend:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: HTTP frontends for this iplb
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: defaultFarmId
+        in: query
+        type: integer
+        format: int64
+      - name: zone
+        in: query
+        type: string
+      - name: port
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new http frontend on your IP Load Balancing
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbHttpFrontendPost
+        in: body
+        schema:
+          type: object
+          required:
+          - zone
+          - port
+          properties:
+            allowedSource:
+              type: array
+              items:
+                type: string
+            dedicatedIpfo:
+              type: array
+              items:
+                type: string
+            defaultFarmId:
+              type: integer
+              format: int64
+            defaultSslId:
+              type: integer
+              format: int64
+            disabled:
+              type: boolean
+              default: false
+            displayName:
+              type: string
+            hsts:
+              type: boolean
+              default: false
+            httpHeader:
+              type: array
+              items:
+                type: string
+            port:
+              type: string
+            redirectLocation:
+              type: string
+            ssl:
+              type: boolean
+              default: false
+            zone:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.FrontendHttp.FrontendHttp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/http/frontend/{frontendId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: frontendId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.FrontendHttp.FrontendHttp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbHttpFrontendPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.FrontendHttp.FrontendHttp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete an HTTP frontend
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/http/route:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: HTTP routes for this iplb
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: frontendId
+        in: query
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new HTTP route to your frontend
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbHttpRoutePost
+        in: body
+        schema:
+          type: object
+          required:
+          - action
+          properties:
+            action:
+              $ref: '#/definitions/iplb.RouteHttpAction'
+            displayName:
+              type: string
+            frontendId:
+              type: integer
+              format: int64
+            weight:
+              type: integer
+              format: int64
+      responses:
+        "200":
+          $ref: '#/responses/iplb.RouteHttp.RouteHttp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/http/route/{routeId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: routeId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.RouteHttp.RouteHttp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbHttpRoutePut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.RouteHttp.RouteHttp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete this HTTP route
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/http/route/{routeId}/rule:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: routeId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: HTTP routes for this iplb
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new rule to your route
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbHttpRouteRulePost
+        in: body
+        schema:
+          type: object
+          required:
+          - match
+          - field
+          properties:
+            field:
+              type: string
+            match:
+              type: string
+              enum:
+              - contains
+              - endswith
+              - exists
+              - in
+              - internal
+              - is
+              - matches
+              - startswith
+            negate:
+              type: boolean
+              default: false
+            pattern:
+              type: string
+            subField:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.RouteRule.RouteRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/http/route/{routeId}/rule/{ruleId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: routeId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    - name: ruleId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.RouteRule.RouteRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbHttpRouteRulePut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.RouteRule.RouteRule'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete this rule from the route
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/instancesState:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get the effective state of your IPLB instances on IPLB servers
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/iplb.InstancesState'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/natIp:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Ip subnet used by OVH to nat requests on your IPLB to your backends.
+        You must ensure that your backends are not part of a network that overlap
+        with this one
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/iplb.NatIps'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/pendingChanges:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List the pending changes on your Load Balancer configuration, per zone
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/iplb.PendingChanges'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/quota:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Available quota informations for current billing period per zone
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/quota/{zone}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: zone
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.Quota.Quota'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbQuotaPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.Quota.Quota'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/quotaHistory:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Quota history informations, per month
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: zone
+        in: query
+        type: string
+      - name: historizedDate.to
+        in: query
+        type: string
+        format: date
+      - name: historizedDate.from
+        in: query
+        type: string
+        format: date
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/quotaHistory/{id}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.QuotaHistory.QuotaHistory'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/refresh:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Apply the configuration to your iplb
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbRefreshPost
+        in: body
+        schema:
+          type: object
+          properties:
+            zone:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.Task.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/serviceInfos:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/services.Service'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbServiceInfosPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.Service'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/ssl:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Ssl for this iplb
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: serial
+        in: query
+        type: string
+      - name: fingerprint
+        in: query
+        type: string
+      - name: type
+        in: query
+        type: string
+        enum:
+        - built
+        - custom
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new custom SSL certificate on your IP Load Balancing
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbSslPost
+        in: body
+        schema:
+          type: object
+          required:
+          - certificate
+          - key
+          properties:
+            certificate:
+              type: string
+            chain:
+              type: string
+            displayName:
+              type: string
+            key:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.Ssl.Ssl'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/ssl/{id}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.Ssl.Ssl'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbSslPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.Ssl.Ssl'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a custom SSL certificate
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/task:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Task for this iplb
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: creationDate.to
+        in: query
+        type: string
+        format: date-time
+      - name: creationDate.from
+        in: query
+        type: string
+        format: date-time
+      - name: doneDate.from
+        in: query
+        type: string
+        format: date-time
+      - name: status
+        in: query
+        type: string
+        enum:
+        - blocked
+        - cancelled
+        - doing
+        - done
+        - error
+        - todo
+      - name: action
+        in: query
+        type: string
+        enum:
+        - deleteIplb
+        - deployIplb
+        - install
+        - installIplb
+        - installZone
+        - orderFreeCertificate
+        - orderPaidCertificate
+        - orderSsl
+        - refreshIplb
+        - releaseIplb
+        - releaseIplbZone
+        - reopenIplb
+        - suspendIplb
+        - suspendZone
+        - switchToIplbNextGenerationApi
+        - vrackAttach
+        - vrackDetach
+      - name: doneDate.to
+        in: query
+        type: string
+        format: date-time
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/task/{id}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.Task.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/tcp/farm:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: TCP Farm for this iplb
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: zone
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new TCP Farm on your IP Load Balancing
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbTcpFarmPost
+        in: body
+        schema:
+          type: object
+          required:
+          - zone
+          properties:
+            balance:
+              type: string
+              enum:
+              - first
+              - leastconn
+              - roundrobin
+              - source
+            displayName:
+              type: string
+            port:
+              type: integer
+              format: int64
+            probe:
+              $ref: '#/definitions/iplb.BackendProbe'
+            stickiness:
+              type: string
+              enum:
+              - sourceIp
+            vrackNetworkId:
+              type: integer
+              format: int64
+            zone:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendTcp.BackendTcp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/tcp/farm/{farmId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: farmId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendTcp.BackendTcp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbTcpFarmPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.BackendTcp.BackendTcp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a TCP Farm
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/tcp/farm/{farmId}/server:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: farmId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: TCP Farm's Servers
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: status
+        in: query
+        type: string
+        enum:
+        - active
+        - inactive
+      - name: address
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a server to a TCP Farm
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbTcpFarmServerPost
+        in: body
+        schema:
+          type: object
+          required:
+          - status
+          - address
+          properties:
+            address:
+              type: string
+            backup:
+              type: boolean
+              default: false
+            chain:
+              type: string
+            displayName:
+              type: string
+            port:
+              type: integer
+              format: int64
+            probe:
+              type: boolean
+              default: false
+            proxyProtocolVersion:
+              type: string
+              enum:
+              - v1
+              - v2
+              - v2-ssl
+              - v2-ssl-cn
+            ssl:
+              type: boolean
+              default: false
+            status:
+              type: string
+              enum:
+              - active
+              - inactive
+            weight:
+              type: integer
+              format: int64
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendCustomerServer.BackendServer'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/tcp/farm/{farmId}/server/{serverId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: farmId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    - name: serverId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendTcpCustomerServer.BackendTCPServer'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbTcpFarmServerPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.BackendTcpCustomerServer.BackendTCPServer'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a server from a TCP Farm
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/tcp/frontend:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: TCP frontends for this iplb
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: defaultFarmId
+        in: query
+        type: integer
+        format: int64
+      - name: zone
+        in: query
+        type: string
+      - name: port
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new TCP frontend on your IP Load Balancing
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbTcpFrontendPost
+        in: body
+        schema:
+          type: object
+          required:
+          - zone
+          - port
+          properties:
+            allowedSource:
+              type: array
+              items:
+                type: string
+            dedicatedIpfo:
+              type: array
+              items:
+                type: string
+            defaultFarmId:
+              type: integer
+              format: int64
+            defaultSslId:
+              type: integer
+              format: int64
+            disabled:
+              type: boolean
+              default: false
+            displayName:
+              type: string
+            port:
+              type: string
+            ssl:
+              type: boolean
+              default: false
+            zone:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.FrontendTcp.FrontendTcp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/tcp/frontend/{frontendId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: frontendId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.FrontendTcp.FrontendTcp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbTcpFrontendPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.FrontendTcp.FrontendTcp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete an TCP frontend
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/tcp/route:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: TCP routes for this iplb
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: frontendId
+        in: query
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new TCP route to your frontend
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbTcpRoutePost
+        in: body
+        schema:
+          type: object
+          required:
+          - action
+          properties:
+            action:
+              $ref: '#/definitions/iplb.RouteTcpAction'
+            displayName:
+              type: string
+            frontendId:
+              type: integer
+              format: int64
+            weight:
+              type: integer
+              format: int64
+      responses:
+        "200":
+          $ref: '#/responses/iplb.RouteTcp.RouteTcp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/tcp/route/{routeId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: routeId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.RouteTcp.RouteTcp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbTcpRoutePut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.RouteTcp.RouteTcp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete this TCP route
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/tcp/route/{routeId}/rule:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: routeId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: HTTP routes for this iplb
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new rule to your route
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbTcpRouteRulePost
+        in: body
+        schema:
+          type: object
+          required:
+          - match
+          - field
+          properties:
+            field:
+              type: string
+            match:
+              type: string
+              enum:
+              - contains
+              - endswith
+              - exists
+              - in
+              - internal
+              - is
+              - matches
+              - startswith
+            negate:
+              type: boolean
+              default: false
+            pattern:
+              type: string
+            subField:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.RouteRule.RouteRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/tcp/route/{routeId}/rule/{ruleId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: routeId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    - name: ruleId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.RouteRule.RouteRule'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: iplbTcpRouteRulePut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.RouteRule.RouteRule'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete this rule from the route
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/terminate:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Terminate your service
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/udp/farm:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: UDP Farm for this iplb
+      description: BETA - authentication required
+      parameters:
+      - name: zone
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new UDP Farm on your IP Load Balancing
+      description: BETA - authentication required
+      parameters:
+      - name: iplbUdpFarmPost
+        in: body
+        schema:
+          type: object
+          required:
+          - zone
+          - port
+          properties:
+            displayName:
+              type: string
+            port:
+              type: integer
+              format: int64
+            vrackNetworkId:
+              type: integer
+              format: int64
+            zone:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendUdp.BackendUdp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/udp/farm/{farmId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: farmId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendUdp.BackendUdp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: BETA - authentication required
+      parameters:
+      - name: iplbUdpFarmPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.BackendUdp.BackendUdp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete an UDP Farm
+      description: BETA - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/udp/farm/{farmId}/server:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: farmId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: UDP Farm's Servers
+      description: BETA - authentication required
+      parameters:
+      - name: status
+        in: query
+        type: string
+        enum:
+        - active
+        - inactive
+      - name: address
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a server to an UDP Farm
+      description: BETA - authentication required
+      parameters:
+      - name: iplbUdpFarmServerPost
+        in: body
+        schema:
+          type: object
+          required:
+          - status
+          - address
+          properties:
+            address:
+              type: string
+            displayName:
+              type: string
+            port:
+              type: integer
+              format: int64
+            status:
+              type: string
+              enum:
+              - active
+              - inactive
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendCustomerServer.BackendServer'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/udp/farm/{farmId}/server/{serverId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: farmId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    - name: serverId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.BackendUdpCustomerServer.BackendUDPServer'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: BETA - authentication required
+      parameters:
+      - name: iplbUdpFarmServerPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.BackendUdpCustomerServer.BackendUDPServer'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a server from an UDP Farm
+      description: BETA - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/udp/frontend:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: UDP frontends for this iplb
+      description: BETA - authentication required
+      parameters:
+      - name: defaultFarmId
+        in: query
+        type: integer
+        format: int64
+      - name: zone
+        in: query
+        type: string
+      - name: port
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a new UDP frontend on your IP Load Balancing
+      description: BETA - authentication required
+      parameters:
+      - name: iplbUdpFrontendPost
+        in: body
+        schema:
+          type: object
+          required:
+          - zone
+          - port
+          properties:
+            dedicatedIpfo:
+              type: array
+              items:
+                type: string
+            defaultFarmId:
+              type: integer
+              format: int64
+            disabled:
+              type: boolean
+              default: false
+            displayName:
+              type: string
+            port:
+              type: string
+            zone:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/iplb.FrontendUdp.FrontendUdp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/udp/frontend/{frontendId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: frontendId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.FrontendUdp.FrontendUdp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: BETA - authentication required
+      parameters:
+      - name: iplbUdpFrontendPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.FrontendUdp.FrontendUdp'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete an UDP frontend
+      description: BETA - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/vrack/network:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Descriptions of private networks in the vRack attached to this Load
+        Balancer
+      description: BETA - authentication required
+      parameters:
+      - name: vlan
+        in: query
+        type: integer
+        format: int64
+      - name: subnet
+        in: query
+        type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Add a description of a private network in the attached vRack
+      description: BETA - authentication required
+      parameters:
+      - name: iplbVrackNetworkPost
+        in: body
+        schema:
+          type: object
+          required:
+          - natIp
+          - subnet
+          properties:
+            natIp:
+              type: string
+            subnet:
+              type: string
+            vlan:
+              type: integer
+              format: int64
+      responses:
+        "200":
+          $ref: '#/responses/iplb.VrackNetwork.VrackNetwork'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/vrack/network/{vrackNetworkId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: vrackNetworkId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.VrackNetwork.VrackNetwork'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: BETA - authentication required
+      parameters:
+      - name: iplbVrackNetworkPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/iplb.VrackNetwork.VrackNetwork'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete this description of a private network in the vRack. It must
+        not be used by any farm server
+      description: BETA - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/vrack/networkCreationRules:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Rules to create a network attached to a vrack
+      description: BETA - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.VrackNetworkCreationRules'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/zone:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Zone for this iplb
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/{serviceName}/zone/{name}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: name
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/iplb.Zone.IpZone'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Delete a zone
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /ipLoadbalancing/availableZones:
+    get:
+      summary: List of zone available for an IP load balancing
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+definitions:
+  iplb.BackendCustomerServer.BackendServer:
+    description: BackendServer
+    type: object
+    required:
+    - backendId
+    - id
+    properties:
+      backendId:
+        description: Backend id
+        type: integer
+        format: int64
+        readOnly: true
+      backup:
+        description: Backup state
+        type: boolean
+      chain:
+        description: Certificate chain. Allow server certificate verification (Avoid
+          man-in-the-middle attacks)
+        type: string
+      cookie:
+        description: Server cookie value configured for cookie stickiness
+        type: string
+      id:
+        description: Id of your backend/server link
+        type: integer
+        format: int64
+        readOnly: true
+      port:
+        description: Port attached to your server. Inherited from backend if null
+        type: integer
+        format: int64
+      probe:
+        description: Probe state
+        type: boolean
+      proxyProtocolVersion:
+        description: Enforce use of the PROXY protocol version over any connection
+          established to this server (disabled if null)
+        type: string
+        enum:
+        - v1
+        - v2
+        - v2-ssl
+        - v2-ssl-cn
+      ssl:
+        description: SSL ciphering. Probes will also be sent ciphered
+        type: boolean
+      weight:
+        description: Weight value. Defaults to 1. 0 if not used in load balancing.
+        type: integer
+        format: int64
+  iplb.BackendHttp.BackendHttp:
+    description: HTTP Farm
+    type: object
+    required:
+    - zone
+    - farmId
+    properties:
+      balance:
+        description: Load balancing algorithm. 'roundrobin' if null
+        type: string
+        enum:
+        - first
+        - leastconn
+        - roundrobin
+        - source
+        - uri
+      displayName:
+        description: Human readable name for your backend, this field is for you
+        type: string
+      farmId:
+        description: Id of your farm
+        type: integer
+        format: int64
+        readOnly: true
+      port:
+        description: Port attached to your farm. Inherited from frontend if null
+        type: integer
+        format: int64
+      probe:
+        $ref: '#/definitions/iplb.BackendProbe'
+      stickiness:
+        description: Stickiness type. No stickiness if null
+        type: string
+        enum:
+        - cookie
+        - sourceIp
+      vrackNetworkId:
+        description: Internal Load Balancer identifier of the vRack private network
+          attached to your farm, mandatory when your Load Balancer is attached to
+          a vRack
+        type: integer
+        format: int64
+        readOnly: true
+      zone:
+        description: Zone of you farm
+        type: string
+        readOnly: true
+  iplb.BackendHttpCustomerServer.BackendHTTPServer:
+    description: HTTP Farm's Server
+    type: object
+    required:
+    - serverId
+    - serverState
+    - backendId
+    - address
+    properties:
+      address:
+        description: Address of your server
+        type: string
+        readOnly: true
+      backendId:
+        description: farm id
+        type: integer
+        format: int64
+        readOnly: true
+      backup:
+        description: Backup state
+        type: boolean
+      chain:
+        description: Certificate chain. Allow server certificate verification (Avoid
+          man-in-the-middle attacks)
+        type: string
+      cookie:
+        description: Server cookie value configured for cookie stickiness
+        type: string
+      displayName:
+        description: Human readable name for your server, this field is for you
+        type: string
+      port:
+        description: Port attached to your server. Inherited from farm if null
+        type: integer
+        format: int64
+      probe:
+        description: Probe state
+        type: boolean
+      proxyProtocolVersion:
+        description: Disabled if null. Send PROXY protocol header. Requires a compatible
+          server.
+        type: string
+        enum:
+        - v1
+        - v2
+        - v2-ssl
+        - v2-ssl-cn
+      serverId:
+        description: Id of your server
+        type: integer
+        format: int64
+        readOnly: true
+      serverState:
+        description: Server state
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/iplb.ServerState'
+      ssl:
+        description: SSL ciphering. Probes will also be sent ciphered
+        type: boolean
+      status:
+        description: Status attached to your server
+        type: string
+        enum:
+        - active
+        - inactive
+      weight:
+        description: Weight value. Defaults to 1. 0 if not used in load balancing.
+          Servers with higher weight get more requests.
+        type: integer
+        format: int64
+  iplb.BackendProbe:
+    description: Probe used to determine if a backend is alive and can handle requests
+    type: object
+    properties:
+      forceSsl:
+        description: Force probe to run over a SSL layer. Defaults to false
+        type: boolean
+      interval:
+        description: Seconds between each probe check. Must be > 30sec. Defaults to
+          30
+        type: integer
+        format: int64
+      match:
+        description: Matcher to use to valide "expect". "default" uses HAProxy's default
+          behavior for this type of check. "status" is only supported for HTTP probes
+        type: string
+        enum:
+        - contains
+        - default
+        - internal
+        - matches
+        - status
+      method:
+        description: HTTP method to use with "http" probe. Consider using HEAD to
+          save bandwidth when possible. Defaults to "GET"
+        type: string
+        enum:
+        - GET
+        - HEAD
+        - OPTIONS
+        - internal
+      negate:
+        description: Invert the matching operator effect
+        type: boolean
+      pattern:
+        description: Server response expected when UP. Empty for "default", comma
+          delimited list of statuses for "status", string for "contains", regex for
+          "matches"
+        type: string
+      port:
+        description: Port used to probe your backend. Equal to farm port if null.
+          Ignored for oco probe type
+        type: integer
+        format: int64
+      type:
+        description: Probe type. "tcp" if null
+        type: string
+        enum:
+        - http
+        - internal
+        - mysql
+        - oco
+        - pgsql
+        - smtp
+        - tcp
+      url:
+        description: URL to use for HTTP probes of the form [www.example.com]/path/to/check.
+          Protocol will be ignored. Defaults to "/"
+        type: string
+  iplb.BackendTcp.BackendTcp:
+    description: TCP Farm
+    type: object
+    required:
+    - zone
+    - farmId
+    properties:
+      balance:
+        description: Load balancing algorithm. 'roundrobin' if null
+        type: string
+        enum:
+        - first
+        - leastconn
+        - roundrobin
+        - source
+      displayName:
+        description: Human readable name for your backend, this field is for you
+        type: string
+      farmId:
+        description: Id of your farm
+        type: integer
+        format: int64
+        readOnly: true
+      port:
+        description: Port attached to your farm. Inherited from frontend if null
+        type: integer
+        format: int64
+      probe:
+        $ref: '#/definitions/iplb.BackendProbe'
+      stickiness:
+        description: Stickiness type. No stickiness if null
+        type: string
+        enum:
+        - sourceIp
+      vrackNetworkId:
+        description: Internal Load Balancer identifier of the vRack private network
+          attached to your farm, mandatory when your Load Balancer is attached to
+          a vRack
+        type: integer
+        format: int64
+        readOnly: true
+      zone:
+        description: Zone of you farm
+        type: string
+        readOnly: true
+  iplb.BackendTcpCustomerServer.BackendTCPServer:
+    description: TCP Farm's Server
+    type: object
+    required:
+    - backendId
+    - address
+    - serverState
+    - serverId
+    properties:
+      address:
+        description: Address of your server
+        type: string
+        readOnly: true
+      backendId:
+        description: Farm id
+        type: integer
+        format: int64
+        readOnly: true
+      backup:
+        description: Backup state
+        type: boolean
+      chain:
+        description: Certificate chain. Allow server certificate verification (Avoid
+          man-in-the-middle attacks)
+        type: string
+      displayName:
+        description: Human readable name for your server, this field is for you
+        type: string
+      port:
+        description: Port attached to your server. Inherited from farm if null
+        type: integer
+        format: int64
+      probe:
+        description: Probe state. 'False' if null
+        type: boolean
+      proxyProtocolVersion:
+        description: Disabled if null. Send PROXY protocol header. Requires a compatible
+          server.
+        type: string
+        enum:
+        - v1
+        - v2
+        - v2-ssl
+        - v2-ssl-cn
+      serverId:
+        description: Id of your server
+        type: integer
+        format: int64
+        readOnly: true
+      serverState:
+        description: Server state
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/iplb.ServerState'
+      ssl:
+        description: SSL ciphering. Probes will also be sent ciphered
+        type: boolean
+      status:
+        description: Status attached to your server
+        type: string
+        enum:
+        - active
+        - inactive
+      weight:
+        description: Weight value. Defaults to 1. 0 if not used in load balancing.
+          Servers with higher weight get more requests.
+        type: integer
+        format: int64
+  iplb.BackendUdp.BackendUdp:
+    description: UDP Farm
+    type: object
+    required:
+    - farmId
+    - zone
+    properties:
+      displayName:
+        description: Human readable name for your backend, this field is for you
+        type: string
+      farmId:
+        description: Id of your farm
+        type: integer
+        format: int64
+        readOnly: true
+      port:
+        description: Port attached to your farm. Inherited from frontend if null
+        type: integer
+        format: int64
+      vrackNetworkId:
+        description: Internal Load Balancer identifier of the vRack private network
+          attached to your farm, mandatory when your Load Balancer is attached to
+          a vRack
+        type: integer
+        format: int64
+        readOnly: true
+      zone:
+        description: Zone of you farm
+        type: string
+        readOnly: true
+  iplb.BackendUdpCustomerServer.BackendUDPServer:
+    description: UDP Farm's Server
+    type: object
+    required:
+    - serverId
+    - backendId
+    - address
+    properties:
+      address:
+        description: Address of your server
+        type: string
+        readOnly: true
+      backendId:
+        description: farm id
+        type: integer
+        format: int64
+        readOnly: true
+      displayName:
+        description: Human readable name for your server, this field is for you
+        type: string
+      port:
+        description: Port attached to your server. Inherited from farm if null
+        type: integer
+        format: int64
+      serverId:
+        description: Id of your server
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        description: Status attached to your server
+        type: string
+        enum:
+        - active
+        - inactive
+  iplb.DefinedBackend:
+    description: a list of {type=>[Backend ids]}
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      type:
+        type: string
+  iplb.DefinedFrontend:
+    description: a list of {type=>[Frontend ids]}
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      type:
+        type: string
+  iplb.DefinedRoute:
+    description: Defined routes name, type and id. Typically used to generate autocomplete
+      lists.
+    type: object
+    properties:
+      displayName:
+        description: Human readable name for your route
+        type: string
+      routeId:
+        description: Id of your route
+        type: integer
+        format: int64
+      type:
+        description: Protocol supported by this route
+        type: string
+  iplb.FarmAvailableProbe:
+    description: Available farm probes options
+    type: object
+    properties:
+      matches:
+        description: List of possible probe result checkers for this type of probe
+        type: array
+        items:
+          type: string
+      method:
+        description: List of available HTTP method, if available
+        type: array
+        items:
+          type: string
+      negatableMatches:
+        description: List of matches operators that accept the negate option for this
+          type of probe
+        type: array
+        items:
+          type: string
+      port:
+        description: True is this probe type supports a custom port
+        type: boolean
+      type:
+        description: Probe protocol name. See probe "type" field in the farm probe
+        type: string
+      url:
+        description: True is this probe type supports a URL
+        type: boolean
+  iplb.FrontendHttp.FrontendHttp:
+    description: Frontend HTTP
+    type: object
+    required:
+    - frontendId
+    properties:
+      allowedSource:
+        description: Restrict IP Load Balancing access to these ip block. No restriction
+          if null
+        type: array
+        items:
+          type: string
+      dedicatedIpfo:
+        description: Only attach frontend on these ip. No restriction if null
+        type: array
+        items:
+          type: string
+      defaultFarmId:
+        description: Default HTTP Farm of your frontend
+        type: integer
+        format: int64
+      defaultSslId:
+        description: Default ssl served to your customer
+        type: integer
+        format: int64
+      disabled:
+        description: Disable frontend
+        type: boolean
+      displayName:
+        description: Human readable name for your frontend, this field is for you
+        type: string
+      frontendId:
+        description: Id of your frontend
+        type: integer
+        format: int64
+        readOnly: true
+      hsts:
+        description: HTTP Strict Transport Security
+        type: boolean
+      httpHeader:
+        description: 'Add header to your frontend. Useful variables admitted : %ci
+          <=> client_ip, %cp <=> client_port'
+        type: array
+        items:
+          type: string
+      port:
+        description: Listening port(s) on the server
+        type: string
+      redirectLocation:
+        description: 'HTTP redirection (Ex : http://www.ovh.com)'
+        type: string
+      ssl:
+        description: SSL deciphering
+        type: boolean
+      zone:
+        description: Zone of you frontend
+        type: string
+  iplb.FrontendTcp.FrontendTcp:
+    description: Frontend TCP
+    type: object
+    required:
+    - frontendId
+    properties:
+      allowedSource:
+        description: Restrict IP Load Balancing access to these ip block. No restriction
+          if null
+        type: array
+        items:
+          type: string
+      dedicatedIpfo:
+        description: Only attach frontend on these ip. No restriction if null
+        type: array
+        items:
+          type: string
+      defaultFarmId:
+        description: Default TCP Farm of your frontend
+        type: integer
+        format: int64
+      defaultSslId:
+        description: Default ssl served to your customer
+        type: integer
+        format: int64
+      disabled:
+        description: Disable frontend
+        type: boolean
+      displayName:
+        description: Human readable name for your frontend, this field is for you
+        type: string
+      frontendId:
+        description: Id of your frontend
+        type: integer
+        format: int64
+        readOnly: true
+      port:
+        description: Listening port(s) on the server
+        type: string
+      ssl:
+        description: SSL deciphering
+        type: boolean
+      zone:
+        description: Zone of you frontend
+        type: string
+  iplb.FrontendUdp.FrontendUdp:
+    description: Frontend UDP
+    type: object
+    required:
+    - frontendId
+    properties:
+      dedicatedIpfo:
+        description: Only attach frontend on these ip. No restriction if null
+        type: array
+        items:
+          type: string
+      defaultFarmId:
+        description: Default UDP Farm of your frontend
+        type: integer
+        format: int64
+      disabled:
+        description: Disable frontend
+        type: boolean
+      displayName:
+        description: Human readable name for your frontend, this field is for you
+        type: string
+      frontendId:
+        description: Id of your frontend
+        type: integer
+        format: int64
+        readOnly: true
+      port:
+        description: Listening port(s) on the server
+        type: string
+      zone:
+        description: Zone of you frontend
+        type: string
+  iplb.InstancesState:
+    description: A structure describing the current state of an IPLB instances
+    type: object
+    properties:
+      internalId:
+        description: Internal ID of this IPLB instance
+        type: integer
+        format: int64
+      lastUpdateDate:
+        description: Last update date
+        type: string
+        format: date-time
+      state:
+        description: Current state of this IPLB instance
+        type: string
+      zone:
+        description: zone of this IPLB instance
+        type: string
+  iplb.Ip:
+    description: Your IP load balancing
+    type: object
+    required:
+    - offer
+    - iplb
+    - state
+    - zone
+    - serviceName
+    properties:
+      displayName:
+        description: Set the name displayed in ManagerV6 for your iplb (max 50 chars)
+        type: string
+      iplb:
+        description: Your IP load balancing
+        type: string
+        readOnly: true
+      ipv4:
+        description: The IPV4 associated to your IP load balancing
+        type: string
+        readOnly: true
+      ipv6:
+        description: The IPV6 associated to your IP load balancing
+        type: string
+        readOnly: true
+      metricsToken:
+        description: The metrics token associated with your IP load balancing
+        type: string
+        readOnly: true
+      offer:
+        description: The offer of your IP load balancing
+        type: string
+        readOnly: true
+      serviceName:
+        description: The internal name of your IP load balancing
+        type: string
+        readOnly: true
+      sslConfiguration:
+        description: 'Modern oldest compatible clients : Firefox 27, Chrome 30, IE
+          11 on Windows 7, Edge, Opera 17, Safari 9, Android 5.0, and Java 8. Intermediate
+          oldest compatible clients : Firefox 1, Chrome 1, IE 7, Opera 5, Safari 1,
+          Windows XP IE8, Android 2.3, Java 7. Intermediate if null.'
+        type: string
+        enum:
+        - intermediate
+        - modern
+      state:
+        description: Current state of your IP
+        type: string
+        readOnly: true
+        enum:
+        - blacklisted
+        - deleted
+        - free
+        - ok
+        - quarantined
+        - suspended
+      vrackName:
+        description: Name of the vRack on which the current Load Balancer is attached
+          to, as it is named on vRack product
+        type: string
+        readOnly: true
+      zone:
+        description: Location where your service is
+        type: array
+        readOnly: true
+        items:
+          type: string
+  iplb.NatIps:
+    description: a list of {zone, nat Ip}
+    type: object
+    properties:
+      ip:
+        type: array
+        items:
+          type: string
+      zone:
+        type: string
+  iplb.PendingChanges:
+    description: The pending changes for a Load Balancer zone
+    type: object
+    properties:
+      number:
+        description: The number of changes waiting to be applied
+        type: integer
+        format: int64
+      zone:
+        description: The Load Balancer zone with pending changes
+        type: string
+  iplb.Quota.Quota:
+    description: Quota informations for current billing period for this zone
+    type: object
+    required:
+    - zone
+    properties:
+      alert:
+        description: 'Quota alert value in bytes. When reached, we will send you an
+          alert. Default : included quota with your offer'
+        type: integer
+        format: int64
+      included:
+        description: Included quota value with your offer, in bytes
+        type: integer
+        format: int64
+        readOnly: true
+      lastUpdateDate:
+        description: The last time your quota was updated from your Load Balancer
+          instance
+        type: string
+        format: date-time
+        readOnly: true
+      resetDate:
+        description: The last time your quota was resetted (billed)
+        type: string
+        format: date-time
+        readOnly: true
+      total:
+        description: Total used quota value in bytes
+        type: integer
+        format: int64
+        readOnly: true
+      zone:
+        description: Zone of your quota
+        type: string
+        readOnly: true
+  iplb.QuotaHistory.QuotaHistory:
+    description: QuotaHistory
+    type: object
+    required:
+    - lastUpdateDate
+    - zone
+    - historizedDate
+    - id
+    - total
+    - resetDate
+    properties:
+      historizedDate:
+        description: Historized date for this quota entry
+        type: string
+        format: date
+        readOnly: true
+      id:
+        description: Id of your quota
+        type: integer
+        format: int64
+        readOnly: true
+      lastUpdateDate:
+        description: The last time your quota was updated from your Load Balancer
+          instance
+        type: string
+        format: date-time
+        readOnly: true
+      resetDate:
+        description: The last time your quota was resetted (billed)
+        type: string
+        format: date-time
+        readOnly: true
+      total:
+        description: Total used quota value in bytes
+        type: integer
+        format: int64
+        readOnly: true
+      zone:
+        description: Zone of your quota
+        type: string
+        readOnly: true
+  iplb.RouteAvailableAction:
+    description: Available route actions options
+    type: object
+    properties:
+      destination:
+        description: Type of the destination for this action
+        type: string
+      name:
+        description: Action name
+        type: string
+      status:
+        description: List of available HTTP status code if applicable
+        type: array
+        items:
+          type: integer
+          format: int64
+      type:
+        description: Protocol supported by this action
+        type: string
+  iplb.RouteAvailableRule:
+    description: Match rule to combine to build routes
+    type: object
+    properties:
+      enum:
+        description: If pattern is "enum", list of available options
+        type: array
+        items:
+          type: string
+      hasSubField:
+        description: If true, this rule needs a subfield. Typically a cookie or header
+          name
+        type: boolean
+      matches:
+        description: List of match operators compatible with this rule
+        type: array
+        items:
+          type: string
+      name:
+        description: Rule name
+        type: string
+      pattern:
+        description: Expected type for the pattern. Like "enum", "backend", "cidr",
+          ...
+        type: string
+      type:
+        description: Protocol supported by this action
+        type: string
+  iplb.RouteHttp.RouteHttp:
+    description: HTTP Route
+    type: object
+    required:
+    - rules
+    - status
+    - routeId
+    properties:
+      action:
+        $ref: '#/definitions/iplb.RouteHttpAction'
+      displayName:
+        description: Human readable name for your route, this field is for you
+        type: string
+      frontendId:
+        description: Route traffic for this frontend
+        type: integer
+        format: int64
+      routeId:
+        description: Id of your route
+        type: integer
+        format: int64
+        readOnly: true
+      rules:
+        description: List of rules to match to trigger action
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/iplb.RouteRule'
+      status:
+        description: Route status. Routes in "ok" state are ready to operate
+        type: string
+        readOnly: true
+        enum:
+        - creating
+        - deleting
+        - internal
+        - ok
+        - updating
+      weight:
+        description: Route priority ([0..255]). 0 if null. Highest priority routes
+          are evaluated first. Only the first matching route will trigger an action
+        type: integer
+        format: int64
+  iplb.RouteHttpAction:
+    description: Action triggered when all rules from route match
+    type: object
+    properties:
+      status:
+        description: HTTP status code for "redirect" and "reject" actions
+        type: integer
+        format: int64
+      target:
+        description: Farm ID for "farm" action type or URL template for "redirect"
+          action. You may use ${uri}, ${protocol}, ${host}, ${port} and ${path} variables
+          in redirect target
+        type: string
+      type:
+        description: Action to trigger if all the rules of this route matches
+        type: string
+  iplb.RouteRule:
+    description: Match rule to combine to build routes
+    type: object
+    properties:
+      field:
+        description: Name of the field to match like "protocol" or "host". See "/ipLoadbalancing/{serviceName}/route/availableRules"
+          for a list of available rules
+        type: string
+      match:
+        description: Matching operator. Not all operators are available for all fields.
+          See "/availableRules"
+        type: string
+        enum:
+        - contains
+        - endswith
+        - exists
+        - in
+        - internal
+        - is
+        - matches
+        - startswith
+      negate:
+        description: Invert the matching operator effect
+        type: boolean
+      pattern:
+        description: Value to match against this match. Interpretation if this field
+          depends on the match and field
+        type: string
+      ruleId:
+        description: Id of your rule
+        type: integer
+        format: int64
+      subField:
+        description: Name of sub-field, if applicable. This may be a Cookie or Header
+          name for instance
+        type: string
+  iplb.RouteRule.RouteRule:
+    description: Rule of a route
+    type: object
+    required:
+    - ruleId
+    properties:
+      field:
+        description: Name of the field to match like "protocol" or "host". See "/ipLoadbalancing/{serviceName}/route/availableRules"
+          for a list of available rules
+        type: string
+      match:
+        description: Matching operator. Not all operators are available for all fields.
+          See "/availableRules"
+        type: string
+        enum:
+        - contains
+        - endswith
+        - exists
+        - in
+        - internal
+        - is
+        - matches
+        - startswith
+      negate:
+        description: Invert the matching operator effect
+        type: boolean
+      pattern:
+        description: Value to match against this match. Interpretation if this field
+          depends on the match and field
+        type: string
+      ruleId:
+        description: Id of your rule
+        type: integer
+        format: int64
+        readOnly: true
+      subField:
+        description: Name of sub-field, if applicable. This may be a Cookie or Header
+          name for instance
+        type: string
+  iplb.RouteTcp.RouteTcp:
+    description: TCP Route
+    type: object
+    required:
+    - status
+    - routeId
+    - rules
+    properties:
+      action:
+        $ref: '#/definitions/iplb.RouteTcpAction'
+      displayName:
+        description: Human readable name for your route, this field is for you
+        type: string
+      frontendId:
+        description: Route traffic for this frontend
+        type: integer
+        format: int64
+      routeId:
+        description: Id of your route
+        type: integer
+        format: int64
+        readOnly: true
+      rules:
+        description: List of rules to match to trigger action
+        type: array
+        readOnly: true
+        items:
+          $ref: '#/definitions/iplb.RouteRule'
+      status:
+        description: Route status. Routes in "ok" state are ready to operate
+        type: string
+        readOnly: true
+        enum:
+        - creating
+        - deleting
+        - internal
+        - ok
+        - updating
+      weight:
+        description: Route priority ([0..255]). 0 if null. Highest priority routes
+          are evaluated first. Only the first matching route will trigger an action
+        type: integer
+        format: int64
+  iplb.RouteTcpAction:
+    description: Action triggered when all rules from route match
+    type: object
+    properties:
+      target:
+        description: Farm ID for "farm" action type, empty for others
+        type: string
+      type:
+        description: Action to trigger if all the rules of this route matches
+        type: string
+  iplb.ServerState:
+    description: Available servers states
+    type: object
+    properties:
+      checkCode:
+        description: Layer5-7 code, if available
+        type: string
+      checkStatus:
+        description: Status of last health check
+        type: string
+      checkTime:
+        description: Time of last health check
+        type: string
+        format: date-time
+      instanceId:
+        description: Id of your instance
+        type: integer
+        format: int64
+      lastCheckContent:
+        description: Last health check contents or textual error
+        type: string
+      status:
+        description: Status
+        type: string
+  iplb.Ssl.Ssl:
+    description: Ssl
+    type: object
+    required:
+    - serial
+    - subject
+    - id
+    - fingerprint
+    properties:
+      displayName:
+        description: Human readable name for your ssl certificate, this field is for
+          you
+        type: string
+      fingerprint:
+        description: Fingerprint of your SSL certificate
+        type: string
+        readOnly: true
+      id:
+        description: Id of your SSL certificate
+        type: integer
+        format: int64
+        readOnly: true
+      serial:
+        description: Serial of your SSL certificate (Deprecated, use fingerprint instead
+          !)
+        type: string
+        readOnly: true
+      subject:
+        description: Subject of your SSL certificate
+        type: string
+        readOnly: true
+      type:
+        description: |-
+          Type of your SSL certificate.
+          'built' for SSL certificates managed by the IP Load Balancing. 'custom' for user manager certificates.
+        type: string
+        readOnly: true
+        enum:
+        - built
+        - custom
+  iplb.Task.Task:
+    description: IP Load Balancing Operations
+    type: object
+    required:
+    - progress
+    - action
+    - id
+    - zones
+    - creationDate
+    - status
+    properties:
+      action:
+        description: Operation type
+        type: string
+        readOnly: true
+        enum:
+        - deleteIplb
+        - deployIplb
+        - install
+        - installIplb
+        - installZone
+        - orderFreeCertificate
+        - orderPaidCertificate
+        - orderSsl
+        - refreshIplb
+        - releaseIplb
+        - releaseIplbZone
+        - reopenIplb
+        - suspendIplb
+        - suspendZone
+        - switchToIplbNextGenerationApi
+        - vrackAttach
+        - vrackDetach
+      creationDate:
+        description: Creation date of your operation
+        type: string
+        format: date-time
+        readOnly: true
+      doneDate:
+        description: Done date of your operation
+        type: string
+        format: date-time
+        readOnly: true
+      id:
+        description: Id of the operation
+        type: integer
+        format: int64
+        readOnly: true
+      progress:
+        description: Operation progress percentage
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        description: Current status of your operation
+        type: string
+        readOnly: true
+        enum:
+        - blocked
+        - cancelled
+        - doing
+        - done
+        - error
+        - todo
+      zones:
+        description: Zone of your Load Balancer which are updated by current Task
+        type: array
+        readOnly: true
+        items:
+          type: string
+  iplb.VrackNetwork.VrackNetwork:
+    description: Represents a private network in the vRack
+    type: object
+    required:
+    - subnet
+    - vrackNetworkId
+    properties:
+      natIp:
+        description: An IP block used as a pool of IPs by this Load Balancer to connect
+          to the servers in this private network. The block must be in the private
+          network and reserved for the Load Balancer
+        type: string
+      subnet:
+        description: IP block of the private network in the vRack
+        type: string
+        readOnly: true
+      vlan:
+        description: VLAN of the private network in the vRack. 0 if the private network
+          is not in a VLAN
+        type: integer
+        format: int64
+      vrackNetworkId:
+        description: Internal Load Balancer identifier of the vRack private network
+          description
+        type: integer
+        format: int64
+        readOnly: true
+  iplb.VrackNetworkCreationRules:
+    description: Rules to create a new description of a private network in the vRack
+    type: object
+    properties:
+      minNatIps:
+        description: Minimum number of IPs needed to forward requests to your servers
+          using NAT in your private network behind the current Load Balancer. Ip Block
+          given on Load Balancer vRack network must contain at least this number of
+          IP.
+        type: integer
+        format: int64
+      remainingNetworks:
+        description: Number of remaining private network descriptions available for
+          creation for this Load Balancer
+        type: integer
+        format: int64
+      vrackName:
+        description: Name of the vRack on which the current Load Balancer is attached
+          to, as it is named on vRack product
+        type: string
+  iplb.Zone.IpZone:
+    description: Zone
+    type: object
+    required:
+    - name
+    - state
+    properties:
+      name:
+        description: Name of your zone
+        type: string
+        readOnly: true
+      state:
+        description: State of your zone
+        type: string
+        readOnly: true
+  service.RenewType:
+    description: Map a possible renew for a specific service
+    type: object
+    properties:
+      automatic:
+        description: The service is automatically renewed
+        type: boolean
+      deleteAtExpiration:
+        description: The service will be deleted at expiration
+        type: boolean
+      forced:
+        description: The service forced to be renewed
+        type: boolean
+      manualPayment:
+        description: The service needs to be manually renewed and paid
+        type: boolean
+      period:
+        description: period of renew in month
+        type: integer
+        format: int64
+  services.Service:
+    description: Details about a Service
+    type: object
+    required:
+    - status
+    - contactAdmin
+    - creation
+    - serviceId
+    - domain
+    - contactTech
+    - canDeleteAtExpiration
+    - contactBilling
+    - expiration
+    - renewalType
+    properties:
+      canDeleteAtExpiration:
+        description: Indicates that the service can be set up to be deleted at expiration
+        type: boolean
+        readOnly: true
+      contactAdmin:
+        type: string
+        readOnly: true
+      contactBilling:
+        type: string
+        readOnly: true
+      contactTech:
+        type: string
+        readOnly: true
+      creation:
+        type: string
+        format: date
+        readOnly: true
+      domain:
+        type: string
+        readOnly: true
+      engagedUpTo:
+        type: string
+        format: date
+        readOnly: true
+      expiration:
+        type: string
+        format: date
+        readOnly: true
+      possibleRenewPeriod:
+        description: All the possible renew period of your service in month
+        type: array
+        readOnly: true
+        items:
+          type: integer
+          format: int64
+      renew:
+        $ref: '#/definitions/service.RenewType'
+      renewalType:
+        type: string
+        readOnly: true
+        enum:
+        - automaticForcedProduct
+        - automaticV2012
+        - automaticV2014
+        - automaticV2016
+        - manual
+        - oneShot
+        - option
+      serviceId:
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        type: string
+        readOnly: true
+        enum:
+        - expired
+        - inCreation
+        - ok
+        - unPaid
+responses:
+  OVH.Error:
+    description: Unexpected error
+    schema:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+        httpCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+  iplb.BackendCustomerServer.BackendServer:
+    description: description of 'iplb.BackendCustomerServer.BackendServer' response
+    schema:
+      $ref: '#/definitions/iplb.BackendCustomerServer.BackendServer'
+  iplb.BackendHttp.BackendHttp:
+    description: description of 'iplb.BackendHttp.BackendHttp' response
+    schema:
+      $ref: '#/definitions/iplb.BackendHttp.BackendHttp'
+  iplb.BackendHttpCustomerServer.BackendHTTPServer:
+    description: description of 'iplb.BackendHttpCustomerServer.BackendHTTPServer'
+      response
+    schema:
+      $ref: '#/definitions/iplb.BackendHttpCustomerServer.BackendHTTPServer'
+  iplb.BackendTcp.BackendTcp:
+    description: description of 'iplb.BackendTcp.BackendTcp' response
+    schema:
+      $ref: '#/definitions/iplb.BackendTcp.BackendTcp'
+  iplb.BackendTcpCustomerServer.BackendTCPServer:
+    description: description of 'iplb.BackendTcpCustomerServer.BackendTCPServer' response
+    schema:
+      $ref: '#/definitions/iplb.BackendTcpCustomerServer.BackendTCPServer'
+  iplb.BackendUdp.BackendUdp:
+    description: description of 'iplb.BackendUdp.BackendUdp' response
+    schema:
+      $ref: '#/definitions/iplb.BackendUdp.BackendUdp'
+  iplb.BackendUdpCustomerServer.BackendUDPServer:
+    description: description of 'iplb.BackendUdpCustomerServer.BackendUDPServer' response
+    schema:
+      $ref: '#/definitions/iplb.BackendUdpCustomerServer.BackendUDPServer'
+  iplb.FrontendHttp.FrontendHttp:
+    description: description of 'iplb.FrontendHttp.FrontendHttp' response
+    schema:
+      $ref: '#/definitions/iplb.FrontendHttp.FrontendHttp'
+  iplb.FrontendTcp.FrontendTcp:
+    description: description of 'iplb.FrontendTcp.FrontendTcp' response
+    schema:
+      $ref: '#/definitions/iplb.FrontendTcp.FrontendTcp'
+  iplb.FrontendUdp.FrontendUdp:
+    description: description of 'iplb.FrontendUdp.FrontendUdp' response
+    schema:
+      $ref: '#/definitions/iplb.FrontendUdp.FrontendUdp'
+  iplb.Ip:
+    description: description of 'iplb.Ip' response
+    schema:
+      $ref: '#/definitions/iplb.Ip'
+  iplb.Quota.Quota:
+    description: description of 'iplb.Quota.Quota' response
+    schema:
+      $ref: '#/definitions/iplb.Quota.Quota'
+  iplb.QuotaHistory.QuotaHistory:
+    description: description of 'iplb.QuotaHistory.QuotaHistory' response
+    schema:
+      $ref: '#/definitions/iplb.QuotaHistory.QuotaHistory'
+  iplb.RouteHttp.RouteHttp:
+    description: description of 'iplb.RouteHttp.RouteHttp' response
+    schema:
+      $ref: '#/definitions/iplb.RouteHttp.RouteHttp'
+  iplb.RouteRule.RouteRule:
+    description: description of 'iplb.RouteRule.RouteRule' response
+    schema:
+      $ref: '#/definitions/iplb.RouteRule.RouteRule'
+  iplb.RouteTcp.RouteTcp:
+    description: description of 'iplb.RouteTcp.RouteTcp' response
+    schema:
+      $ref: '#/definitions/iplb.RouteTcp.RouteTcp'
+  iplb.Ssl.Ssl:
+    description: description of 'iplb.Ssl.Ssl' response
+    schema:
+      $ref: '#/definitions/iplb.Ssl.Ssl'
+  iplb.Task.Task:
+    description: description of 'iplb.Task.Task' response
+    schema:
+      $ref: '#/definitions/iplb.Task.Task'
+  iplb.VrackNetwork.VrackNetwork:
+    description: description of 'iplb.VrackNetwork.VrackNetwork' response
+    schema:
+      $ref: '#/definitions/iplb.VrackNetwork.VrackNetwork'
+  iplb.VrackNetworkCreationRules:
+    description: description of 'iplb.VrackNetworkCreationRules' response
+    schema:
+      $ref: '#/definitions/iplb.VrackNetworkCreationRules'
+  iplb.Zone.IpZone:
+    description: description of 'iplb.Zone.IpZone' response
+    schema:
+      $ref: '#/definitions/iplb.Zone.IpZone'
+  services.Service:
+    description: description of 'services.Service' response
+    schema:
+      $ref: '#/definitions/services.Service'

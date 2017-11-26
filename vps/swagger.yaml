@@ -1,0 +1,2907 @@
+swagger: "2.0"
+info:
+  title: OVH API - EU
+  description: Build your own OVH world.
+  version: 1.0.0
+  contact:
+    name: OVH API EU
+    url: https://eu.api.ovh.com/
+    email: api-subscribe@ml.ovh.net
+  license:
+    name: © OVH SAS
+    url: https://eu.api.ovh.com/
+host: eu.api.ovh.com
+basePath: /1.0
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+externalDocs:
+  url: https://eu.api.ovh.com/
+  description: Online version
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    name: X-Ovh-Consumer
+    in: header
+paths:
+  /vps:
+    get:
+      summary: List available services
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.VPS'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/vps.VPS'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/activeOptions:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Return all active options for the virtual server
+      description: DEPRECATED (see '/vps/{serviceName}/option') - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+              - additionalDisk
+              - automatedBackup
+              - cpanel
+              - ftpbackup
+              - plesk
+              - snapshot
+              - veeam
+              - windows
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/automatedBackup:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.AutomatedBackup'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/automatedBackup/attachedBackup:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Backup attached to your VPS
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/vps.AutomatedBackup.Attached'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/automatedBackup/detachBackup:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Create a VPS.Task that will umount a restored backup on your VPS
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsAutomatedBackupDetachBackupPost
+        in: body
+        schema:
+          type: object
+          required:
+          - restorePoint
+          properties:
+            restorePoint:
+              type: string
+              format: date-time
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/automatedBackup/restore:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Creates a VPS.Task that will restore the given restorePoint
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsAutomatedBackupRestorePost
+        in: body
+        schema:
+          type: object
+          required:
+          - type
+          - restorePoint
+          properties:
+            changePassword:
+              type: boolean
+              default: false
+            restorePoint:
+              type: string
+              format: date-time
+            type:
+              type: string
+              default: file
+              enum:
+              - file
+              - full
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/automatedBackup/restorePoints:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get available Restore Points
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: state
+        in: query
+        required: true
+        type: string
+        enum:
+        - available
+        - restored
+        - restoring
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+              format: date-time
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/availableUpgrade:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Return all models the virtual server can be upgraded to
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/vps.Model'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/backupftp:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.BackupFtp'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/backupftp/access:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of IP blocks (and protocols to allow on these blocks) authorized
+        on your backup FTP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: Create a new Backup FTP ACL
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsBackupftpAccessPost
+        in: body
+        schema:
+          type: object
+          required:
+          - ipBlock
+          - nfs
+          - cifs
+          properties:
+            cifs:
+              type: boolean
+              default: false
+            ftp:
+              type: boolean
+              default: false
+            ipBlock:
+              type: string
+            nfs:
+              type: boolean
+              default: false
+      responses:
+        "200":
+          $ref: '#/responses/dedicated.Server.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/backupftp/access/{ipBlock}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: ipBlock
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/dedicated.Server.BackupFtpAcl'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsBackupftpAccessPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/dedicated.Server.BackupFtpAcl'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Revoke this ACL
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/dedicated.Server.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/backupftp/authorizableBlocks:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get all IP blocks that can be used in the ACL
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/backupftp/password:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Change your Backup FTP password
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/dedicated.Server.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/changeContact:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Launch a contact change procedure
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsChangeContactPost
+        in: body
+        schema:
+          type: object
+          properties:
+            contactAdmin:
+              type: string
+            contactBilling:
+              type: string
+            contactTech:
+              type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/confirmTermination:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Confirm termination of your service
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsConfirmTerminationPost
+        in: body
+        schema:
+          type: object
+          required:
+          - token
+          properties:
+            commentary:
+              type: string
+            reason:
+              type: string
+              enum:
+              - LACK_OF_PERFORMANCES
+              - MIGRATED_TO_ANOTHER_OVH_PRODUCT
+              - MIGRATED_TO_COMPETITOR
+              - NOT_NEEDED_ANYMORE
+              - NOT_RELIABLE
+              - OTHER
+              - TOO_EXPENSIVE
+              - TOO_HARD_TO_USE
+            token:
+              type: string
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/createSnapshot:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Create a snapshot of the Virtual Server if the snapshot option is enabled
+        and if there is no existing snapshot
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsCreateSnapshotPost
+        in: body
+        schema:
+          type: object
+          properties:
+            description:
+              type: string
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/datacenter:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Datacenter'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/disks:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Disks associated to this virtual server
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/disks/{id}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Disk'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsDisksPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/vps.Disk'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/disks/{id}/monitoring:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Return many statistics about the disk for a given period
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: period
+        in: query
+        required: true
+        type: string
+        enum:
+        - lastday
+        - lastmonth
+        - lastweek
+        - lastyear
+        - today
+      - name: type
+        in: query
+        required: true
+        type: string
+        enum:
+        - max
+        - used
+      responses:
+        "200":
+          $ref: '#/responses/complexType.UnitAndValues.Vps.VpsTimestampValue'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/disks/{id}/use:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Return many statistics about the disk at that time
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: type
+        in: query
+        required: true
+        type: string
+        enum:
+        - max
+        - used
+      responses:
+        "200":
+          $ref: '#/responses/complexType.UnitAndValue.Double'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/distribution:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Template'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/distribution/software:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List available softwares for this template Id
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/distribution/software/{softwareId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: softwareId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Software'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/getConsoleUrl:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Return the VPS console URL
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/ipCountryAvailable:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get the countries you can select for your IPs geolocation
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+              - au
+              - be
+              - ca
+              - cz
+              - de
+              - es
+              - fi
+              - fr
+              - ie
+              - it
+              - lt
+              - nl
+              - pl
+              - pt
+              - sg
+              - uk
+              - us
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/ips:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Ips associated to this virtual server
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/ips/{ipAddress}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: ipAddress
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Ip'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsIpsPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/vps.Ip'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Release a given Ip (Additional Ip)
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/models:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Return all models for the range of the virtual server
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/vps.Model'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/monitoring:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Return many statistics about the virtual machine for a given period
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: period
+        in: query
+        required: true
+        type: string
+        enum:
+        - lastday
+        - lastmonth
+        - lastweek
+        - lastyear
+        - today
+      - name: type
+        in: query
+        required: true
+        type: string
+        enum:
+        - cpu:iowait
+        - cpu:max
+        - cpu:nice
+        - cpu:sys
+        - cpu:used
+        - cpu:user
+        - mem:max
+        - mem:used
+        - net:rx
+        - net:tx
+      responses:
+        "200":
+          $ref: '#/responses/complexType.UnitAndValues.Vps.VpsTimestampValue'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/openConsoleAccess:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Return the necessary informations to open a VNC connection to your
+        VPS
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsOpenConsoleAccessPost
+        in: body
+        schema:
+          type: object
+          properties:
+            protocol:
+              type: string
+              enum:
+              - VNC
+              - VNCOverWebSocket
+      responses:
+        "200":
+          $ref: '#/responses/vps.Vnc'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/option:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of VPS options
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+              - additionalDisk
+              - automatedBackup
+              - cpanel
+              - ftpbackup
+              - plesk
+              - snapshot
+              - veeam
+              - windows
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/option/{option}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: option
+      in: path
+      required: true
+      type: string
+      enum:
+      - additionalDisk
+      - automatedBackup
+      - cpanel
+      - ftpbackup
+      - plesk
+      - snapshot
+      - veeam
+      - windows
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Option'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Release a given option
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/reboot:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Request a reboot of the machine
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/reinstall:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Reinstall the virtual server
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsReinstallPost
+        in: body
+        schema:
+          type: object
+          required:
+          - templateId
+          properties:
+            doNotSendPassword:
+              type: boolean
+              default: false
+            language:
+              type: string
+            softwareId:
+              type: array
+              items:
+                type: integer
+                format: int64
+            sshKey:
+              type: array
+              items:
+                type: string
+            templateId:
+              type: integer
+              format: int64
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/secondaryDnsDomains:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: List of secondary dns domain name
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    post:
+      summary: add a domain on secondary dns
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsSecondaryDnsDomainsPost
+        in: body
+        schema:
+          type: object
+          required:
+          - domain
+          properties:
+            domain:
+              type: string
+            ip:
+              type: string
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/secondaryDnsDomains/{domain}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: domain
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/secondaryDns.SecondaryDNS'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsSecondaryDnsDomainsPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/secondaryDns.SecondaryDNS'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: remove this domain
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/secondaryDnsDomains/{domain}/dnsServer:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: domain
+      in: path
+      required: true
+      type: string
+    get:
+      summary: domain name server informations
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/secondaryDns.SecondaryDNSNameServer'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/secondaryDnsNameServerAvailable:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Secondary nameServer available for your Server
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/secondaryDns.SecondaryDNSNameServer'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/serviceInfos:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/services.Service'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsServiceInfosPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.Service'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/setPassword:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Start the process in order to set the root password of the virtual
+        machine. Be careful, in case of Cloud model, a reboot is mandatory.
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/snapshot:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Snapshot'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    put:
+      summary: Alter this object properties
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsSnapshotPut
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/vps.Snapshot'
+      responses:
+        "200":
+          description: return 'void'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Creates a vps.Task that will delete the Snapshot
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/snapshot/revert:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Revert the Virtual Server to this snapshot
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/start:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Request the machine to start
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/status:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Give the status of the services of the main IP
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Ip.ServiceStatus'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/stop:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Request the machine to stop
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/tasks:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Tasks associated to this virtual server
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: type
+        in: query
+        type: string
+        enum:
+        - addVeeamBackupJob
+        - changeRootPassword
+        - createSnapshot
+        - deleteSnapshot
+        - deliverVm
+        - getConsoleUrl
+        - internalTask
+        - openConsoleAccess
+        - provisioningAdditionalIp
+        - reOpenVm
+        - rebootVm
+        - reinstallVm
+        - removeVeeamBackup
+        - restoreFullVeeamBackup
+        - restoreVeeamBackup
+        - restoreVm
+        - revertSnapshot
+        - setMonitoring
+        - setNetboot
+        - startVm
+        - stopVm
+        - upgradeVm
+      - name: state
+        in: query
+        type: string
+        enum:
+        - blocked
+        - cancelled
+        - doing
+        - done
+        - error
+        - paused
+        - todo
+        - waitingAck
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/tasks/{id}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/templates:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Templates available for this virtual server
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/templates/{id}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Template'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/templates/{id}/software:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: List available softwares for this template Id
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/templates/{id}/software/{softwareId}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    - name: softwareId
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Software'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/terminate:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    post:
+      summary: Terminate your service
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/use:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Return many statistics about the virtual machine at that time
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: type
+        in: query
+        required: true
+        type: string
+        enum:
+        - cpu:iowait
+        - cpu:max
+        - cpu:nice
+        - cpu:sys
+        - cpu:used
+        - cpu:user
+        - mem:max
+        - mem:used
+        - net:rx
+        - net:tx
+      responses:
+        "200":
+          $ref: '#/responses/complexType.UnitAndValue.Double'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/veeam:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Veeam'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/veeam/restorePoints:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Veeam restore points for the VPS
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: creationTime
+        in: query
+        type: string
+        format: date-time
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/veeam/restorePoints/{id}:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Veeam.RestorePoint'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/veeam/restorePoints/{id}/restore:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    - name: id
+      in: path
+      required: true
+      type: integer
+      format: int64
+    post:
+      summary: Creates a VPS.Task that will restore the given restorePoint
+      description: PRODUCTION - authentication required
+      parameters:
+      - name: vpsVeeamRestorePointsRestorePost
+        in: body
+        schema:
+          type: object
+          required:
+          - full
+          properties:
+            changePassword:
+              type: boolean
+              default: false
+            export:
+              type: string
+              enum:
+              - nfs
+              - smb
+            full:
+              type: boolean
+              default: false
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/{serviceName}/veeam/restoredBackup:
+    parameters:
+    - name: serviceName
+      in: path
+      required: true
+      type: string
+    get:
+      summary: Get this object properties
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Veeam.RestoredBackup'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      summary: Creates a VPS.Task that will unmount the backup
+      description: PRODUCTION - authentication required
+      responses:
+        "200":
+          $ref: '#/responses/vps.Task'
+        default:
+          $ref: '#/responses/OVH.Error'
+      security:
+      - ApiKeyAuth: []
+  /vps/datacenter:
+    get:
+      summary: List all the datacenters for a specific country
+      description: PRODUCTION
+      parameters:
+      - name: country
+        in: query
+        required: true
+        type: string
+        enum:
+        - AC
+        - AD
+        - AE
+        - AF
+        - AG
+        - AI
+        - AL
+        - AM
+        - AO
+        - AQ
+        - AR
+        - AS
+        - AT
+        - AU
+        - AW
+        - AX
+        - AZ
+        - BA
+        - BB
+        - BD
+        - BE
+        - BF
+        - BG
+        - BH
+        - BI
+        - BJ
+        - BL
+        - BM
+        - BN
+        - BO
+        - BQ
+        - BR
+        - BS
+        - BT
+        - BW
+        - BY
+        - BZ
+        - CA
+        - CC
+        - CD
+        - CF
+        - CG
+        - CH
+        - CI
+        - CK
+        - CL
+        - CM
+        - CN
+        - CO
+        - CR
+        - CU
+        - CV
+        - CW
+        - CX
+        - CY
+        - CZ
+        - DE
+        - DG
+        - DJ
+        - DK
+        - DM
+        - DO
+        - DZ
+        - EA
+        - EC
+        - EE
+        - EG
+        - EH
+        - ER
+        - ES
+        - ET
+        - FI
+        - FJ
+        - FK
+        - FM
+        - FO
+        - FR
+        - GA
+        - GB
+        - GD
+        - GE
+        - GF
+        - GG
+        - GH
+        - GI
+        - GL
+        - GM
+        - GN
+        - GP
+        - GQ
+        - GR
+        - GS
+        - GT
+        - GU
+        - GW
+        - GY
+        - HK
+        - HN
+        - HR
+        - HT
+        - HU
+        - IC
+        - ID
+        - IE
+        - IL
+        - IM
+        - IN
+        - IO
+        - IQ
+        - IR
+        - IS
+        - IT
+        - JE
+        - JM
+        - JO
+        - JP
+        - KE
+        - KG
+        - KH
+        - KI
+        - KM
+        - KN
+        - KP
+        - KR
+        - KW
+        - KY
+        - KZ
+        - LA
+        - LB
+        - LC
+        - LI
+        - LK
+        - LR
+        - LS
+        - LT
+        - LU
+        - LV
+        - LY
+        - MA
+        - MC
+        - MD
+        - ME
+        - MF
+        - MG
+        - MH
+        - MK
+        - ML
+        - MM
+        - MN
+        - MO
+        - MP
+        - MQ
+        - MR
+        - MS
+        - MT
+        - MU
+        - MV
+        - MW
+        - MX
+        - MY
+        - MZ
+        - NA
+        - NC
+        - NE
+        - NF
+        - NG
+        - NI
+        - NL
+        - "NO"
+        - NP
+        - NR
+        - NU
+        - NZ
+        - OM
+        - PA
+        - PE
+        - PF
+        - PG
+        - PH
+        - PK
+        - PL
+        - PM
+        - PN
+        - PR
+        - PS
+        - PT
+        - PW
+        - PY
+        - QA
+        - RE
+        - RO
+        - RS
+        - RU
+        - RW
+        - SA
+        - SB
+        - SC
+        - SD
+        - SE
+        - SG
+        - SH
+        - SI
+        - SJ
+        - SK
+        - SL
+        - SM
+        - SN
+        - SO
+        - SR
+        - SS
+        - ST
+        - SV
+        - SX
+        - SY
+        - SZ
+        - TA
+        - TC
+        - TD
+        - TF
+        - TG
+        - TH
+        - TJ
+        - TK
+        - TL
+        - TM
+        - TN
+        - TO
+        - TR
+        - TT
+        - TV
+        - TW
+        - TZ
+        - UA
+        - UG
+        - UM
+        - UNKNOWN
+        - US
+        - UY
+        - UZ
+        - VA
+        - VC
+        - VE
+        - VG
+        - VI
+        - VN
+        - VU
+        - WF
+        - WS
+        - XK
+        - YE
+        - YT
+        - ZA
+        - ZM
+        - ZW
+      responses:
+        "200":
+          description: return value
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: '#/responses/OVH.Error'
+definitions:
+  complexType.UnitAndValue.Double:
+    description: A numeric value tagged with its unit
+    type: object
+    properties:
+      unit:
+        type: string
+      value:
+        type: number
+        format: double
+  complexType.UnitAndValues.Vps.VpsTimestampValue:
+    description: A value set tagged with its unit
+    type: object
+    properties:
+      unit:
+        type: string
+      values:
+        type: array
+        items:
+          $ref: '#/definitions/vps.VpsTimestampValue'
+  dedicated.Server.BackupFtpAcl:
+    description: Backup Ftp ACL for this server and Backup Ftp
+    type: object
+    required:
+    - ipBlock
+    - lastUpdate
+    - isApplied
+    properties:
+      cifs:
+        description: Wether to allow the CIFS (SMB) protocol for this ACL
+        type: boolean
+      ftp:
+        description: Wether to allow the FTP protocol for this ACL
+        type: boolean
+      ipBlock:
+        description: The IP Block specific to this ACL
+        type: string
+        readOnly: true
+      isApplied:
+        description: Whether the rule has been applied on the Backup Ftp
+        type: boolean
+        readOnly: true
+      lastUpdate:
+        description: Date of the last object modification
+        type: string
+        format: date-time
+        readOnly: true
+      nfs:
+        description: Wether to allow the NFS protocol for this ACL
+        type: boolean
+  dedicated.Server.Task:
+    description: Server tasks
+    type: object
+    required:
+    - startDate
+    - taskId
+    - function
+    - status
+    properties:
+      comment:
+        description: Details of this task
+        type: string
+        readOnly: true
+      doneDate:
+        description: Completion date
+        type: string
+        format: date-time
+        readOnly: true
+      function:
+        description: Function name
+        type: string
+        readOnly: true
+        enum:
+        - addVirtualMac
+        - addWindowSplaFromExistingSerial
+        - applyBackupFtpAcls
+        - applyBackupFtpQuota
+        - bypassAntiDDosGame
+        - changePasswordBackupFTP
+        - changeRipeOrg
+        - checkAndReleaseIp
+        - createBackupFTP
+        - createOrUpdateRipeOrg
+        - createPrivateNetwork
+        - disableFirewall
+        - enableFirewall
+        - genericMoveFloatingIp
+        - hardReboot
+        - migrateBackupFTP
+        - moveFloatingIp
+        - moveVirtualMac
+        - rebootPower8To
+        - reinstallServer
+        - releaseIp
+        - removeBackupFTP
+        - removeVirtualMac
+        - requestAccessIPMI
+        - resetIPMI
+        - resetIPMISession
+        - testIPMIhttp
+        - testIPMIpassword
+        - testIPMIping
+        - virtualMacAdd
+        - virtualMacDelete
+      lastUpdate:
+        description: last update
+        type: string
+        format: date-time
+        readOnly: true
+      startDate:
+        description: Task Creation date
+        type: string
+        format: date-time
+        readOnly: true
+      status:
+        description: Task status
+        type: string
+        readOnly: true
+        enum:
+        - cancelled
+        - customerError
+        - doing
+        - done
+        - init
+        - ovhError
+        - todo
+      taskId:
+        description: the id of the task
+        type: integer
+        format: int64
+        readOnly: true
+  secondaryDns.SecondaryDNS:
+    description: Secondary dns infos
+    type: object
+    required:
+    - dns
+    - creationDate
+    - domain
+    properties:
+      creationDate:
+        type: string
+        format: date-time
+        readOnly: true
+      dns:
+        description: secondary dns server
+        type: string
+        readOnly: true
+      domain:
+        description: domain on slave server
+        type: string
+        readOnly: true
+      ipMaster:
+        description: master ip
+        type: string
+  secondaryDns.SecondaryDNSNameServer:
+    description: 'A structure describing informations about available nameserver for
+      secondary dns '
+    type: object
+    properties:
+      hostname:
+        description: the name server
+        type: string
+      ip:
+        type: string
+      ipv6:
+        type: string
+  service.RenewType:
+    description: Map a possible renew for a specific service
+    type: object
+    properties:
+      automatic:
+        description: The service is automatically renewed
+        type: boolean
+      deleteAtExpiration:
+        description: The service will be deleted at expiration
+        type: boolean
+      forced:
+        description: The service forced to be renewed
+        type: boolean
+      manualPayment:
+        description: The service needs to be manually renewed and paid
+        type: boolean
+      period:
+        description: period of renew in month
+        type: integer
+        format: int64
+  services.Service:
+    description: Details about a Service
+    type: object
+    required:
+    - expiration
+    - contactBilling
+    - canDeleteAtExpiration
+    - status
+    - contactTech
+    - domain
+    - creation
+    - renewalType
+    - serviceId
+    - contactAdmin
+    properties:
+      canDeleteAtExpiration:
+        description: Indicates that the service can be set up to be deleted at expiration
+        type: boolean
+        readOnly: true
+      contactAdmin:
+        type: string
+        readOnly: true
+      contactBilling:
+        type: string
+        readOnly: true
+      contactTech:
+        type: string
+        readOnly: true
+      creation:
+        type: string
+        format: date
+        readOnly: true
+      domain:
+        type: string
+        readOnly: true
+      engagedUpTo:
+        type: string
+        format: date
+        readOnly: true
+      expiration:
+        type: string
+        format: date
+        readOnly: true
+      possibleRenewPeriod:
+        description: All the possible renew period of your service in month
+        type: array
+        readOnly: true
+        items:
+          type: integer
+          format: int64
+      renew:
+        $ref: '#/definitions/service.RenewType'
+      renewalType:
+        type: string
+        readOnly: true
+        enum:
+        - automaticForcedProduct
+        - automaticV2012
+        - automaticV2014
+        - automaticV2016
+        - manual
+        - oneShot
+        - option
+      serviceId:
+        type: integer
+        format: int64
+        readOnly: true
+      status:
+        type: string
+        readOnly: true
+        enum:
+        - expired
+        - inCreation
+        - ok
+        - unPaid
+  vps.AutomatedBackup:
+    description: Backup your VPS
+    type: object
+    required:
+    - state
+    properties:
+      schedule:
+        description: Scheduled time of your daily backup
+        type: string
+        readOnly: true
+      state:
+        description: Backup state
+        type: string
+        readOnly: true
+        enum:
+        - disabled
+        - enabled
+  vps.AutomatedBackup.Attached:
+    description: A backup attached to your VPS
+    type: object
+    properties:
+      access:
+        $ref: '#/definitions/vps.AutomatedBackup.Attached.Infos'
+      restorePoint:
+        type: string
+        format: date-time
+  vps.AutomatedBackup.Attached.Infos:
+    description: A structure describing a backup's access informations
+    type: object
+    properties:
+      additionalDisk:
+        description: Additional Disk details
+        type: string
+      nfs:
+        description: NFS URL of the backup
+        type: string
+      smb:
+        description: SMB URL of the backup
+        type: string
+  vps.BackupFtp:
+    description: Backup Ftp assigned to this VPS
+    type: object
+    required:
+    - ftpBackupName
+    - type
+    properties:
+      ftpBackupName:
+        description: The backup FTP server name
+        type: string
+        readOnly: true
+      quota:
+        description: The disk space available on your backup FTP
+        type: object
+        readOnly: true
+        properties:
+          unit:
+            type: string
+          value:
+            type: integer
+            format: int64
+      readOnlyDate:
+        description: If not-null, gives the date since when your account was set in
+          read-only mode because the quota was exceeded
+        type: string
+        format: date-time
+        readOnly: true
+      type:
+        description: The backup FTP type
+        type: string
+        readOnly: true
+      usage:
+        description: The disk space currently used on your backup FTP
+        type: object
+        readOnly: true
+        properties:
+          unit:
+            type: string
+          value:
+            type: integer
+            format: int64
+  vps.Datacenter:
+    description: Information about a datacenter of a VPS Virtual Machine
+    type: object
+    required:
+    - longName
+    - name
+    properties:
+      longName:
+        type: string
+        readOnly: true
+      name:
+        type: string
+        readOnly: true
+  vps.Disk:
+    description: Information about a disk of a VPS Virtual Machine
+    type: object
+    required:
+    - id
+    - bandwidthLimit
+    - type
+    - size
+    - state
+    properties:
+      bandwidthLimit:
+        type: integer
+        format: int64
+        readOnly: true
+      id:
+        type: integer
+        format: int64
+        readOnly: true
+      lowFreeSpaceThreshold:
+        description: The low disk free space threshold in MiB
+        type: integer
+        format: int64
+      monitoring:
+        description: The monitoring state of this disk
+        type: boolean
+      size:
+        type: integer
+        format: int64
+        readOnly: true
+      state:
+        type: string
+        readOnly: true
+        enum:
+        - connected
+        - disconnected
+        - pending
+      type:
+        type: string
+        readOnly: true
+        enum:
+        - additional
+        - primary
+  vps.Ip:
+    description: Information about an IP address for a VPS Virtual Machine
+    type: object
+    required:
+    - version
+    - ipAddress
+    - type
+    - geolocation
+    properties:
+      gateway:
+        type: string
+        readOnly: true
+      geolocation:
+        type: string
+        readOnly: true
+        enum:
+        - au
+        - be
+        - ca
+        - cz
+        - de
+        - es
+        - fi
+        - fr
+        - ie
+        - it
+        - lt
+        - nl
+        - pl
+        - pt
+        - sg
+        - uk
+        - us
+      ipAddress:
+        description: The effective ip address of the Ip object
+        type: string
+        readOnly: true
+      macAddress:
+        type: string
+        readOnly: true
+      reverse:
+        type: string
+      type:
+        type: string
+        readOnly: true
+        enum:
+        - additional
+        - primary
+      version:
+        type: string
+        readOnly: true
+        enum:
+        - v4
+        - v6
+  vps.Ip.ServiceStatus:
+    description: Service states for an Ip
+    type: object
+    properties:
+      dns:
+        $ref: '#/definitions/vps.Ip.ServiceStatusService'
+      http:
+        $ref: '#/definitions/vps.Ip.ServiceStatusService'
+      https:
+        $ref: '#/definitions/vps.Ip.ServiceStatusService'
+      ping:
+        type: string
+        enum:
+        - down
+        - up
+      smtp:
+        $ref: '#/definitions/vps.Ip.ServiceStatusService'
+      ssh:
+        $ref: '#/definitions/vps.Ip.ServiceStatusService'
+      tools:
+        type: string
+        enum:
+        - down
+        - up
+  vps.Ip.ServiceStatusService:
+    description: Port and state of a service on an IP
+    type: object
+    properties:
+      port:
+        type: integer
+        format: int64
+      state:
+        type: string
+        enum:
+        - down
+        - up
+  vps.Model:
+    description: A structure describing characteristics of a VPS model
+    type: object
+    properties:
+      availableOptions:
+        type: array
+        items:
+          type: string
+          enum:
+          - additionalDisk
+          - automatedBackup
+          - cpanel
+          - ftpbackup
+          - plesk
+          - snapshot
+          - veeam
+          - windows
+      datacenter:
+        type: array
+        items:
+          type: string
+      disk:
+        type: integer
+        format: int64
+      maximumAdditionnalIp:
+        type: integer
+        format: int64
+      memory:
+        type: integer
+        format: int64
+      name:
+        type: string
+      offer:
+        type: string
+      vcore:
+        type: integer
+        format: int64
+      version:
+        type: string
+        enum:
+        - 2013v1
+        - 2014v1
+        - 2015v1
+        - 2017v1
+        - 2017v2
+  vps.Option:
+    description: Information about the options of a VPS Virtual Machine
+    type: object
+    required:
+    - option
+    - state
+    properties:
+      option:
+        description: The option name
+        type: string
+        readOnly: true
+        enum:
+        - additionalDisk
+        - automatedBackup
+        - cpanel
+        - ftpbackup
+        - plesk
+        - snapshot
+        - veeam
+        - windows
+      state:
+        description: The state of the option
+        type: string
+        readOnly: true
+        enum:
+        - released
+        - subscribed
+  vps.Snapshot:
+    description: Information about the snapshot of a VPS Virtual Machine
+    type: object
+    required:
+    - creationDate
+    properties:
+      creationDate:
+        type: string
+        format: date-time
+        readOnly: true
+      description:
+        type: string
+  vps.Software:
+    description: Available softwares on a Template
+    type: object
+    required:
+    - status
+    - name
+    - id
+    - type
+    properties:
+      id:
+        type: integer
+        format: int64
+        readOnly: true
+      name:
+        type: string
+        readOnly: true
+      status:
+        type: string
+        readOnly: true
+        enum:
+        - deprecated
+        - stable
+        - testing
+      type:
+        type: string
+        readOnly: true
+        enum:
+        - database
+        - environment
+        - webserver
+  vps.Task:
+    description: Operation on a VPS Virtual Machine
+    type: object
+    required:
+    - state
+    - progress
+    - id
+    - type
+    properties:
+      id:
+        type: integer
+        format: int64
+        readOnly: true
+      progress:
+        type: integer
+        format: int64
+        readOnly: true
+      state:
+        type: string
+        readOnly: true
+        enum:
+        - blocked
+        - cancelled
+        - doing
+        - done
+        - error
+        - paused
+        - todo
+        - waitingAck
+      type:
+        type: string
+        readOnly: true
+        enum:
+        - addVeeamBackupJob
+        - changeRootPassword
+        - createSnapshot
+        - deleteSnapshot
+        - deliverVm
+        - getConsoleUrl
+        - internalTask
+        - openConsoleAccess
+        - provisioningAdditionalIp
+        - reOpenVm
+        - rebootVm
+        - reinstallVm
+        - removeVeeamBackup
+        - restoreFullVeeamBackup
+        - restoreVeeamBackup
+        - restoreVm
+        - revertSnapshot
+        - setMonitoring
+        - setNetboot
+        - startVm
+        - stopVm
+        - upgradeVm
+  vps.Template:
+    description: Installation template for a VPS Virtual Machine
+    type: object
+    required:
+    - distribution
+    - bitFormat
+    - name
+    - id
+    - locale
+    - availableLanguage
+    properties:
+      availableLanguage:
+        type: array
+        readOnly: true
+        items:
+          type: string
+      bitFormat:
+        type: integer
+        format: int64
+        readOnly: true
+        enum:
+        - 32
+        - 64
+      distribution:
+        type: string
+        readOnly: true
+      id:
+        type: integer
+        format: int64
+        readOnly: true
+      locale:
+        type: string
+        readOnly: true
+      name:
+        type: string
+        readOnly: true
+  vps.VPS:
+    description: VPS Virtual Machine
+    type: object
+    required:
+    - zone
+    - memoryLimit
+    - vcore
+    - state
+    - offerType
+    - model
+    - name
+    - monitoringIpBlocks
+    - cluster
+    properties:
+      cluster:
+        type: string
+        readOnly: true
+      displayName:
+        description: Set the name displayed in ManagerV6 for your VPS (max 50 chars)
+        type: string
+      keymap:
+        description: Set KVM keyboard layout on VPS Cloud. Reboot your VPS after change
+        type: string
+        enum:
+        - fr
+        - us
+      memoryLimit:
+        type: integer
+        format: int64
+        readOnly: true
+      model:
+        $ref: '#/definitions/vps.Model'
+      monitoringIpBlocks:
+        description: Ip blocks for OVH monitoring servers
+        type: array
+        readOnly: true
+        items:
+          type: string
+      name:
+        type: string
+        readOnly: true
+      netbootMode:
+        description: Reboot your VPS 'Cloud' after change, VPS 'Classic/LowLat' will
+          reboot automatically. Credentials for rescue mode will be sent by mail
+        type: string
+        enum:
+        - local
+        - rescue
+      offerType:
+        type: string
+        readOnly: true
+        enum:
+        - beta-classic
+        - classic
+        - cloud
+        - cloudram
+        - game-classic
+        - lowlat
+        - ssd
+      slaMonitoring:
+        type: boolean
+      state:
+        type: string
+        readOnly: true
+        enum:
+        - installing
+        - maintenance
+        - rebooting
+        - running
+        - stopped
+        - stopping
+        - upgrading
+      vcore:
+        type: integer
+        format: int64
+        readOnly: true
+      zone:
+        type: string
+        readOnly: true
+  vps.Veeam:
+    description: Informations about a VPS Veeam backups
+    type: object
+    required:
+    - backup
+    properties:
+      backup:
+        description: Backup state
+        type: boolean
+        readOnly: true
+  vps.Veeam.Infos:
+    description: A structure describing a Veeam backup's access informations
+    type: object
+    properties:
+      nfs:
+        description: NFS URL of the backup
+        type: string
+      smb:
+        description: SMB URL of the backup
+        type: string
+  vps.Veeam.RestorePoint:
+    description: Informations about a VPS Veeam restore points
+    type: object
+    required:
+    - creationTime
+    - id
+    properties:
+      creationTime:
+        description: The restore point's creation time
+        type: string
+        format: date-time
+        readOnly: true
+      id:
+        description: The restore point's id
+        type: integer
+        format: int64
+        readOnly: true
+  vps.Veeam.RestoredBackup:
+    description: Currently restored backup
+    type: object
+    required:
+    - accessInfos
+    - restorePointId
+    - state
+    properties:
+      accessInfos:
+        $ref: '#/definitions/vps.Veeam.Infos'
+      restorePointId:
+        description: The restore point id
+        type: integer
+        format: int64
+        readOnly: true
+      state:
+        description: The restored backup state
+        type: string
+        readOnly: true
+        enum:
+        - mounted
+        - restoring
+        - unmounted
+        - unmounting
+  vps.Vnc:
+    description: A VNC connection informations
+    type: object
+    properties:
+      host:
+        type: string
+      password:
+        type: string
+        format: password
+      port:
+        type: integer
+        format: int64
+  vps.VpsTimestampValue:
+    description: A timestamp associated to a value
+    type: object
+    properties:
+      timestamp:
+        type: integer
+        format: int64
+      value:
+        type: number
+        format: double
+responses:
+  OVH.Error:
+    description: Unexpected error
+    schema:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+        httpCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+  complexType.UnitAndValue.Double:
+    description: description of 'complexType.UnitAndValue.Double' response
+    schema:
+      $ref: '#/definitions/complexType.UnitAndValue.Double'
+  complexType.UnitAndValues.Vps.VpsTimestampValue:
+    description: description of 'complexType.UnitAndValues.Vps.VpsTimestampValue'
+      response
+    schema:
+      $ref: '#/definitions/complexType.UnitAndValues.Vps.VpsTimestampValue'
+  dedicated.Server.BackupFtpAcl:
+    description: description of 'dedicated.Server.BackupFtpAcl' response
+    schema:
+      $ref: '#/definitions/dedicated.Server.BackupFtpAcl'
+  dedicated.Server.Task:
+    description: description of 'dedicated.Server.Task' response
+    schema:
+      $ref: '#/definitions/dedicated.Server.Task'
+  secondaryDns.SecondaryDNS:
+    description: description of 'secondaryDns.SecondaryDNS' response
+    schema:
+      $ref: '#/definitions/secondaryDns.SecondaryDNS'
+  secondaryDns.SecondaryDNSNameServer:
+    description: description of 'secondaryDns.SecondaryDNSNameServer' response
+    schema:
+      $ref: '#/definitions/secondaryDns.SecondaryDNSNameServer'
+  services.Service:
+    description: description of 'services.Service' response
+    schema:
+      $ref: '#/definitions/services.Service'
+  vps.AutomatedBackup:
+    description: description of 'vps.AutomatedBackup' response
+    schema:
+      $ref: '#/definitions/vps.AutomatedBackup'
+  vps.BackupFtp:
+    description: description of 'vps.BackupFtp' response
+    schema:
+      $ref: '#/definitions/vps.BackupFtp'
+  vps.Datacenter:
+    description: description of 'vps.Datacenter' response
+    schema:
+      $ref: '#/definitions/vps.Datacenter'
+  vps.Disk:
+    description: description of 'vps.Disk' response
+    schema:
+      $ref: '#/definitions/vps.Disk'
+  vps.Ip:
+    description: description of 'vps.Ip' response
+    schema:
+      $ref: '#/definitions/vps.Ip'
+  vps.Ip.ServiceStatus:
+    description: description of 'vps.Ip.ServiceStatus' response
+    schema:
+      $ref: '#/definitions/vps.Ip.ServiceStatus'
+  vps.Option:
+    description: description of 'vps.Option' response
+    schema:
+      $ref: '#/definitions/vps.Option'
+  vps.Snapshot:
+    description: description of 'vps.Snapshot' response
+    schema:
+      $ref: '#/definitions/vps.Snapshot'
+  vps.Software:
+    description: description of 'vps.Software' response
+    schema:
+      $ref: '#/definitions/vps.Software'
+  vps.Task:
+    description: description of 'vps.Task' response
+    schema:
+      $ref: '#/definitions/vps.Task'
+  vps.Template:
+    description: description of 'vps.Template' response
+    schema:
+      $ref: '#/definitions/vps.Template'
+  vps.VPS:
+    description: description of 'vps.VPS' response
+    schema:
+      $ref: '#/definitions/vps.VPS'
+  vps.Veeam:
+    description: description of 'vps.Veeam' response
+    schema:
+      $ref: '#/definitions/vps.Veeam'
+  vps.Veeam.RestorePoint:
+    description: description of 'vps.Veeam.RestorePoint' response
+    schema:
+      $ref: '#/definitions/vps.Veeam.RestorePoint'
+  vps.Veeam.RestoredBackup:
+    description: description of 'vps.Veeam.RestoredBackup' response
+    schema:
+      $ref: '#/definitions/vps.Veeam.RestoredBackup'
+  vps.Vnc:
+    description: description of 'vps.Vnc' response
+    schema:
+      $ref: '#/definitions/vps.Vnc'
