@@ -4,6 +4,10 @@
 # go-ovh
 Golang client for OVH
 
+## Motivation
+The official [OVH API GO client](https://github.com/ovh/go-ovh) only handles credential creation and requests signing. This project generates idimatic GO client for OVH apis using [go-swagger](https://github.com/go-swagger/go-swagger) generator.
+
+
 ### Acknowledgement
  - [ovh/go-ovh](https://github.com/ovh/go-ovh): This project adapts official api wrappers from OVH
  - [cygy/ovhapi2openapi](https://github.com/appscode/ovhapi2openapi): A modified version is used to translate OVH API schema to Swagger 2.0 schema
