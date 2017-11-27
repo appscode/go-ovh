@@ -53,8 +53,7 @@
   branch = "master"
   name = "github.com/go-openapi/runtime"
   packages = [".","client","logger","middleware","middleware/denco","middleware/header","middleware/untyped","security"]
-  revision = "196284479f19f7d390a2979e8ca30f2e30552c84"
-  source = "github.com/tamalsaha/runtime"
+  revision = "e14965b7171054b0716bb9c08d653ac7871517ea"
 
 [[projects]]
   branch = "master"
@@ -125,6 +124,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e1262f0fd40f081e4851a03c67f145672fe577e623a6955bcb23bd126a65a93b"
+  inputs-digest = "c261531fe9e0357ef9a1118026b59ad6337a1f48f9f70c1a57abd856d19c0731"
   solver-name = "gps-cdcl"
   solver-version = 1
