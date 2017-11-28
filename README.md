@@ -10,5 +10,5 @@ The official [OVH API GO client](https://github.com/ovh/go-ovh) only handles cre
 
 ### Acknowledgement
  - [ovh/go-ovh](https://github.com/ovh/go-ovh): This project adapts official api wrappers from OVH
- - [cygy/ovhapi2openapi](https://github.com/appscode/ovhapi2openapi): A modified version is used to translate OVH API schema to Swagger 2.0 schema
+ - [cygy/ovhapi2openapi](https://github.com/cygy/ovhapi2openapi): A modified version is used to translate OVH API schema to Swagger 2.0 schema
  - [go-swagger/go-swagger](https://github.com/go-swagger/go-swagger): Used to generate GO client from Swagger 2.0 api schema
